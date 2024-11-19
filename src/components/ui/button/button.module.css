@@ -1,0 +1,77 @@
+.button {
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.1s ease;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button.small {
+  font-size: 12px;
+  padding: 6px 12px;
+  min-height: 28px;
+}
+
+.button.medium {
+  font-size: 14px;
+  padding: 10px 16px;
+  min-height: 36px;
+}
+
+.button.large {
+  font-size: 16px;
+  padding: 14px 20px;
+  min-height: 44px;
+}
+
+.button.plain {
+  background-color: transparent;
+  color: #026451;
+}
+
+.button.plain:hover {
+  color: #005bb5;
+}
+
+.button.gray {
+  background-color: #f5f5f7;
+  color: #1c1c1e;
+}
+
+.button.gray:hover {
+  background-color: #e5e5ea;
+}
+
+.button.tinted {
+  background-color: #026451;
+  color: #007aff;
+}
+
+.button.tinted:hover {
+  background-color: #015343;
+}
+
+.button.filled {
+  background-color: #026451;
+  color: white;
+}
+
+.button.filled:hover {
+  background-color: #015343;
+}
+
+.button:active {
+  background-color: #004437;
+  border: none !important;
+}
