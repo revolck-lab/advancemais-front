@@ -1,29 +1,23 @@
-export const metadata = {
-  title: 'Página Inicial | AdvanceMais',
-  description: 'Bem-vindo à página inicial da AdvanceMais!',
-}
+import Slider from '@/components/website/slider/slider'
+import CourseCarrousel from '@/components/website/courses/coursesCarousel'
+import Blog from '@/components/website/blog/blog'
+import BusinessInformation from '@/components/website/informations/businessInformation'
+import BannersGroup from '@/components/website/bannersGroup/bannersGroup'
+import CounterInformation from '@/components/website/counter/counterInformation'
+import BusinessGroupInformation from '@/components/website/informations/businessGroupInformation'
+import LogoCarousel from '@/components/website/logocarousel/logocarousel'
 
-export default function PaginaInicial() {
+export default function HomePage() {
   return (
-    <section className="container mx-auto py-12 px-6 text-center">
-      <h1 className="text-4xl font-bold mb-4">Bem-vindo à AdvanceMais</h1>
-      <p className="text-lg mb-8">
-        Explore cursos, serviços e muito mais com a AdvanceMais.
-      </p>
-      <div className="flex justify-center space-x-4">
-        <a
-          href="#"
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500 transition"
-        >
-          Conheça os Cursos
-        </a>
-        <a
-          href="#"
-          className="border border-blue-600 text-blue-600 py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition"
-        >
-          Saiba Mais
-        </a>
-      </div>
-    </section>
+    <>
+      <Slider />
+      <BusinessInformation />
+      <BannersGroup />
+      <CounterInformation />
+      <BusinessGroupInformation />
+      <CourseCarrousel />
+      <Blog />
+      <LogoCarousel />
+    </>
   )
 }
