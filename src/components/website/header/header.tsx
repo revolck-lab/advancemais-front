@@ -95,7 +95,7 @@ const Header = () => {
       </div>
 
       {/* Header Principal */}
-      <header className="bg-gray-900 py-4 px-6 md:px-12">
+      <header className="bg-[#00257D] py-4 px-6 md:px-12">
         <div className="container mx-auto flex flex-wrap md:flex-nowrap justify-between items-center">
           {/* Logo */}
           <Link href="/website">

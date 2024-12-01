@@ -1,0 +1,65 @@
+.buttonPrevious {
+  position: absolute;
+  top: 49%;
+  left: -23px;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #001a57;
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  opacity: 0.7;
+  border-radius: 50%;
+  border-color: transparent;
+  cursor: pointer;
+  transition:
+    all 0.3s ease,
+    box-shadow 0.3s ease;
+  margin-left: 0;
+}
+
+.buttonPrevious:hover {
+  opacity: 1;
+  background-color: #00257d;
+}
+
+.buttonNext {
+  position: absolute;
+  top: 60%;
+  left: -23px;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #001a57;
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  opacity: 0.7;
+  border-radius: 50%;
+  border-color: transparent;
+  cursor: pointer;
+  transition:
+    all 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.buttonNext:hover {
+  opacity: 1;
+  background-color: #00257d;
+}
+
+/* Ajustes no título */
+.carousel-item-title {
+  position: absolute;
+  top: 10%; /* Ajuste para mover o título para cima */
+  left: 50%; /* Centraliza horizontalmente */
+  transform: translateX(-50%); /* Garantindo a centralização */
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Aumenta a sombra */
+}
