@@ -4,6 +4,9 @@ import React, { useState } from 'react'
 import { Input } from '@/components/ui/input/input'
 import { Checkbox, Button } from '@nextui-org/react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { login, getUserRole } from '@/services/api/auth/authService'
+import { UserRoleResponse } from '@/services/api/auth/authService'
 
 // Logo
 import Logo from '/public/images/logo_branco.webp'
@@ -14,50 +17,80 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
   const [passwordError, setPasswordError] = useState(false)
   const [passwordVisible, setPasswordVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const getNumericValue = (input: string) => input.replace(/\D/g, '')
+  const router = useRouter()
 
-  const applyMask = (numericValue: string) => {
+  const applyMask = (value: string) => {
+    const numericValue = value.replace(/\D/g, '') // Remove tudo que não é número
+
     if (numericValue.length <= 11) {
+      // Formata como CPF
       return numericValue.replace(
-        /(\d{3})(\d{3})(\d{3})(\d{1,2})/,
-        '$1.$2.$3-$4'
+        /(\d{3})(\d{0,3})(\d{0,3})(\d{0,2})/,
+        (_, g1, g2, g3, g4) =>
+          `${g1}${g2 ? `.${g2}` : ''}${g3 ? `.${g3}` : ''}${g4 ? `-${g4}` : ''}`
       )
     } else {
+      // Formata como CNPJ
       return numericValue.replace(
-        /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-        '$1.$2.$3/$4-$5'
+        /(\d{2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2})/,
+        (_, g1, g2, g3, g4, g5) =>
+          `${g1}${g2 ? `.${g2}` : ''}${g3 ? `.${g3}` : ''}${
+            g4 ? `/${g4}` : ''
+          }${g5 ? `-${g5}` : ''}`
       )
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let rawValue = e.target.value
-    let numericValue = getNumericValue(rawValue)
+  const handleCpfCnpjChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value
+    const numericValue = inputValue.replace(/\D/g, '').slice(0, 14) // Limita a 14 dígitos
+    const formattedValue = applyMask(numericValue)
 
-    if (numericValue.length > 14) {
-      numericValue = numericValue.slice(0, 14)
-      rawValue = applyMask(numericValue)
-    } else {
-      rawValue = applyMask(numericValue)
-    }
+    setValue(formattedValue)
 
-    setValue(rawValue)
-
-    const numericLength = numericValue.length
-    if (numericLength !== 11 && numericLength !== 14) {
+    // Validação: CPF tem 11 dígitos, CNPJ tem 14 dígitos
+    if (numericValue.length !== 11 && numericValue.length !== 14) {
       setHasError(true)
     } else {
       setHasError(false)
     }
   }
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-    if (e.target.value.length < 6) {
-      setPasswordError(true)
-    } else {
-      setPasswordError(false)
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!value || !password) {
+      setHasError(!value)
+      setPasswordError(!password)
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const data = await login({ cpfCnpj: value.replace(/\D/g, ''), password })
+      localStorage.setItem('authToken', data.token) // Armazena o token localmente
+
+      const user: UserRoleResponse = await getUserRole()
+
+      if (user.role === 'student') {
+        router.push('/dashboard/student')
+      } else if (user.role === 'teacher') {
+        router.push('/dashboard/teacher')
+      } else if (user.role === 'company') {
+        router.push('/dashboard/company')
+      } else if (user.role === 'admin') {
+        router.push('/dashboard/admin')
+      } else {
+        throw new Error('Role não reconhecida')
+      }
+    } catch (error) {
+      console.error('Erro no login:', error)
+      alert('Falha na autenticação. Verifique suas credenciais.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -70,7 +103,7 @@ const LoginPage = () => {
       <div className="flex flex-1 flex-col items-center justify-center">
         <Image src={Logo} alt="Logo Advance+" className="mb-10 w-52" />
         <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-8">
-          <form>
+          <form onSubmit={handleLogin}>
             <div className="text-left relative mb-5">
               <label
                 htmlFor="cpfCnpj"
@@ -82,7 +115,7 @@ const LoginPage = () => {
               <div className="mt-2 relative">
                 <Input
                   value={value}
-                  onChange={handleInputChange}
+                  onChange={handleCpfCnpjChange}
                   placeholder="Digite seu CPF ou CNPJ"
                   type="text"
                   hasError={hasError}
@@ -107,7 +140,7 @@ const LoginPage = () => {
               <div className="relative w-full mt-2">
                 <Input
                   value={password}
-                  onChange={handlePasswordChange}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Digite sua senha"
                   type={passwordVisible ? 'text' : 'password'}
                   hasError={passwordError}
@@ -148,6 +181,7 @@ const LoginPage = () => {
               size="lg"
               fullWidth
               className="py-3"
+              isLoading={loading}
             >
               Entrar
             </Button>

@@ -5,10 +5,13 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'via.placeholder.com',
-        port: '', // Deixe vazio se não há porta
-        pathname: '/**', // Permite qualquer caminho no domínio
+        port: '',
+        pathname: '/**',
       },
     ],
+  },
+  env: {
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
   },
   webpack(config) {
     config.module.rules.push({
