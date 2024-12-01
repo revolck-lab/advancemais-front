@@ -1,0 +1,26 @@
+.carouselContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.carouselContent {
+  display: flex;
+  gap: 0; /* Remove qualquer espaço entre os itens */
+  width: 100%;
+}
+
+.carouselItem {
+  flex: 0 0 13%; /* Exibe 6 logos ao mesmo tempo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carouselImage {
+  height: 100px; /* Ajusta a altura das logos */
+  width: auto;
+}

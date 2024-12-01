@@ -1,0 +1,95 @@
+.footer {
+  background-color: #001a57;
+  color: white;
+  font-family: 'Arial', sans-serif;
+  padding: 40px 20px;
+}
+
+.mainContainer {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.logoSection {
+  text-align: center;
+}
+
+.logo {
+  max-width: 150px;
+  margin: 0 auto;
+}
+
+.linksSection {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  color: white;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  margin-bottom: 5px;
+  color: #c4c4c4;
+}
+
+.attendanceInfo {
+  margin-top: 10px;
+  font-size: 14px;
+  color: white;
+}
+
+.qrSection {
+  text-align: center;
+}
+
+.qrCode {
+  margin-top: 10px;
+  width: 120px;
+  height: auto;
+}
+
+.divider {
+  border-top: 1px solid #424242;
+  margin: 20px 0;
+}
+
+.footerBottom {
+  text-align: center;
+  padding-top: 20px;
+}
+
+.copy {
+  color: #c4c4c4;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.bottomNav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.link {
+  color: #c4c4c4;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.link:hover {
+  text-decoration: underline;
+  color: white;
+}
