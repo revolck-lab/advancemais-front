@@ -7,11 +7,11 @@
 }
 
 .hiddenCheckbox {
-  --active: #66c61c;
+  --active: #001a57;
   --active-inner: #fff;
-  --focus: 2px rgba(75, 254, 39, 0.3);
+  --focus: 2px rgba(32, 28, 255, 0.3);
   --border: #bbc1e1;
-  --border-hover: #325f15;
+  --border-hover: #0060d7;
   --background: #fff;
   --disabled: #f6f8ff;
   --disabled-inner: #e1e6f9;

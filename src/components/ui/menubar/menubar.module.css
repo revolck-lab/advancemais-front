@@ -1,0 +1,141 @@
+/* General styles for the menu bar */
+.menubar-root {
+  display: flex;
+  align-items: center;
+  height: 32px; /* Ajustei a altura para que fique mais compacto */
+  background-color: var(--background-color, #f0f0f0);
+  border-radius: 8px;
+  padding: 0 4px; /* Diminuí o padding horizontal */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Trigger button */
+.menubar-trigger {
+  cursor: pointer;
+  padding: 0px 4px; /* Menos padding para aproximar */
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  outline: none;
+  background: transparent;
+  color: var(--text-color, #333);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.menubar-trigger button {
+  padding: 0px 4px; /* Reduzido para compactar os itens */
+  font-size: 14px; /* Opcional: para texto mais compacto */
+}
+
+.menubar-trigger:hover,
+.menubar-trigger:focus {
+  background-color: var(--accent-color, #d1d1d1);
+  color: var(--accent-text-color, #000);
+}
+
+/* Sub trigger */
+.menubar-sub-trigger {
+  display: flex;
+  align-items: center;
+  padding: 2px 6px; /* Menos padding para aproximar */
+  font-size: 14px;
+  border-radius: 4px;
+  outline: none;
+  background: transparent;
+  color: var(--text-color, #333);
+}
+
+.menubar-sub-trigger:hover,
+.menubar-sub-trigger:focus {
+  background-color: var(--accent-color, #d1d1d1);
+  color: var(--accent-text-color, #000);
+}
+
+/* Sub content */
+.menubar-sub-content {
+  min-width: 120px; /* Reduzi a largura mínima */
+  background-color: var(--popover-bg, #fff);
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 4px 8px; /* Menos padding para aproximar */
+  overflow: hidden;
+  color: var(--popover-text, #333);
+}
+
+/* Menu items */
+.menubar-item {
+  display: flex;
+  align-items: center;
+  padding: 2px 6px; /* Menos padding para aproximar */
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  color: var(--text-color, #333);
+}
+
+.menubar-item:hover,
+.menubar-item:focus {
+  background-color: var(--accent-color, #d1d1d1);
+  color: var(--accent-text-color, #000);
+}
+
+/* Checkbox item */
+.menubar-checkbox-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px; /* Menos padding para aproximar */
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-color, #333);
+}
+
+.menubar-checkbox-item:hover,
+.menubar-checkbox-item:focus {
+  background-color: var(--accent-color, #d1d1d1);
+  color: var(--accent-text-color, #000);
+}
+
+/* Radio item */
+.menubar-radio-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px; /* Menos padding para aproximar */
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-color, #333);
+}
+
+.menubar-radio-item:hover,
+.menubar-radio-item:focus {
+  background-color: var(--accent-color, #d1d1d1);
+  color: var(--accent-text-color, #000);
+}
+
+/* Label */
+.menubar-label {
+  padding: 4px 8px; /* Menos padding para aproximar */
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--label-color, #444);
+}
+
+/* Separator */
+.menubar-separator {
+  height: 1px;
+  background-color: var(--separator-color, #ccc);
+  margin: 2px 0; /* Menos margin para reduzir espaço */
+}
+
+/* Shortcut */
+.menubar-shortcut {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--shortcut-color, #888);
+}

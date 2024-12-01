@@ -1,0 +1,28 @@
+.sliderButton {
+  padding: 12px;
+  opacity: 0.4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.sliderButton:hover {
+  opacity: 1;
+}
+
+.sliderPrevious {
+  left: 30px;
+}
+
+.sliderNext {
+  right: 30px;
+}
+
+.sliderButton svg {
+  fill: #333;
+  width: 30px;
+  height: 30px;
+}
