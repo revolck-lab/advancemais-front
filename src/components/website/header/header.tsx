@@ -19,7 +19,7 @@ import {
 
 const Header = () => {
   const navLinks = [
-    { href: '/website/pagina-inicial', label: 'Início' },
+    { href: '/pagina-inicial', label: 'Início' },
     {
       label: 'Cursos',
       subLinks: [
@@ -34,7 +34,7 @@ const Header = () => {
         { href: '#', label: 'Serviço 2' },
       ],
     },
-    { href: '/website/sobre', label: 'Sobre nós' },
+    { href: '/sobre', label: 'Sobre nós' },
     { href: '#', label: 'Fale conosco' },
   ]
 
@@ -151,7 +151,7 @@ const Header = () => {
           {/* Botões de ação */}
           <div className="flex items-center space-x-4">
             <Link
-              href="#"
+              href="/auth/login"
               className="border border-white text-white py-2 px-4 rounded hover:bg-white hover:text-blue-900 transition text-sm md:text-base"
             >
               Entrar

@@ -2,26 +2,29 @@ import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const authToken = request.cookies.get('authToken') // Verifica o cookie 'authToken'
+  const pathname = request.nextUrl.pathname
 
-  // Redireciona para '/website' caso seja a rota principal
-  if (request.nextUrl.pathname === '/') {
-    return NextResponse.redirect(new URL('/website', request.url))
+  // Reescreve a raiz `/` para `/website/pagina-inicial`
+  if (pathname === '/') {
+    return NextResponse.rewrite(new URL('/website/pagina-inicial', request.url))
   }
 
-  // Se o usuário estiver autenticado e tentar acessar a página de login, redireciona para o dashboard
-  if (authToken && request.nextUrl.pathname === '/auth/login') {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  // Reescreve rotas simplificadas para rotas internas no diretório `/website`
+  const websiteRoutes = [
+    '/pagina-inicial',
+    '/sobre',
+    '/cursos',
+    '/servicos',
+    '/fale-conosco',
+  ]
+  if (websiteRoutes.some((route) => pathname === route)) {
+    return NextResponse.rewrite(new URL(`/website${pathname}`, request.url))
   }
 
-  // Permite acesso ao login se o usuário não estiver autenticado
-  if (!authToken && request.nextUrl.pathname === '/auth/login') {
-    return NextResponse.next() // Permite acessar a página de login
-  }
-
-  // Protege páginas do dashboard contra usuários não autenticados
-  if (!authToken && request.nextUrl.pathname.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/auth/login', request.url)) // Redireciona para login
+  // Protege rotas de dashboard (exige autenticação)
+  const authToken = request.cookies.get('authToken')
+  if (!authToken && pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/auth/login', request.url))
   }
 
   return NextResponse.next() // Permite o acesso em outros casos
@@ -29,5 +32,14 @@ export function middleware(request: NextRequest) {
 
 // Define as rotas onde o middleware deve ser aplicado
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image).*)'], // Aplica o middleware a todas as rotas relevantes
+  matcher: [
+    '/', // Middleware ativo na raiz
+    '/pagina-inicial',
+    '/sobre',
+    '/cursos',
+    '/servicos',
+    '/fale-conosco',
+    '/dashboard/:path*',
+    '/auth/login',
+  ],
 }
