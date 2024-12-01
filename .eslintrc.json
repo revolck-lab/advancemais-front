@@ -7,7 +7,15 @@
   ],
   "plugins": ["prettier", "@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/no-explicit-any": "off",
+    // Torna a regra de 'any' como aviso em vez de erro
+    "@typescript-eslint/no-explicit-any": "warn",
+    // Ajuda a definir tipos explícitos em exportações
+    "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      // Ignora argumentos iniciados com '_' (útil em callbacks)
+      { "argsIgnorePattern": "^_" }
+    ],
     "prettier/prettier": [
       "error",
       {
