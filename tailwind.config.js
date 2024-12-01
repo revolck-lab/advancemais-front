@@ -1,9 +1,13 @@
 import tailwindcssAnimate from 'tailwindcss-animate'
+import { nextui } from '@nextui-org/react'
 
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ['class'], // Suporte para tema escuro
-  content: ['./src/**/*.{js,ts,jsx,tsx}'], // Diretórios observados
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}', // Diretórios observados
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}', // Inclua o NextUI
+  ],
   theme: {
     extend: {
       // Fontes customizadas
@@ -14,7 +18,6 @@ export default {
 
       // Configuração de cores
       colors: {
-        // Tons neutros
         neutral: {
           DEFAULT: '#191919',
           50: '#f6f6f6',
@@ -28,8 +31,6 @@ export default {
           800: '#0b0b0b',
           900: '#050505',
         },
-
-        // Cores primárias
         primary: {
           DEFAULT: '#001A57',
           50: '#e4e9f5',
@@ -43,8 +44,6 @@ export default {
           800: '#000f2f',
           900: '#000a1f',
         },
-
-        // Cores secundárias
         secondary: {
           DEFAULT: '#FF202A',
           50: '#ffe7e8',
@@ -58,8 +57,6 @@ export default {
           800: '#861016',
           900: '#600b10',
         },
-
-        // Cores adicionais
         accent: {
           DEFAULT: '#0060D7',
           50: '#e4f0ff',
@@ -86,5 +83,8 @@ export default {
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [
+    tailwindcssAnimate,
+    nextui(), // Plugin NextUI para integração
+  ],
 }

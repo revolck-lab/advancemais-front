@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react'
 import { Input } from '@/components/ui/input/input'
-import { Button } from '@/components/ui/button/button'
-import Checkbox from '@/components/ui/checkbox/checkbox'
+import { Checkbox, Button } from '@nextui-org/react'
 import Image from 'next/image'
 
 // Logo
@@ -131,9 +130,9 @@ const LoginPage = () => {
             </div>
 
             <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
-                <Checkbox id="rememberMe" label="Me mantenha na conta" />
-              </div>
+              <Checkbox value="remember" size="md" color="primary" radius="sm">
+                Me mantenha na conta
+              </Checkbox>
               <a
                 href="#"
                 className="block font-normal text-sm text-neutral-600 hover:text-neutral-900 focus:underline focus:outline-none"
@@ -144,9 +143,11 @@ const LoginPage = () => {
 
             <Button
               type="submit"
-              variant="default"
+              color="primary"
+              radius="sm"
               size="lg"
-              className="w-full py-3 rounded-lg"
+              fullWidth
+              className="py-3"
             >
               Entrar
             </Button>
