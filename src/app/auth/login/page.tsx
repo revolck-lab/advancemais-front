@@ -1,10 +1,12 @@
+'use client'
+
 import React, { useState } from 'react'
 import { Input } from '@/components/ui/input/input'
 import { Button } from '@/components/ui/button/button'
 import Checkbox from '@/components/ui/checkbox/checkbox'
 import Image from 'next/image'
 
-//Logo
+// Logo
 import Logo from '/public/images/logo_branco.webp'
 
 const LoginPage = () => {
