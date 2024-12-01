@@ -1,5 +1,7 @@
-export const log = (...args: any[]) => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[LOG]', ...args)
-  }
+export const logInfo = (message: string, data?: any) => {
+  console.info(`[INFO] ${message}`, data || '')
+}
+
+export const logError = (message: string, error?: any) => {
+  console.error(`[ERROR] ${message}`, error || '')
 }
