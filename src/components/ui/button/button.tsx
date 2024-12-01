@@ -1,8 +1,14 @@
 import React from 'react'
 import styles from './button.module.css'
 
-type ButtonVariant = 'plain' | 'gray' | 'tinted' | 'filled'
-type ButtonSize = 'small' | 'medium' | 'large'
+type ButtonVariant =
+  | 'default'
+  | 'destructive'
+  | 'outline'
+  | 'secondary'
+  | 'ghost'
+  | 'link'
+type ButtonSize = 'default' | 'sm' | 'lg' | 'icon'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
@@ -13,8 +19,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button: React.FC<ButtonProps> = ({
   children,
-  variant = 'plain',
-  size = 'medium',
+  variant = 'default',
+  size = 'default',
   className = '',
   ...props
 }) => {

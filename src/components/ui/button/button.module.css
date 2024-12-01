@@ -1,5 +1,6 @@
 .button {
-  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
   text-align: center;
   border: none;
   border-radius: 8px;
@@ -37,11 +38,11 @@
 
 .button.plain {
   background-color: transparent;
-  color: #026451;
+  color: #001a57;
 }
 
 .button.plain:hover {
-  color: #005bb5;
+  color: #0060d7;
 }
 
 .button.gray {
@@ -54,24 +55,99 @@
 }
 
 .button.tinted {
-  background-color: #026451;
-  color: #007aff;
+  background-color: #001a57;
+  color: #0060d7;
 }
 
 .button.tinted:hover {
-  background-color: #015343;
+  background-color: #001a57;
 }
 
 .button.filled {
-  background-color: #026451;
+  background-color: #0060d7;
   color: white;
 }
 
 .button.filled:hover {
-  background-color: #015343;
+  background-color: #001a57;
 }
 
-.button:active {
-  background-color: #004437;
+/* .button:active {
+  background-color: #001a57;
   border: none !important;
+} */
+
+.button.outline {
+  background-color: transparent;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 5px;
+  border: 1px solid #042e90;
+  text-transform: uppercase;
+  border-radius: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0;
+  outline: none;
+  padding: 13px 23px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    box-shadow 0.2s,
+    -ms-transform 0.1s,
+    -webkit-transform 0.1s,
+    transform 0.1s;
+  user-select: none;
+  -webkit-user-select: none;
+  width: auto;
+}
+
+.button.outline:focus-visible {
+  box-shadow:
+    #042e90 0 0 0 2px,
+    rgba(255, 255, 255, 0.8) 0 0 0 4px;
+  transition: box-shadow 0.2s;
+}
+
+.button.outline:focus-visible {
+  border-color: #042e90;
+  transform: scale(0.96);
+}
+
+.button.outline:active {
+  border-color: #042e90;
+  transform: scale(0.96);
+}
+
+.button.link {
+  background-color: transparent;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 5px;
+  border: none;
+  text-transform: uppercase;
+  border-radius: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0;
+  outline: none;
+  padding: 13px 15px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    box-shadow 0.2s,
+    -ms-transform 0.1s,
+    -webkit-transform 0.1s,
+    transform 0.1s;
+  user-select: none;
+  -webkit-user-select: none;
+  width: auto;
 }

@@ -10,13 +10,13 @@
 }
 
 .input-rounded:focus {
-  border-color: #66c61c;
-  box-shadow: 0 0 8px rgba(75, 254, 39, 0.3);
+  border-color: #001a57;
+  box-shadow: 0 0 8px rgba(32, 28, 255, 0.3);
   outline: none;
 }
 
 .input-rounded:hover {
-  border-color: #66c61c;
+  border-color: #001a57;
 }
 
 .input-rounded.error {
