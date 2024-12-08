@@ -16,8 +16,9 @@ import {
   MenubarContent,
   MenubarItem,
 } from '@/components/ui/menubar/menubar'
+import { ChevronDown } from 'lucide-react'
 
-const Header = () => {
+const Header: React.FC = (): JSX.Element => {
   const navLinks = [
     { href: '/pagina-inicial', label: 'Início' },
     {
@@ -112,14 +113,7 @@ const Header = () => {
                       <MenubarTrigger asChild>
                         <button className="text-white hover:underline flex items-center">
                           {navItem.label}
-                          <svg
-                            className="w-4 h-4 ml-1"
-                            fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M5.23 7.21a1 1 0 011.41 0L10 10.59l3.36-3.38a1 1 0 011.42 1.42l-4.07 4.08a1 1 0 01-1.41 0L5.23 8.63a1 1 0 010-1.42z" />
-                          </svg>
+                          <ChevronDown className="w-4 h-4 ml-1" />
                         </button>
                       </MenubarTrigger>
                       <MenubarContent className="absolute left-0 mt-2 w-40 bg-white text-black rounded shadow-lg">

@@ -31,7 +31,7 @@ const slides = [
   },
 ]
 
-const Slider = () => {
+const Slider: React.FC = () => {
   const isMobile = useIsMobile()
 
   return (

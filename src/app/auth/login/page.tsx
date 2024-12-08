@@ -5,34 +5,35 @@ import { Input } from '@/components/ui/input/input'
 import { Checkbox, Button } from '@nextui-org/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { login, getUserRole } from '@/services/api/auth/authService'
-import { UserRoleResponse } from '@/services/api/auth/authService'
+import {
+  login,
+  validateToken,
+  checkPermission,
+} from '@/services/api/auth/authService'
 
 // Logo
 import Logo from '/public/images/logo_branco.webp'
 
-const LoginPage = () => {
+const LoginPage: React.FC = () => {
   const [value, setValue] = useState('')
   const [hasError, setHasError] = useState(false)
   const [password, setPassword] = useState('')
   const [passwordError, setPasswordError] = useState(false)
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const router = useRouter()
 
-  const applyMask = (value: string) => {
-    const numericValue = value.replace(/\D/g, '') // Remove tudo que não é número
-
+  const applyMask = (value: string): string => {
+    const numericValue = value.replace(/\D/g, '')
     if (numericValue.length <= 11) {
-      // Formata como CPF
       return numericValue.replace(
         /(\d{3})(\d{0,3})(\d{0,3})(\d{0,2})/,
         (_, g1, g2, g3, g4) =>
           `${g1}${g2 ? `.${g2}` : ''}${g3 ? `.${g3}` : ''}${g4 ? `-${g4}` : ''}`
       )
     } else {
-      // Formata como CNPJ
       return numericValue.replace(
         /(\d{2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2})/,
         (_, g1, g2, g3, g4, g5) =>
@@ -43,14 +44,15 @@ const LoginPage = () => {
     }
   }
 
-  const handleCpfCnpjChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCpfCnpjChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     const inputValue = e.target.value
-    const numericValue = inputValue.replace(/\D/g, '').slice(0, 14) // Limita a 14 dígitos
+    const numericValue = inputValue.replace(/\D/g, '').slice(0, 14)
     const formattedValue = applyMask(numericValue)
 
     setValue(formattedValue)
 
-    // Validação: CPF tem 11 dígitos, CNPJ tem 14 dígitos
     if (numericValue.length !== 11 && numericValue.length !== 14) {
       setHasError(true)
     } else {
@@ -58,43 +60,78 @@ const LoginPage = () => {
     }
   }
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
 
     if (!value || !password) {
       setHasError(!value)
       setPasswordError(!password)
+      setError('Por favor, preencha todos os campos.')
       return
     }
 
     setLoading(true)
+    setError(null)
 
     try {
-      const data = await login({ cpfCnpj: value.replace(/\D/g, ''), password })
-      localStorage.setItem('authToken', data.token) // Armazena o token localmente
+      const formattedLogin = value.replace(/\D/g, '')
+      const loginResponse = await login({ login: formattedLogin, password })
+      console.log('Resposta do login:', loginResponse)
+      localStorage.setItem('authToken', loginResponse.token)
 
-      const user: UserRoleResponse = await getUserRole()
+      const welcomeResponse = await validateToken()
+      console.log('Validação do token:', welcomeResponse.message)
 
-      if (user.role === 'student') {
-        router.push('/dashboard/student')
-      } else if (user.role === 'teacher') {
-        router.push('/dashboard/teacher')
-      } else if (user.role === 'company') {
-        router.push('/dashboard/company')
-      } else if (user.role === 'admin') {
-        router.push('/dashboard/admin')
-      } else {
-        throw new Error('Role não reconhecida')
+      const roles = ['admin', 'company', 'teacher', 'student']
+
+      for (const role of roles) {
+        try {
+          const permissionResponse = await checkPermission(
+            role as 'admin' | 'company' | 'teacher' | 'student'
+          )
+          console.log(`Permissão para ${role}:`, permissionResponse.message)
+
+          // Redirecionar com base na role
+          if (role === 'admin') {
+            router.push('/dashboard/admin')
+            return
+          } else if (role === 'company') {
+            router.push('/dashboard/company')
+            return
+          } else if (role === 'teacher') {
+            router.push('/dashboard/teacher')
+            return
+          } else if (role === 'student') {
+            router.push('/dashboard/student')
+            return
+          }
+        } catch (err: unknown) {
+          // Substituí `any` por `unknown`
+          if (
+            typeof err === 'object' &&
+            err !== null &&
+            'response' in err &&
+            typeof (err as { response?: { status?: number } }).response ===
+              'object' &&
+            (err as { response?: { status?: number } }).response?.status === 403
+          ) {
+            console.warn(`Sem permissão para ${role}.`)
+          } else {
+            console.error(`Erro inesperado para ${role}:`, err)
+          }
+        }
       }
-    } catch (error) {
+
+      setError('Nenhuma permissão válida encontrada.')
+    } catch (error: unknown) {
       console.error('Erro no login:', error)
-      alert('Falha na autenticação. Verifique suas credenciais.')
+      setError('Falha no login. Verifique suas credenciais.')
     } finally {
       setLoading(false)
     }
   }
 
-  const togglePasswordVisibility = () => {
+  const togglePasswordVisibility = (): void => {
     setPasswordVisible(!passwordVisible)
   }
 
@@ -150,7 +187,6 @@ const LoginPage = () => {
                   type="button"
                   onClick={togglePasswordVisibility}
                   className="absolute right-3 top-3 text-blue-500 text-sm font-semibold"
-                  style={{ marginTop: '2px' }}
                 >
                   {passwordVisible ? 'Ocultar' : 'Exibir'}
                 </button>
@@ -164,7 +200,7 @@ const LoginPage = () => {
 
             <div className="flex items-center justify-between mb-6">
               <Checkbox value="remember" size="md" color="primary" radius="sm">
-                Me mantenha na conta
+                Me mantenha conectado
               </Checkbox>
               <a
                 href="#"
@@ -173,6 +209,8 @@ const LoginPage = () => {
                 Esqueceu sua senha?
               </a>
             </div>
+
+            {error && <p className="text-red-500 text-sm mb-5">{error}</p>}
 
             <Button
               type="submit"
@@ -208,7 +246,7 @@ const LoginPage = () => {
           </a>
         </p>
         <p className="text-gray-500 mt-3">
-          O Advance+ LTDA CNPJ nº 00.000.000/0001- 97, com Sede na Av. Juca
+          O Advance+ LTDA CNPJ nº 00.000.000/0001-97, com Sede na Av. Juca
           Sampaio, 2247 - Sala 30 - Feitosa, Maceió - AL, 57040-600 Todos os
           Direitos Reservados AdvanceMais
         </p>

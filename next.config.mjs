@@ -8,10 +8,20 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   env: {
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  },
+  i18n: {
+    locales: ['pt-BR', 'en'], // Lista de idiomas suportados
+    defaultLocale: 'pt-BR', // Idioma padrão
   },
   webpack(config) {
     config.module.rules.push({

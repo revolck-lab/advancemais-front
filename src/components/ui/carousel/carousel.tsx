@@ -4,20 +4,23 @@ import * as React from 'react'
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from 'embla-carousel-react'
+import Autoplay from 'embla-carousel-autoplay'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons'
 
 type CarouselApi = UseEmblaCarouselType[1]
-type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
-type CarouselOptions = UseCarouselParameters[0]
-type CarouselPlugin = UseCarouselParameters[1]
+type UseEmblaCarouselParameters = Parameters<typeof useEmblaCarousel>
+type CarouselOptions = UseEmblaCarouselParameters[0]
+type CarouselPlugin = UseEmblaCarouselParameters[1]
 
 type CarouselProps = {
   opts?: CarouselOptions
   plugins?: CarouselPlugin
   orientation?: 'horizontal' | 'vertical'
   setApi?: (api: CarouselApi) => void
+  autoplay?: boolean // Flag to enable autoplay
+  autoplayDelay?: number // Delay time for autoplay
 }
 
 type CarouselContextProps = {
@@ -50,20 +53,33 @@ const Carousel = React.forwardRef<
       orientation = 'horizontal',
       opts,
       setApi,
-      plugins,
+      plugins = [],
+      autoplay = false,
+      autoplayDelay = 3000,
       className,
       children,
       ...props
     },
     ref
   ) => {
+    // Add Autoplay plugin if enabled
+    const autoplayPlugin = React.useRef(
+      autoplay
+        ? Autoplay({
+            delay: autoplayDelay,
+            stopOnInteraction: true,
+          })
+        : undefined
+    )
+
     const [carouselRef, api] = useEmblaCarousel(
       {
         ...opts,
         axis: orientation === 'horizontal' ? 'x' : 'y',
       },
-      plugins
+      autoplayPlugin.current ? [...plugins, autoplayPlugin.current] : plugins
     )
+
     const [canScrollPrev, setCanScrollPrev] = React.useState(false)
     const [canScrollNext, setCanScrollNext] = React.useState(false)
 

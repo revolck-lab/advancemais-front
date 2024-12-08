@@ -7,7 +7,7 @@ import CounterInformation from '@/components/website/counter/counterInformation'
 import BusinessGroupInformation from '@/components/website/informations/businessGroupInformation'
 import LogoCarousel from '@/components/website/logocarousel/logocarousel'
 
-export default function HomePage() {
+export default function HomePage(): JSX.Element {
   return (
     <>
       <Slider />

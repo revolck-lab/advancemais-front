@@ -26,7 +26,7 @@ const blogPosts = [
   },
 ]
 
-const Blog = () => {
+const Blog: React.FC = (): JSX.Element => {
   return (
     <section className="container mx-auto py-16 flex-col lg:flex-row items-center">
       <div className="flex items-center justify-between mb-8">
