@@ -1,4 +1,3 @@
-// src/services/api/common/apiClient.ts
 import axios from 'axios'
 import axiosRetry from 'axios-retry'
 import { getAuthToken } from './tokenService'
@@ -14,13 +13,10 @@ const apiClient = axios.create({
 
 // Configuração do axios-retry
 axiosRetry(apiClient, {
-  // Número de tentativas
-  retries: 3,
-  // Atraso incremental (1s, 2s, 3s)
-  retryDelay: (retryCount) => retryCount * 1000,
+  retries: 3, // Número de tentativas
+  retryDelay: (retryCount) => retryCount * 1000, // Atraso incremental
   retryCondition: (error) => {
-    // Repetir apenas para erros 5xx ou falhas de rede
-    return error.response?.status >= 500 || !error.response
+    return error.response?.status >= 500 || !error.response // Repetir apenas para erros 5xx ou falhas de rede
   },
 })
 
@@ -31,10 +27,12 @@ apiClient.interceptors.request.use(
       config.headers = {}
     }
 
-    // Centraliza a lógica de obtenção do token
-    const token = getAuthToken()
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    // Evita adicionar o token na rota de login
+    if (config.url !== '/api/auth/login') {
+      const token = getAuthToken()
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
     }
 
     return config
@@ -49,7 +47,6 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Tratamento centralizado de erros
     const { response } = error
     if (response) {
       console.error(
@@ -58,7 +55,6 @@ apiClient.interceptors.response.use(
     } else {
       console.error('[Network Error]', error.message)
     }
-
     return Promise.reject(error)
   }
 )

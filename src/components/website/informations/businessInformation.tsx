@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-const Business = () => {
+const Business: React.FC = (): JSX.Element => {
   return (
     <section>
       <div className="container mx-auto py-16 px-4 flex flex-col lg:flex-row items-center gap-8">

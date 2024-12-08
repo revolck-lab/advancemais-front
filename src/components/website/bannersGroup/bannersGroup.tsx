@@ -1,6 +1,6 @@
 import React from 'react'
 
-const BannersGroup = () => {
+const BannersGroup: React.FC = (): JSX.Element => {
   return (
     <section className="bg-gray-100 py-16 relative">
       {/* Imagens de fundo laterais */}

@@ -1,6 +1,4 @@
-// src/app/page.tsx
-
-'use client' // Adicione esta linha para indicar que o componente é um Client Component
+'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -8,7 +6,7 @@ import { useRouter } from 'next/navigation'
 // Importar o componente de login
 import LoginPage from './auth/login/page'
 
-export default function HomePage() {
+export default function HomePage(): JSX.Element {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 

@@ -75,7 +75,7 @@ const BreadcrumbSeparator = ({
   children,
   className,
   ...props
-}: React.ComponentProps<'li'>) => (
+}: React.ComponentProps<'li'>): JSX.Element => (
   <li
     role="presentation"
     aria-hidden="true"
@@ -90,7 +90,7 @@ BreadcrumbSeparator.displayName = 'BreadcrumbSeparator'
 const BreadcrumbEllipsis = ({
   className,
   ...props
-}: React.ComponentProps<'span'>) => (
+}: React.ComponentProps<'span'>): JSX.Element => (
   <span
     role="presentation"
     aria-hidden="true"
@@ -101,7 +101,7 @@ const BreadcrumbEllipsis = ({
     <span className="sr-only">More</span>
   </span>
 )
-BreadcrumbEllipsis.displayName = 'BreadcrumbElipssis'
+BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis'
 
 export {
   Breadcrumb,

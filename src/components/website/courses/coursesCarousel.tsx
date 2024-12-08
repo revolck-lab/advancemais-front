@@ -74,7 +74,7 @@ const courses = [
   },
 ]
 
-const CoursesCarousel = () => {
+const CoursesCarousel: React.FC = (): JSX.Element => {
   return (
     <section className="container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8">
       <div className="w-full bg-white">

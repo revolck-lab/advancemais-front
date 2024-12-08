@@ -1,4 +1,4 @@
-export default function Footer() {
+export default function Footer(): JSX.Element {
   return (
     <footer className="bg-white shadow-lg dark:bg-dark py-4 text-center">
       <p className="text-sm text-gray-600 dark:text-gray-400">
