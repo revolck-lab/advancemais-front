@@ -34,7 +34,7 @@ export function middleware(request: NextRequest) {
 
   // Impede que um usuário autenticado acesse a página de login
   if (isAuthenticated && pathname === '/auth/login') {
-    return NextResponse.redirect(new URL('/dashboard', request.url)) // Redireciona para o dashboard
+    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   // Permite o acesso em outros casos
@@ -44,7 +44,7 @@ export function middleware(request: NextRequest) {
 // Define as rotas onde o middleware deve ser aplicado
 export const config = {
   matcher: [
-    '/', // Middleware ativo na raiz
+    '/', // Raiz do sistema
     '/pagina-inicial',
     '/sobre',
     '/cursos',
