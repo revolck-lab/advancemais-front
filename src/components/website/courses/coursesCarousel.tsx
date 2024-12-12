@@ -111,7 +111,7 @@ const CoursesCarousel: React.FC = (): JSX.Element => {
                       {course.tag}
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-800 to-transparent p-10 text-white text-center">
-                      <h3 className="carousel-item-title mb-2">
+                      <h3 className="carousel-item-title text-lg mb-2">
                         {course.title}
                       </h3>
                     </div>
@@ -119,12 +119,16 @@ const CoursesCarousel: React.FC = (): JSX.Element => {
                 ))}
               </CarouselContent>
 
-              <CarouselPrevious className={`absolute ${Styles.buttonPrevious}`}>
-                <ChevronLeft className="w-6 h-6" />
+              <CarouselPrevious
+                className={`absolute left-2 top-1/2 transform -translate-y-1/2 ${Styles.buttonPrevious}`}
+              >
+                <ChevronLeft className="w-5 h-5" />
               </CarouselPrevious>
 
-              <CarouselNext className={`absolute ${Styles.buttonNext}`}>
-                <ChevronRight className="w-6 h-6" />
+              <CarouselNext
+                className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${Styles.buttonNext}`}
+              >
+                <ChevronRight className="w-5 h-5" />
               </CarouselNext>
             </Carousel>
           </div>

@@ -63,3 +63,8 @@
   color: white;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Aumenta a sombra */
 }
+
+.ImagemGrid {
+  height: auto;
+  max-height: 270px;
+}

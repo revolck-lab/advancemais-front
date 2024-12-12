@@ -23,6 +23,7 @@ const Header: React.FC = (): JSX.Element => {
     { href: '/pagina-inicial', label: 'Início' },
     {
       label: 'Cursos',
+      href: '/cursos',
       subLinks: [
         { href: '#', label: 'Curso 1' },
         { href: '#', label: 'Curso 2' },

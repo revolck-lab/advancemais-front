@@ -13,7 +13,7 @@
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": ".", // Adicionado para resolver caminhos
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
