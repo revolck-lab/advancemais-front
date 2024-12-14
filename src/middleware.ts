@@ -15,6 +15,7 @@ export function middleware(request: NextRequest) {
     '/pagina-inicial',
     '/sobre',
     '/cursos',
+    '/vagas',
     '/servicos',
     '/fale-conosco',
   ]
@@ -48,6 +49,7 @@ export const config = {
     '/pagina-inicial',
     '/sobre',
     '/cursos',
+    '/vagas',
     '/servicos',
     '/fale-conosco',
     '/dashboard/:path*',
