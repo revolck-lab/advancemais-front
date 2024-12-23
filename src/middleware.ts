@@ -17,6 +17,8 @@ export function middleware(request: NextRequest) {
     '/cursos',
     '/vagas',
     '/servicos',
+    '/servicos/recrutamento-selecao',
+    '/servicos/treinamento-company',
     '/fale-conosco',
   ]
 
@@ -45,12 +47,14 @@ export function middleware(request: NextRequest) {
 // Define as rotas onde o middleware deve ser aplicado
 export const config = {
   matcher: [
-    '/', // Raiz do sistema
+    '/',
     '/pagina-inicial',
     '/sobre',
     '/cursos',
     '/vagas',
     '/servicos',
+    '/servicos/recrutamento-selecao',
+    '/servicos/treinamento-company',
     '/fale-conosco',
     '/dashboard/:path*',
     '/auth/login',
