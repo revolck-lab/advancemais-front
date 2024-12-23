@@ -1,0 +1,35 @@
+.gradientBackgroundPrimary {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 25, 86, 0.14) 0%,
+    rgba(0, 25, 86, 0) 100%
+  );
+  color: #001956;
+  border-radius: 30px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 15px;
+  width: max-content;
+}
+
+.gradientBackgroundSecondary {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 31, 41, 0.14) 0%,
+    rgba(255, 31, 41, 0) 100%
+  );
+  color: #ff1f29;
+  border-radius: 30px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 15px;
+  width: max-content;
+}

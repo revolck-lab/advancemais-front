@@ -1,0 +1,21 @@
+.input {
+  background-color: white !important;
+  border-radius: 8px;
+  border: 1px solid #d1d5dbb6 !important;
+}
+
+.input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+.textarea {
+  background-color: white !important;
+  border-radius: 8px;
+  border: 1px solid #d1d5db !important;
+}
+
+.textarea:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}

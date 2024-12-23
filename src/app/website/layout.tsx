@@ -1,7 +1,6 @@
 import Header from '@/components/website/header/header'
 import Footer from '@/components/website/footer/footer'
 import { NextUIProvider } from '@nextui-org/react'
-
 export default function WebsiteLayout({
   children,
 }: {
