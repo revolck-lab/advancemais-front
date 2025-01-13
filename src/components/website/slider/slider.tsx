@@ -1,105 +1,97 @@
 'use client'
 
-import React from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import Image from 'next/image'
-import { useIsMobile } from '@/hooks/use-mobile'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-} from '@/components/ui/carousel/carousel'
-import Styles from './slider.module.css'
+import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useIsMobile } from '@/hooks/use-mobile'
+import Styles from './slider.module.css'
 
-const slides = [
-  {
-    id: 1,
-    image: 'https://via.placeholder.com/1920x500.png?text=Slide+1',
-    title: 'Slide 1',
-  },
-  {
-    id: 2,
-    image: 'https://via.placeholder.com/1920x500.png?text=Slide+2',
-    title: 'Slide 2',
-  },
-  {
-    id: 3,
-    image: 'https://via.placeholder.com/1920x500.png?text=Slide+3',
-    title: 'Slide 3',
-  },
+const slidesDesktop = [
+  { id: 1, image: '/images/banners/banner_1_desktop.png', title: 'Banner 1' },
+  { id: 2, image: '/images/banners/banner_2_desktop.png', title: 'Banner 2' },
+  { id: 3, image: '/images/banners/banner_3_desktop.png', title: 'Banner 3' },
+]
+
+const slidesMobile = [
+  { id: 1, image: '/images/banners/banner_1_mobile.png', title: 'Banner 1' },
+  { id: 2, image: '/images/banners/banner_2_mobile.png', title: 'Banner 2' },
+  { id: 3, image: '/images/banners/banner_3_mobile.png', title: 'Banner 3' },
 ]
 
 const Slider: React.FC = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const isMobile = useIsMobile()
+  const slides = isMobile ? slidesMobile : slidesDesktop
+
+  const [prevBtnEnabled, setPrevBtnEnabled] = useState(false)
+  const [nextBtnEnabled, setNextBtnEnabled] = useState(false)
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev()
+  }, [emblaApi])
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext()
+  }, [emblaApi])
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return
+    setPrevBtnEnabled(emblaApi.canScrollPrev())
+    setNextBtnEnabled(emblaApi.canScrollNext())
+  }, [emblaApi])
+
+  useEffect(() => {
+    if (!emblaApi) return
+    onSelect()
+    emblaApi.on('select', onSelect)
+    emblaApi.on('reInit', onSelect)
+  }, [emblaApi, onSelect])
 
   return (
-    <div
-      className={`relative w-full ${
-        isMobile ? 'h-[400px]' : 'h-48 md:h-64 lg:h-[400px] xl:h-[500px]'
-      } group`}
-    >
-      <Carousel className="relative w-full h-full" opts={{ loop: true }}>
-        <CarouselContent className="h-full">
+    <div className={Styles['slider-container']}>
+      <div ref={emblaRef} className={Styles.embla}>
+        <div className={Styles.embla__container}>
           {slides.map((slide) => (
-            <CarouselItem key={slide.id} className="relative w-full h-full">
+            <div key={slide.id} className={Styles.embla__slide}>
               <div
-                className={`relative w-full ${
+                className={`${Styles.embla__imageWrapper} ${
                   isMobile
-                    ? 'h-[400px]'
-                    : 'h-48 md:h-64 lg:h-[400px] xl:h-[500px]'
+                    ? Styles.embla__imageWrapperMobile
+                    : Styles.embla__imageWrapperDesktop
                 }`}
               >
                 <Image
                   src={slide.image}
                   alt={slide.title}
-                  layout="fill"
-                  className="object-cover"
+                  fill
+                  className={Styles.embla__image}
                   priority
-                  quality={100}
-                  sizes={
-                    isMobile
-                      ? '100vw'
-                      : '(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1920px'
-                  }
                 />
               </div>
-            </CarouselItem>
+            </div>
           ))}
-        </CarouselContent>
-
-        {/* Navegação no Desktop */}
-        {!isMobile && (
-          <>
-            <CarouselPrevious
-              className={`${Styles.sliderButton} ${Styles.sliderPrevious} absolute top-1/2 transform -translate-y-1/2 z-10`}
-            >
-              <ChevronLeft />
-            </CarouselPrevious>
-            <CarouselNext
-              className={`${Styles.sliderButton} ${Styles.sliderNext} absolute top-1/2 transform -translate-y-1/2 z-10`}
-            >
-              <ChevronRight />
-            </CarouselNext>
-          </>
-        )}
-
-        {/* Dots para Mobile */}
-        {isMobile && (
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                className={`w-2 h-2 rounded-full ${
-                  index === 0 ? 'bg-gray-800' : 'bg-gray-400'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-        )}
-      </Carousel>
+        </div>
+      </div>
+      {/* Botões de Navegação com Ícones */}
+      <div className={Styles.embla__controls}>
+        <button
+          className={`${Styles.embla__button} ${Styles.embla__buttonPrev}`}
+          onClick={scrollPrev}
+          disabled={!prevBtnEnabled}
+          aria-label="Previous Slide"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        <button
+          className={`${Styles.embla__button} ${Styles.embla__buttonNext}`}
+          onClick={scrollNext}
+          disabled={!nextBtnEnabled}
+          aria-label="Next Slide"
+        >
+          <ChevronRight size={24} />
+        </button>
+      </div>
     </div>
   )
 }

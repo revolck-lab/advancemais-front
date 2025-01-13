@@ -20,7 +20,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({
 }) => {
   return (
     <section
-      className={`container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8 ${
+      className={`container mx-auto py-16 px-4 flex flex-col lg:flex-row items-center gap-8 ${
         reverse ? 'lg:flex-row-reverse' : ''
       }`}
     >
@@ -36,9 +36,11 @@ const ContentSection: React.FC<ContentSectionProps> = ({
       </div>
 
       {/* Lado do texto */}
-      <div className="w-full lg:w-1/2 text-center lg:text-left">
+      <div className="w-full lg:w-1/2 lg:text-left">
         <h2 className="text-3xl font-bold mb-4 text-neutral-800">{title}</h2>
-        <p className="text-neutral-600 mb-6 leading-relaxed">{description}</p>
+        <p className="text-neutral-600 mb-6 leading-relaxed text-justify">
+          {description}
+        </p>
         <Button
           variant="default"
           size="lg"

@@ -60,12 +60,12 @@ const logos = [
 const LogoEnterprises: React.FC = () => {
   return (
     <section className="py-12 bg-white">
-      <div className="container mx-auto text-center">
+      <div className="container mx-auto text-center px-6">
         {/* Título e subtítulo */}
         <h2 className="text-4xl font-bold text-neutral mb-4">
           Quem está com a gente nessa jornada
         </h2>
-        <p className="text-[15px] text-neutral-400 leading-relaxed mb-8">
+        <p className="text-[15px] text-neutral-400 leading-relaxed mb-8 text-justify">
           Na Advance RH, acreditamos que cada talento é singular e cada empresa
           tem um potencial ilimitado. Conectamos histórias para criar um futuro
           mais inovador, inclusivo e promissor.
