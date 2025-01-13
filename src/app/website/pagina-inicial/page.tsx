@@ -5,7 +5,7 @@ import BusinessInformation from '@/components/website/informations/businessInfor
 import BannersGroup from '@/components/website/bannersGroup/bannersGroup'
 import CounterInformation from '@/components/website/counter/counterInformation'
 import BusinessGroupInformation from '@/components/website/informations/businessGroupInformation'
-import LogoCarousel from '@/components/website/logocarousel/logocarousel'
+import LogoEnterprises from '@/components/website/logoEnterprises/logoEnterprises'
 
 export default function HomePage(): JSX.Element {
   return (
@@ -17,7 +17,9 @@ export default function HomePage(): JSX.Element {
       <BusinessGroupInformation />
       <CourseCarrousel />
       <Blog />
-      <LogoCarousel />
+      <div className="mb-14">
+        <LogoEnterprises />
+      </div>
     </>
   )
 }

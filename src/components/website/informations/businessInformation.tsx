@@ -16,12 +16,12 @@ const Business: React.FC = (): JSX.Element => {
         </div>
 
         {/* Título e descrição do lado direito */}
-        <div className="w-full lg:w-1/2 text-center lg:text-left">
-          <h1 className="text-4xl mb-4 text-neutral-600">
+        <div className="w-full lg:w-1/2 lg:text-left">
+          <h1 className="text-3xl mb-4 text-neutral-600">
             <span className="font-bold">Acelere o crescimento</span> do seu
             negócio
           </h1>
-          <p className="text-neutral-400 leading-relaxed">
+          <p className="text-neutral-400 leading-relaxed text-justify">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry&apos;s standard dummy
             text ever since the 1500s. Lorem Ipsum is simply dummy text of the

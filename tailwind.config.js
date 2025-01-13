@@ -8,6 +8,11 @@ export default {
     './src/**/*.{js,ts,jsx,tsx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
+  screens: {
+    mobile: { max: '768px' },
+    md: '768px',
+    lg: '1024px',
+  },
   theme: {
     extend: {
       fontFamily: {

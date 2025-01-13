@@ -1,0 +1,49 @@
+.embla {
+  overflow: hidden;
+  width: 100%;
+}
+
+.embla__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.embla__container {
+  display: flex;
+}
+
+.embla__slide {
+  flex: 0 0 100%;
+  position: relative;
+}
+
+.embla__imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 300px; /* Defina a altura que você deseja */
+}
+
+.embla__image {
+  object-fit: cover;
+}
+
+.embla__button {
+  background: #333;
+  color: #fff;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.embla__button_prev {
+  margin-right: 0.5rem;
+}
+
+.embla__button_next {
+  margin-left: 0.5rem;
+}
+
+.embla__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

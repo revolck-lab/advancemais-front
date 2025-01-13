@@ -1,0 +1,41 @@
+/* Estilo para o fundo do menu */
+.menu-overlay {
+  animation: fadeIn 0.3s ease forwards;
+  backdrop-filter: blur(4px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Estilo para o menu deslizante */
+.menu-slide-in {
+  animation: slideIn 0.3s ease forwards;
+}
+
+.menu-slide-out {
+  animation: slideOut 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
