@@ -68,7 +68,7 @@ const CoursesCarousel: React.FC = (): JSX.Element => {
   const isMobile = useIsMobile()
 
   return (
-    <section className="container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8">
+    <section className="container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8 mt-5">
       <div className="w-full bg-white">
         <div className="container mx-auto lg:px-4">
           <div className="flex flex-col items-center justify-center mb-8 space-y-0 md:flex-row md:items-center md:space-y-0 md:justify-between">

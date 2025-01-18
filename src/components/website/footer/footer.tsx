@@ -18,7 +18,7 @@ const Footer: React.FC = (): JSX.Element => {
             {/* Redes Sociais e Logo */}
             <div className="flex flex-col items-center mb-8">
               <Image
-                src="https://via.placeholder.com/250x100.png?text=Advance+Logo"
+                src="/images/logo_footer.svg"
                 alt="Advance+ Logo"
                 width={200}
                 height={80}
@@ -106,9 +106,9 @@ const Footer: React.FC = (): JSX.Element => {
               {/* Logo e Redes Sociais */}
               <div className="flex-1 lg:basis-[30%] flex flex-col items-center lg:items-start">
                 <Image
-                  src="https://via.placeholder.com/250x100.png?text=Advance+Logo"
+                  src="/images/logo_footer.svg"
                   alt="Advance+ Logo"
-                  width={250}
+                  width={170}
                   height={100}
                   className="mb-4"
                 />
@@ -148,7 +148,7 @@ const Footer: React.FC = (): JSX.Element => {
                 <h4 className="text-sm font-semibold uppercase text-white mb-4">
                   Sobre Nós
                 </h4>
-                <ul className="space-y-2 text-gray-400 text-sm">
+                <ul className="space-y-2 text-gray-400">
                   <li>Lorem Ipsum</li>
                   <li>Lorem Ipsum</li>
                   <li>Lorem Ipsum</li>
@@ -160,7 +160,7 @@ const Footer: React.FC = (): JSX.Element => {
                 <h4 className="text-sm font-semibold uppercase text-white mb-4">
                   Acesso Rápido
                 </h4>
-                <ul className="space-y-2 text-gray-400 text-sm">
+                <ul className="space-y-2 text-gray-400">
                   <li>Lorem Ipsum</li>
                   <li>Lorem Ipsum</li>
                   <li>Lorem Ipsum</li>
@@ -172,14 +172,20 @@ const Footer: React.FC = (): JSX.Element => {
                 <h4 className="text-sm font-semibold uppercase text-white mb-4">
                   Fale Conosco
                 </h4>
-                <ul className="space-y-2 text-gray-400 text-sm">
+                <ul className="space-y-2 text-gray-400">
                   <li>Fale Conosco</li>
                   <li>Ouvidoria</li>
                   <li>FAQ</li>
                 </ul>
-                <p className="text-white text-xs mt-4">
+                <p className="text-white mt-4">
                   Horário de atendimento: <br />
                   segunda a sexta (08h às 20h) e sábado (09h às 13h)
+                </p>
+                <p className="text-white mt-4">
+                  Contato:
+                  <br />
+                  (82) 3234-1397 <br />
+                  (82) 98882-5559 <br />
                 </p>
               </div>
             </div>
@@ -188,9 +194,9 @@ const Footer: React.FC = (): JSX.Element => {
 
         {/* Footer Inferior */}
         <div className="mt-8 border-t border-gray-700 pt-4 text-center">
-          <p className="text-gray-400 text-xs">
-            O Advance+ LTDA CNPJ nº 00.000.000/0001-97, com Sede na Av. Juca
-            Sampaio, 2247 - Sala 30 - Feitosa, Maceió - AL, 57040-600 <br />
+          <p className="text-gray-400 text-xs mt-3">
+            Av. Juca Sampaio, 2247 - sala 30 Condominio Shopping Miramar -
+            Feitosa CEP 57.042-530 Maceió/AL. <br />
             Todos os Direitos Reservados AdvanceMais
           </p>
           <nav className="flex justify-center mt-4 space-x-4 text-sm">

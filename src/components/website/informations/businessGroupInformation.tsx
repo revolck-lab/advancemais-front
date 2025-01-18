@@ -20,7 +20,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({
 }) => {
   return (
     <section
-      className={`container mx-auto py-16 px-4 flex flex-col lg:flex-row items-center gap-8 ${
+      className={`container mx-auto pt-16 lg:pb-6 px-4 flex flex-col lg:flex-row items-center lg:gap-20 gap-6 mt-5 ${
         reverse ? 'lg:flex-row-reverse' : ''
       }`}
     >
@@ -31,12 +31,13 @@ const ContentSection: React.FC<ContentSectionProps> = ({
           alt={imageAlt}
           width={600}
           height={400}
-          className="rounded-lg shadow-lg object-cover w-full h-auto"
+          layout="responsive"
+          className="rounded-lg shadow-lg object-cover"
         />
       </div>
 
       {/* Lado do texto */}
-      <div className="w-full lg:w-1/2 lg:text-left">
+      <div className="w-full text-center lg:w-1/2 lg:text-left">
         <h2 className="text-3xl font-bold mb-4 text-neutral-800">{title}</h2>
         <p className="text-neutral-600 mb-6 leading-relaxed text-justify">
           {description}
@@ -60,16 +61,16 @@ const BusinessGroupInformation: React.FC = () => {
         title="Conheça nosso serviço de Consultoria Empresarial"
         description="O segredo para uma empresa de sucesso está em decisões estratégicas bem fundamentadas. A Advance+ oferece consultoria personalizada para auxiliar no crescimento sustentável e inovação do seu negócio."
         buttonLabel="Saiba mais"
-        imageUrl="https://via.placeholder.com/600x400.png?text=Consultoria+Empresarial"
-        imageAlt="Imagem representando Consultoria Empresarial"
+        imageUrl="/images/home/banner_site_2.webp"
+        imageAlt="Conheça nosso serviço de Consultoria Empresarial"
         reverse={false}
       />
       <ContentSection
         title="Conheça nosso serviço de Recrutamento & Seleção"
         description="O segredo para uma empresa de sucesso está em decisões estratégicas bem fundamentadas. A Advance+ oferece consultoria personalizada para auxiliar no crescimento sustentável e inovação do seu negócio."
         buttonLabel="Saiba mais"
-        imageUrl="https://via.placeholder.com/600x400.png?text=Recrutamento+%26+Seleção"
-        imageAlt="Imagem representando Recrutamento e Seleção"
+        imageUrl="/images/home/banner_site_3.webp"
+        imageAlt="Conheça nosso serviço de Recrutamento & Seleção"
         reverse={true}
       />
     </>

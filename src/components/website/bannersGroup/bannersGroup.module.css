@@ -1,8 +1,8 @@
-/* Container principal */
 .container {
   position: relative;
-  background-color: #f3f4f6; /* bg-gray-100 */
-  padding: 4rem 1rem; /* py-16 */
+  padding: 4rem 1rem;
+  margin-top: -40px;
+  margin-bottom: 30px;
 }
 
 /* Conteúdo central */
@@ -15,10 +15,10 @@
 
 .title {
   text-align: center;
-  font-size: 1.875rem; /* text-2xl */
+  font-size: 1.875rem;
   font-weight: bold;
-  color: #1f2937; /* text-neutral-800 */
-  margin-bottom: 2rem; /* mb-8 */
+  color: #1f2937;
+  margin-bottom: 2rem;
 }
 
 /* Grid para desktop e notebook */
@@ -60,57 +60,66 @@
 
 .embla__container {
   display: flex;
-  gap: 1rem; /* Espaçamento entre os slides */
-  padding-left: 1rem; /* Espaçamento no início */
-  padding-right: 1rem; /* Espaçamento no final */
+  gap: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .embla__slide {
-  flex: 0 0 calc(70% - 1rem); /* Corrige a largura para incluir o gap */
+  flex: 0 0 calc(70% - 1rem);
   display: flex;
   justify-content: center;
 }
 
 .banner {
-  height: 250px; /* Altura menor no carrossel */
-  width: 100%; /* Ocupa toda a largura do slide */
-  border-radius: 1rem; /* Borda arredondada */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
-  background-color: #2563eb; /* Azul para o banner */
+  height: 400px;
+  width: 100%;
+  border-radius: 1rem;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #2563eb;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem; /* Tamanho da fonte */
+  font-size: 1.25rem;
   font-weight: bold;
   text-align: center;
 }
 
 /* Ajuste para telas menores */
 @media (max-width: 768px) {
+  .content {
+    margin-top: -80px;
+  }
+
   .embla__container {
-    gap: 1rem; /* Espaçamento maior entre os slides */
-    padding-left: 1rem; /* Espaçamento inicial para corrigir o espaço entre o primeiro e último slide */
-    padding-right: 1rem; /* Espaçamento final para corrigir o espaço entre o último e o primeiro slide */
+    gap: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .banner {
-    height: 200px; /* Altura menor para mobile */
+    height: 200px;
   }
 }
 
 /* Responsividade */
 @media (max-width: 1024px) {
   .grid {
-    grid-template-columns: repeat(
-      2,
-      1fr
-    ); /* Duas colunas em telas de notebook */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .title {
-    font-size: 1.5rem; /* text-lg */
+    font-size: 1.5rem;
+    text-align: center;
   }
+}
+
+.bannerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.75rem;
 }

@@ -3,15 +3,16 @@ import Image from 'next/image'
 const Business: React.FC = (): JSX.Element => {
   return (
     <section>
-      <div className="container mx-auto py-16 px-4 flex flex-col lg:flex-row items-center gap-8">
+      <div className="container mx-auto py-16 px-4 flex flex-col lg:flex-row items-center gap-20 mt-5">
         {/* Imagem do lado esquerdo */}
         <div className="w-full lg:w-1/2">
           <Image
-            src="https://via.placeholder.com/600x400.png?text=Imagem+Ilustrativa"
+            src="/images/home/banner_info.webp"
             alt="Acelere o crescimento"
             width={600}
             height={400}
-            className="w-full h-auto rounded-lg shadow-lg object-cover"
+            layout="responsive"
+            className="rounded-lg shadow-lg object-cover"
           />
         </div>
 
@@ -22,10 +23,13 @@ const Business: React.FC = (): JSX.Element => {
             negócio
           </h1>
           <p className="text-neutral-400 leading-relaxed text-justify">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry&apos;s standard dummy
-            text ever since the 1500s. Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry.
+            Na Advance+, fornecemos soluções estratégicas em gestão de pessoas e
+            recrutamento, focadas em elevar o desempenho e a competitividade da
+            sua empresa. Nosso trabalho envolve identificar e desenvolver
+            talentos, otimizar processos e fortalecer a cultura organizacional,
+            reduzindo custos de rotatividade e aumentando a produtividade da
+            equipe. Conte conosco para potencializar resultados e alcançar novos
+            patamares de sucesso.
           </p>
         </div>
       </div>

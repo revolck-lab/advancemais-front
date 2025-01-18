@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/carousel/carousel'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Styles from './headerPages.module.css'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 const courses = [
   {
@@ -64,6 +65,16 @@ export default function HeaderPagesCourses({
     { label: 'Cursos', href: '/cursos' },
   ],
 }: HeaderPagesCoursesProps): JSX.Element {
+  const isMobile = useIsMobile()
+
+  if (isMobile) {
+    return (
+      <section className="container mx-auto py-16 flex flex-col items-center justify-center text-center">
+        <h1 className="text-4xl font-bold">Hello World</h1>
+      </section>
+    )
+  }
+
   return (
     <section className="container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8">
       <div className="w-full flex flex-col lg:flex-row items-start justify-between">
@@ -111,7 +122,6 @@ export default function HeaderPagesCourses({
               }}
             >
               <CarouselContent className="flex space-x-4 px-6">
-                {' '}
                 {/* Adicione padding (px-6) */}
                 {courses.map((course) => (
                   <CarouselItem

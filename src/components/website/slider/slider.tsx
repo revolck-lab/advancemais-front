@@ -8,15 +8,19 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import Styles from './slider.module.css'
 
 const slidesDesktop = [
-  { id: 1, image: '/images/banners/banner_1_desktop.png', title: 'Banner 1' },
-  { id: 2, image: '/images/banners/banner_2_desktop.png', title: 'Banner 2' },
-  { id: 3, image: '/images/banners/banner_3_desktop.png', title: 'Banner 3' },
+  {
+    id: 1,
+    image: '/images/banners/desktop-foqueemseunegocio.jpg',
+    title: 'Banner 1',
+  },
 ]
 
 const slidesMobile = [
-  { id: 1, image: '/images/banners/banner_1_mobile.png', title: 'Banner 1' },
-  { id: 2, image: '/images/banners/banner_2_mobile.png', title: 'Banner 2' },
-  { id: 3, image: '/images/banners/banner_3_mobile.png', title: 'Banner 3' },
+  {
+    id: 1,
+    image: '/images/banners/mobile-foqueemseunegocio.jpg',
+    title: 'Banner 1',
+  },
 ]
 
 const Slider: React.FC = () => {

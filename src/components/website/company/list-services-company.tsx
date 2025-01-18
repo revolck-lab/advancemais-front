@@ -31,8 +31,8 @@ const ListServicesCompany: React.FC = () => {
       {/* Left Content (Image) */}
       <div className="lg:w-1/2 w-full flex flex-col lg:flex-row items-start justify-between">
         <Image
-          src="https://via.placeholder.com/600x400"
-          alt="Team working"
+          src="/images/home/banner_site_2.webp"
+          alt="Conheça nosso serviço de Consultoria Empresarial"
           className="rounded-lg shadow-lg"
           width={600}
           height={400}

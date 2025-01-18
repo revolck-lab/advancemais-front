@@ -4,13 +4,14 @@ import React, { useEffect } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import Autoplay from 'embla-carousel-autoplay'
 import styles from './bannersGroup.module.css'
+import Image from 'next/image'
 
 const slides = [
-  { id: 1, text: 'Banner 1' },
-  { id: 2, text: 'Banner 2' },
-  { id: 3, text: 'Banner 3' },
-  { id: 4, text: 'Banner 4' },
-  { id: 5, text: 'Banner 5' },
+  { id: 1, image: '/images/home/banner_crescimento.webp' },
+  { id: 2, image: '/images/home/banner_custos.webp' },
+  { id: 3, image: '/images/home/banner_equipe.webp' },
+  { id: 4, image: '/images/home/banner_produtividade.webp' },
+  { id: 5, image: '/images/home/banner_resultados.webp' },
 ]
 
 const BannersGroup: React.FC = (): JSX.Element => {
@@ -43,7 +44,13 @@ const BannersGroup: React.FC = (): JSX.Element => {
             <div className={styles.embla__container}>
               {slides.map((slide) => (
                 <div key={slide.id} className={styles.embla__slide}>
-                  <div className={styles.banner}>{slide.text}</div>
+                  <Image
+                    src={slide.image}
+                    alt={`Banner ${slide.id}`}
+                    width={400}
+                    height={600}
+                    className={styles.bannerImage}
+                  />
                 </div>
               ))}
             </div>
@@ -53,7 +60,13 @@ const BannersGroup: React.FC = (): JSX.Element => {
           <div className={styles.grid}>
             {slides.map((slide) => (
               <div key={slide.id} className={styles.banner}>
-                {slide.text}
+                <Image
+                  src={slide.image}
+                  alt={`Banner ${slide.id}`}
+                  width={400}
+                  height={600}
+                  className={styles.bannerImage}
+                />
               </div>
             ))}
           </div>
