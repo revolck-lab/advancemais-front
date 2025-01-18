@@ -2,7 +2,7 @@ import tailwindcssAnimate from 'tailwindcss-animate'
 import { nextui } from '@nextui-org/react'
 
 /** @type {import('tailwindcss').Config} */
-export default {
+const tailwindConfig = {
   darkMode: ['class'],
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
@@ -105,3 +105,5 @@ export default {
   },
   plugins: [tailwindcssAnimate, nextui()],
 }
+
+export default tailwindConfig
