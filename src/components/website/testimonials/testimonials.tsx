@@ -1,121 +1,133 @@
+'use client'
+
 import React from 'react'
-import Image from 'next/image'
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
 } from '@/components/ui/carousel/carousel'
+import Image from 'next/image'
+import { useIsMobile } from '@/hooks/use-mobile'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import Styles from './testimonials.module.css'
 
 const testimonials = [
   {
     id: 1,
-    image: 'https://via.placeholder.com/100',
+    image: '/images/testemonials/face_1.png',
     name: 'Carolina Lemelle',
     position: 'Gerente de Gente e Gestão',
-    tag: 'Comunicadora Planejadora',
     testimonial:
       '“Para a contratação, precisávamos ser assertivos. Com o suporte da AdvanceMais, realizamos contratações mais rápidas e eficazes, otimizando nosso processo.”',
   },
   {
     id: 2,
-    image: 'https://via.placeholder.com/100',
+    image: '/images/testemonials/face_2.png',
     name: 'Kaique Barboza',
     position: 'Coordenador de Gente & Cultura',
-    tag: 'Comunicador Executor',
     testimonial:
       '“A AdvanceMais trouxe automação e inovação para nosso processo seletivo. Conseguimos reduzir o tempo de contratação e focar mais no desenvolvimento dos colaboradores.”',
   },
   {
     id: 3,
-    image: 'https://via.placeholder.com/100',
+    image: '/images/testemonials/face_3.png',
     name: 'Rodolfo Martins',
     position: 'Coordenador Administrativo',
-    tag: 'Analista Planejador',
     testimonial:
       '“Com as soluções da AdvanceMais, otimizamos os processos internos e conseguimos atingir resultados que antes pareciam impossíveis.”',
   },
   {
     id: 4,
-    image: 'https://via.placeholder.com/100',
+    image: '/images/testemonials/face_4.png',
     name: 'Camilla Souza',
     position: 'Coordenadora de RH',
-    tag: 'Planejadora Analista',
     testimonial:
       '“Com a AdvanceMais, otimizamos todo o ciclo de recrutamento e seleção. Um processo que durava 45 dias agora é concluído em apenas 15.”',
   },
-  {
-    id: 5,
-    image: 'https://via.placeholder.com/100',
-    name: 'Carlos Santos',
-    position: 'Gerente de Projetos',
-    tag: 'Executor Estratégico',
-    testimonial:
-      '“O suporte da AdvanceMais foi essencial para implementar estratégias de sucesso na nossa empresa.”',
-  },
 ]
 
-const Testimonials: React.FC = () => (
-  <section className="py-1">
-    <div className="container mx-auto">
-      {/* Título da seção */}
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-neutral">Depoimentos</h2>
-        <p className="mt-4 text-lg text-neutral-400 leading-relaxed max-w-4xl mx-auto">
-          Conheça as histórias de quem confiou na AdvanceMais para transformar
-          desafios em conquistas.
-        </p>
-      </div>
+const Testimonials: React.FC = () => {
+  const isMobile = useIsMobile()
 
-      {/* Carrossel */}
-      <div className="relative">
-        <Carousel
-          className="w-full"
-          opts={{
-            align: 'start',
-            containScroll: 'trimSnaps',
-            loop: true,
-          }}
-        >
-          <CarouselContent className="flex space-x-4 px-10 mr-20">
-            {testimonials.map((testimonial) => (
-              <CarouselItem
-                key={testimonial.id}
-                className="flex-shrink-0 basis-[25%] w-[25%] rounded-lg border-1 border-secondary border-opacity-45 bg-white p-5"
-              >
-                <div className="flex flex-col justify-between h-full">
-                  {/* Aspas e texto */}
-                  <div className="mt-2">
-                    <p className="text-[15px] text-neutral italic leading-relaxed">
+  return (
+    <section className="py-10">
+      <div className="container mx-auto">
+        {/* Título da seção */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-neutral">Depoimentos</h2>
+          <p className="mt-4 text-lg text-neutral-400 leading-relaxed max-w-4xl mx-auto">
+            Conheça as histórias de quem confiou na AdvanceMais para transformar
+            desafios em conquistas.
+          </p>
+        </div>
+
+        {/* Carrossel */}
+        <div className="relative w-full px-10 lg:px-5">
+          <Carousel
+            className="w-full"
+            opts={{
+              align: isMobile ? 'center' : 'start',
+              containScroll: 'trimSnaps',
+              loop: true,
+            }}
+          >
+            <CarouselContent
+              className={`${Styles.mobileContent} flex space-x-5 px-4`}
+            >
+              {testimonials.map((testimonial) => (
+                <CarouselItem
+                  key={testimonial.id}
+                  className={`flex-shrink-0 ${
+                    isMobile ? 'basis-[100%] w-[100%]' : 'basis-[30%] w-[30%]'
+                  } rounded-lg border border-secondary-100 hover:border-secondary p-6`}
+                >
+                  <div className="flex flex-col justify-between h-full">
+                    {/* Texto do depoimento */}
+                    <p className="text-[15px] text-neutral italic leading-relaxed mb-6">
                       {testimonial.testimonial}
                     </p>
-                  </div>
 
-                  {/* Informações do usuário */}
-                  <div className="flex items-center gap-4">
-                    <Image
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      width={56}
-                      height={56}
-                      className="rounded-full flex-shrink-0"
-                    />
-                    <div className="leading-none">
-                      <h3 className="text-lg font-semibold text-primary mb-[-2px]">
-                        {testimonial.name}
-                      </h3>
-                      <p className="text-sm text-neutral-400">
-                        {testimonial.position}
-                      </p>
+                    {/* Informações do autor */}
+                    <div className="flex items-center gap-4">
+                      <Image
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        width={56}
+                        height={56}
+                        className="rounded-full"
+                      />
+                      <div className="leading-none">
+                        <h3 className="text-lg font-semibold text-primary">
+                          {testimonial.name}
+                        </h3>
+                        <p className="text-sm text-neutral-400">
+                          {testimonial.position}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+
+            {/* Botões de navegação */}
+            <CarouselPrevious
+              className={`absolute left-2 top-1/2 transform -translate-y-1/2 ${Styles.buttonPrevious}`}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </CarouselPrevious>
+            <CarouselNext
+              className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${Styles.buttonNext}`}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </CarouselNext>
+          </Carousel>
+        </div>
       </div>
-    </div>
-  </section>
-)
+    </section>
+  )
+}
 
 export default Testimonials

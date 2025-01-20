@@ -16,9 +16,9 @@ export function middleware(request: NextRequest) {
     '/sobre',
     '/cursos',
     '/vagas',
-    '/servicos',
-    '/servicos/recrutamento-selecao',
-    '/servicos/treinamento-company',
+    '/solucoes',
+    '/solucoes/recrutamento-selecao',
+    '/solucoes/treinamento-company',
     '/fale-conosco',
   ]
 

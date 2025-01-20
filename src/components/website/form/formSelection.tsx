@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 import { Input, Textarea, Button } from '@nextui-org/react'
 import Styles from './formSelection.module.css'
-import InputMask from 'react-input-mask'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 
@@ -14,20 +13,26 @@ const FormSelection: React.FC = () => {
   const [state, setState] = useState('')
   const [fieldsDisabled, setFieldsDisabled] = useState(true)
 
+  // Lógica de formatação e busca de CEP
   const handleCepChange = async (value: string) => {
-    setCep(value)
+    const formattedCep = value
+      .replace(/\D/g, '') // Remove caracteres não numéricos
+      .replace(/^(\d{5})(\d{1,3})$/, '$1-$2') // Adiciona o hífen no formato '12345-678'
+      .slice(0, 9) // Garante o tamanho máximo de 9 caracteres
 
-    if (value.length === 9) {
+    setCep(formattedCep)
+
+    if (formattedCep.length === 9) {
       try {
         const response = await fetch(
-          `https://viacep.com.br/ws/${value.replace('-', '')}/json/`
+          `https://viacep.com.br/ws/${formattedCep.replace('-', '')}/json/`
         )
         const data = await response.json()
 
         if (!data.erro) {
-          setAddress(data.logradouro)
-          setCity(data.localidade)
-          setState(data.uf)
+          setAddress(data.logradouro || '')
+          setCity(data.localidade || '')
+          setState(data.uf || '')
           setFieldsDisabled(false)
         } else {
           alert('CEP não encontrado')
@@ -44,8 +49,8 @@ const FormSelection: React.FC = () => {
         {/* Imagem no lado esquerdo */}
         <div className="lg:w-1/2 flex justify-center">
           <Image
-            src="https://via.placeholder.com/600x400"
-            alt="Team working"
+            src="/images/sobre/banner_about.webp"
+            alt="Contato"
             className="rounded-lg"
             width={600}
             height={400}
@@ -87,17 +92,16 @@ const FormSelection: React.FC = () => {
                 radius="sm"
                 type="tel"
               />
-              <InputMask
-                mask="99999-999"
+              {/* Campo de CEP com lógica de máscara integrada */}
+              <Input
+                className={`${Styles.input} w-full`}
+                label="CEP"
+                radius="sm"
                 value={cep}
                 onChange={(e) => handleCepChange(e.target.value)}
-                className={Styles.input}
-                maskChar=" "
-              >
-                {(inputProps) => (
-                  <Input {...inputProps} label="CEP" radius="sm" type="text" />
-                )}
-              </InputMask>
+                placeholder="CEP"
+              />
+
               <Input
                 className={Styles.input}
                 label="Endereço"
@@ -137,9 +141,8 @@ const FormSelection: React.FC = () => {
 
             {/* Botão */}
             <Button
-              color="danger"
               size="md"
-              className="w-3/6 justify-self-center text-lg font-bold py-6 rounded-full flex items-center gap-2"
+              className="w-3/6 justify-self-center bg-secondary text-white text-lg font-bold py-6 rounded-full flex items-center gap-2"
             >
               ENVIAR <ArrowRight />
             </Button>

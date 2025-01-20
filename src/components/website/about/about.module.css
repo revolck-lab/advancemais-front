@@ -1,0 +1,32 @@
+@media (min-width: 768px) {
+  /* md breakpoint (tablets ou maiores) */
+  .pxResponsive {
+    padding-left: 3%;
+    padding-right: 3%;
+  }
+}
+
+/* Para dispositivos menores que 768px (mobile) */
+@media (max-width: 767px) {
+  .pxResponsive {
+    padding-left: 3%;
+    padding-right: 3%;
+    text-align: center;
+    margin-top: -30px;
+  }
+  .playerVideo {
+    width: 100%;
+  }
+  .aboutSection {
+    margin-top: 1px;
+    margin-right: 0px;
+    padding-left: 3%;
+    padding-right: 3%;
+  }
+  .aboutImagem {
+    display: none;
+  }
+  .spaceMobile {
+    margin-bottom: -20px;
+  }
+}

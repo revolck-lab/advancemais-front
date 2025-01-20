@@ -1,13 +1,16 @@
 'use client'
 
 import React from 'react'
+import Styles from './list-services.module.css'
 
 const ProcessAbout: React.FC = () => {
   return (
     <section className="bg-primary py-20 text-white">
-      <div className="container mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-16 items-center">
+      <div
+        className={`${Styles.pxResponsive} container mx-auto grid lg:grid-cols-2 gap-16 items-center`}
+      >
         {/* Lado esquerdo: Texto */}
-        <div>
+        <div className={`${Styles.centerResponsive}`}>
           <h3 className="text-lg uppercase text-secondary font-light mb-4">
             Como Funciona?
           </h3>

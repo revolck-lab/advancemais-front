@@ -1,0 +1,77 @@
+/* Botões de navegação */
+.buttonPrevious,
+.buttonNext {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background-color: #001a57;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  opacity: 0.7;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition:
+    opacity 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.buttonPrevious {
+  left: -15px; /* Ajuste para deixar o botão mais próximo do conteúdo */
+}
+
+.buttonNext {
+  right: -15px; /* Ajuste para deixar o botão mais próximo do conteúdo */
+}
+
+.buttonPrevious:hover,
+.buttonNext:hover {
+  opacity: 1;
+  background-color: #00257d;
+}
+
+/* Estilo dos itens do carrossel */
+.carouselItem {
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  padding: 1.25rem;
+  transition: transform 0.3s ease;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile: Itens com largura total */
+@media (max-width: 767px) {
+  .carouselItem {
+    flex-basis: 100%;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .carouselContent {
+    justify-content: center; /* Garante que o item esteja no centro */
+    gap: 0; /* Remove o espaçamento horizontal */
+  }
+
+  .buttonNext,
+  .buttonPrevious {
+    display: none;
+  }
+}
+
+/* Desktop: Itens lado a lado */
+@media (min-width: 768px) {
+  .carouselItem {
+    flex-basis: 30%;
+    width: 30%;
+    margin: 0; /* Remove o auto */
+  }
+
+  .carouselContent {
+    gap: 1rem; /* Espaçamento entre os itens */
+  }
+}

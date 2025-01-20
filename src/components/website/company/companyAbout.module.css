@@ -1,0 +1,19 @@
+@media (min-width: 768px) {
+  /* md breakpoint (tablets ou maiores) */
+  .pxResponsive {
+    width: 94%;
+  }
+}
+
+/* Mobile: Itens com largura total */
+@media (max-width: 767px) {
+  .pxResponsive {
+    width: 94%;
+  }
+  .mobileCenter {
+    text-align: center;
+  }
+  .mobileJustify {
+    text-align: justify;
+  }
+}

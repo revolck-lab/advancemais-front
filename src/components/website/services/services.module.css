@@ -1,0 +1,32 @@
+/* Mobile: Itens com largura total */
+@media (max-width: 767px) {
+  .titleMobile {
+    font-size: 30px;
+    text-align: center;
+  }
+
+  .descriptionMobile {
+    font-size: 17px;
+    text-align: justify;
+  }
+
+  .mobileTopItem {
+    margin-top: -50px;
+  }
+
+  .mobileTopImage {
+    margin-top: -20px;
+    margin-bottom: -20px;
+  }
+
+  .pxResponsive {
+    width: 90%;
+  }
+}
+
+@media (min-width: 768px) {
+  /* md breakpoint (tablets ou maiores) */
+  .pxResponsive {
+    width: 94%;
+  }
+}

@@ -30,8 +30,14 @@ const Header: React.FC = (): JSX.Element => {
       label: 'Soluções',
       href: '/cursos',
       subLinks: [
-        { href: '#', label: 'Recrutamento & Seleção' },
-        { href: '#', label: 'Treinamento In Company' },
+        {
+          href: '/solucoes/recrutamento-selecao',
+          label: 'Recrutamento & Seleção',
+        },
+        {
+          href: '/solucoes/treinamento-company',
+          label: 'Treinamento In Company',
+        },
       ],
     },
     { href: '/vagas', label: 'Vagas' },

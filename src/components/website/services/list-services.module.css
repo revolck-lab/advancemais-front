@@ -33,3 +33,21 @@
   margin-bottom: 15px;
   width: max-content;
 }
+
+@media (min-width: 768px) {
+  /* md breakpoint (tablets ou maiores) */
+  .pxResponsive {
+    width: 94%;
+  }
+}
+
+/* Mobile: Itens com largura total */
+@media (max-width: 767px) {
+  .pxResponsive {
+    margin-top: -70px;
+  }
+  .centerResponsive {
+    text-align: center;
+    margin-bottom: -40px;
+  }
+}

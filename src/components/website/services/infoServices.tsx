@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { Target, Database, Activity } from 'lucide-react'
+import Styles from './services.module.css'
 
 const InfoServices: React.FC = () => {
   const infoCards = [
@@ -26,13 +27,19 @@ const InfoServices: React.FC = () => {
   ]
 
   return (
-    <section className="container mx-auto py-14 px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-16">
+    <section
+      className={`${Styles.pxResponsive} container mx-auto py-14 flex flex-col lg:flex-row items-center gap-16`}
+    >
       {/* Texto no lado esquerdo */}
       <div className="lg:w-1/2 text-left animate-fade-in">
-        <h2 className="text-3xltext-neutral sm:text-5xl mb-8">
+        <h2
+          className={`${Styles.titleMobile} text-3xl text-neutral sm:text-5xl mb-8`}
+        >
           Você ainda recruta com <br /> emails e planilhas?
         </h2>
-        <p className="text-lg text-neutral-400 leading-relaxed mb-8">
+        <p
+          className={`${Styles.descriptionMobile} text-lg text-neutral-400 leading-relaxed mb-8`}
+        >
           O esforço e a boa vontade do recrutador têm um limite claro e acabam
           criando problemas e desafios relevantes. Simplifique seus processos e
           alcance resultados melhores com as ferramentas certas.
@@ -40,7 +47,7 @@ const InfoServices: React.FC = () => {
       </div>
 
       {/* Cards no lado direito */}
-      <div className="lg:w-1/2 flex flex-col gap-6">
+      <div className={`${Styles.mobileTopItem} lg:w-1/2 flex flex-col gap-6`}>
         {infoCards.map((card, index) => (
           <div
             key={index}

@@ -1,12 +1,13 @@
 'use client'
 import OfferList from './OfferList'
 import PricingBox from './PricingBox'
+import Styles from './pricing.module.css'
 
 const Pricing = (): JSX.Element => {
   return (
     <section
       id="pricing"
-      className="container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8"
+      className={`${Styles.pxResponsive} container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8`}
     >
       <div className="container">
         <div className="text-center mb-10">

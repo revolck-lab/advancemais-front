@@ -63,7 +63,7 @@ export default function HeaderPages({
 
         {/* Título principal */}
         <h3 className={`${Styles.subTitle} mb-1 text-secondary`}>{subtitle}</h3>
-        <h2 className={`${Styles.mainTitle} text-neutral`}>{title}</h2>
+        <h2 className={`${Styles.mainTitlePages} text-neutral`}>{title}</h2>
         <p className={`${Styles.paragraphyTitle} text-neutral-400`}>
           {description}
         </p>

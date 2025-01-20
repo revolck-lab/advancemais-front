@@ -15,7 +15,7 @@ export const generateMetadata = (): { title: string; description: string } => {
   }
 }
 
-export default function SobrePage(): JSX.Element {
+export default function RecrutamentoSelecao(): JSX.Element {
   return (
     <>
       {/* Titulo da Página */}
@@ -26,7 +26,8 @@ export default function SobrePage(): JSX.Element {
           description="Com a gente, seu negócio cresce sem limites!"
           buttonText="Fale com nossos especialistas"
           buttonUrl="https://www.exemplo.com/contato"
-          imageUrl="https://via.placeholder.com/810x360"
+          imageUrl="/images/sobre/bannerHeader.webp"
+          imageAlt="Capacitar hoje para transformar o amanhã, honrando nossa trajetória"
         />
       </div>
 
@@ -36,25 +37,15 @@ export default function SobrePage(): JSX.Element {
 
       <InfoAbout />
 
-      <div className="mb-10">
-        <ListServices />
-      </div>
+      <ListServices />
 
-      <div className="mb-10">
-        <ProcessAbout />
-      </div>
+      <ProcessAbout />
 
-      <div className="mb-10">
-        <Pricing />
-      </div>
+      <Pricing />
 
-      <div className="mb-10">
-        <LogoEnterprises />
-      </div>
+      <LogoEnterprises />
 
-      <div className="mb-10">
-        <FormSelection />
-      </div>
+      <FormSelection />
     </>
   )
 }

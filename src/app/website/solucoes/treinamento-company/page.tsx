@@ -24,7 +24,8 @@ export default function SobrePage(): JSX.Element {
           personalizados."
           buttonText="Fale com nossos especialistas"
           buttonUrl="https://www.exemplo.com/contato"
-          imageUrl="https://via.placeholder.com/810x360"
+          imageUrl="/images/sobre/bannerHeader.webp"
+          imageAlt="A capacitação da sua equipe impulsiona o crescimento da sua empresa!"
         />
       </div>
 
@@ -32,17 +33,11 @@ export default function SobrePage(): JSX.Element {
 
       <CompanyAbout />
 
-      <div className="mb-10">
-        <ListServicesCompany />
-      </div>
+      <ListServicesCompany />
 
-      <div className="mb-10">
-        <LogoEnterprises />
-      </div>
+      <LogoEnterprises />
 
-      <div className="mb-10">
-        <FormSelection />
-      </div>
+      <FormSelection />
     </>
   )
 }

@@ -1,8 +1,12 @@
+'use client'
 import React from 'react'
 import Image from 'next/image'
 import Styles from './list-services-company.module.css'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 const ListServicesCompany: React.FC = () => {
+  const isMobile = useIsMobile()
+
   const benefits = [
     {
       text: 'Aprimore as competências da sua equipe.',
@@ -27,24 +31,48 @@ const ListServicesCompany: React.FC = () => {
   ]
 
   return (
-    <section className="container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8">
-      {/* Left Content (Image) */}
-      <div className="lg:w-1/2 w-full flex flex-col lg:flex-row items-start justify-between">
+    <section
+      className={`${
+        Styles.pxResponsive
+      } container mx-auto py-14 flex flex-col ${
+        isMobile ? 'items-center gap-6' : 'lg:flex-row items-center gap-8'
+      }`}
+    >
+      {/* Image Section */}
+      <div
+        className={`${
+          isMobile
+            ? 'w-full flex justify-center'
+            : 'lg:w-1/2 w-full flex flex-col lg:flex-row items-start justify-between'
+        }`}
+      >
         <Image
           src="/images/home/banner_site_2.webp"
-          alt="Conheça nosso serviço de Consultoria Empresarial"
-          className="rounded-lg shadow-lg"
-          width={600}
-          height={400}
+          alt="Team working"
+          className={`${Styles.imagemMobile} rounded-lg shadow-${isMobile ? 'md' : 'lg'}`}
+          width={isMobile ? 300 : 600}
+          height={isMobile ? 200 : 400}
         />
       </div>
 
-      {/* Right Content (Text and Benefits) */}
-      <div className="lg:w-1/2">
-        <h2 className="text-4xl font-bold leading-tight text-gray-900 mb-6">
+      {/* Text Section */}
+      <div className={isMobile ? 'w-full px-4 text-center' : 'lg:w-1/2'}>
+        <h2
+          className={`${
+            isMobile
+              ? 'text-3xl font-semibold leading-tight text-gray-900 mb-4'
+              : 'text-4xl font-bold leading-tight text-gray-900 mb-6'
+          }`}
+        >
           Conheça nosso serviço de Treinamento In Company
         </h2>
-        <p className="text-gray-600 text-lg mb-6">
+        <p
+          className={`${
+            isMobile
+              ? 'text-gray-600 text-base mb-6'
+              : 'text-gray-600 text-lg mb-6'
+          }`}
+        >
           O segredo para uma empresa de sucesso está em uma capactação contínua
           da equipe. A Advance+ oferece treinamentos personalizados que
           pontecializam as habilibidades dos seus colaboradores, permitindo que
@@ -52,18 +80,30 @@ const ListServicesCompany: React.FC = () => {
         </p>
 
         {/* Benefits List */}
-        <ul className="space-y-3">
+        <ul className={isMobile ? 'space-y-4' : 'space-y-3'}>
           {benefits.map((item, index) => (
             <li
               key={index}
-              className={`flex items-center gap-4 ${item.gradientClass}`}
+              className={`flex items-center gap-3 ${
+                isMobile ? 'py-2 px-4 rounded-md' : ''
+              } ${item.gradientClass}`}
             >
               <span
-                className={`w-6 h-6 flex items-center justify-center text-white rounded-full ${item.circleClass}`}
+                className={`${
+                  isMobile ? 'w-8 h-8' : 'w-6 h-6'
+                } flex items-center justify-center text-white rounded-full ${
+                  item.circleClass
+                }`}
               >
                 ✓
               </span>
-              <span className="text-lg text-gray-800">{item.text}</span>
+              <span
+                className={`${
+                  isMobile ? 'text-base' : 'text-lg'
+                } text-gray-800`}
+              >
+                {item.text}
+              </span>
             </li>
           ))}
         </ul>
