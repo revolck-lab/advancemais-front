@@ -6,11 +6,12 @@
 }
 
 .image {
-  width: 810px;
-  height: 360px;
-  object-fit: contain;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 810px; /* Tamanho máximo para a largura */
+  height: auto; /* Ajusta a altura automaticamente */
+  border-radius: 0.5rem; /* Arredonda as bordas */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+  object-fit: cover; /* Evita distorção */
 }
 
 .breadcrumbs {
@@ -104,4 +105,30 @@
   font-weight: 600;
   color: white;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Aumenta a sombra */
+}
+
+@media (min-width: 768px) {
+  /* md breakpoint (tablets ou maiores) */
+  .pxResponsive {
+    width: 94%;
+  }
+}
+
+/* Para dispositivos menores que 768px (mobile) */
+@media (max-width: 767px) {
+  .breadcrumbs {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .paragraphyTitle {
+    font-size: 17px;
+    padding: 0px 30px;
+    text-align: justify;
+    font-weight: 300;
+    line-height: 25px;
+  }
 }

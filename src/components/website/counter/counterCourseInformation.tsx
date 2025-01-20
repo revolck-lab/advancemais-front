@@ -1,9 +1,12 @@
 import React from 'react'
+import Styles from './counterInformation.module.css'
 
 const CounterInformation: React.FC = (): JSX.Element => {
   return (
     <section className="bg-primary py-12">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
+      <div
+        className={`${Styles.pxResponsive} container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-center justify-between`}
+      >
         {/* Texto Principal */}
         <div className="col-span-1 md:col-span-2 lg:col-span-1">
           <h3 className="text-2xl font-light text-secondary mb-1">

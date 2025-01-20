@@ -20,24 +20,23 @@ const Header: React.FC = (): JSX.Element => {
   const [isClosing, setIsClosing] = useState(false)
 
   const navLinks = [
-    { href: '/pagina-inicial', label: 'Início' },
+    { href: '/pagina-inicial', label: 'Página Inicial' },
+    { href: '/sobre', label: 'Sobre' },
     {
       label: 'Cursos',
       href: '/cursos',
-      subLinks: [
-        { href: '#', label: 'Curso 1' },
-        { href: '#', label: 'Curso 2' },
-      ],
     },
     {
-      label: 'Serviços',
+      label: 'Soluções',
+      href: '/cursos',
       subLinks: [
-        { href: '#', label: 'Serviço 1' },
-        { href: '#', label: 'Serviço 2' },
+        { href: '#', label: 'Recrutamento & Seleção' },
+        { href: '#', label: 'Treinamento In Company' },
       ],
     },
-    { href: '/sobre', label: 'Sobre nós' },
-    { href: '#', label: 'Fale conosco' },
+    { href: '/vagas', label: 'Vagas' },
+    { href: '/blog', label: 'Blog' },
+    { href: '/contato', label: 'Contato' },
   ]
 
   const rightLinks = [
@@ -89,7 +88,7 @@ const Header: React.FC = (): JSX.Element => {
       <header className="bg-[#00257D] py-6 px-6 md:px-12">
         <div className="container mx-auto flex flex-wrap md:flex-nowrap justify-between items-center">
           {/* Logo */}
-          <Link href="/website">
+          <Link href="/pagina-inicial">
             <Image src={Logo} alt="Advance+ Logo" width={240} height={40} />
           </Link>
 
@@ -109,9 +108,11 @@ const Header: React.FC = (): JSX.Element => {
                   <Menubar>
                     <MenubarMenu>
                       <MenubarTrigger asChild>
-                        <button className="text-white hover:underline flex items-center">
+                        <button
+                          className={`${Styles.menuItem} flex items-center`}
+                        >
                           {navItem.label}
-                          <ChevronDown className="w-4 h-4 ml-1" />
+                          <ChevronDown />
                         </button>
                       </MenubarTrigger>
                       <MenubarContent className="absolute left-0 mt-2 w-40 bg-white text-black rounded shadow-lg">
@@ -129,10 +130,7 @@ const Header: React.FC = (): JSX.Element => {
                     </MenubarMenu>
                   </Menubar>
                 ) : (
-                  <Link
-                    href={navItem.href}
-                    className="text-white hover:underline"
-                  >
+                  <Link href={navItem.href} className={`${Styles.menuItem}`}>
                     {navItem.label}
                   </Link>
                 )}

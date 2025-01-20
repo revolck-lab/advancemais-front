@@ -68,3 +68,46 @@
   height: auto;
   max-height: 270px;
 }
+
+/* Para dispositivos menores que 768px (mobile) */
+@media (max-width: 767px) {
+  .pxResponsive {
+    width: 94%;
+    text-align: center;
+  }
+  .gridCourses {
+    grid-template-columns: 1fr; /* 1 curso por linha */
+  }
+
+  .responsiveFilter {
+    text-align: left;
+    align-items: center;
+    padding-left: 5%;
+    align-content: center;
+  }
+
+  .titleFilter {
+    padding-top: 10px;
+    font-size: 25px;
+  }
+
+  .filter {
+    padding-left: 5%;
+  }
+}
+
+@media (min-width: 768px) {
+  /* md breakpoint (tablets ou maiores) */
+  .pxResponsive {
+    width: 94%;
+    padding-left: 3%;
+  }
+
+  .InforDias {
+    font-size: 12px;
+  }
+
+  .gridCourses {
+    grid-template-columns: repeat(2, 1fr); /* 2 cursos por linha */
+  }
+}

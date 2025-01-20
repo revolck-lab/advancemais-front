@@ -31,7 +31,8 @@ export default function SobrePage(): JSX.Element {
           description="Com excelência, a Advance transforma desafios em oportunidades, impulsionando talentos e empresas por meio de educação, recrutamento e soluções inovadoras para o crescimento no mercado alagoano."
           buttonText="Fale com nossos especialistas"
           buttonUrl="https://www.exemplo.com/contato"
-          imageUrl="https://via.placeholder.com/810x360"
+          imageUrl="/images/sobre/bannerHeader.webp"
+          imageAlt="Capacitar hoje para transformar o amanhã, honrando nossa trajetória"
         />
       </div>
 

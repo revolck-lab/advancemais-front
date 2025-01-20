@@ -15,31 +15,31 @@ import { useIsMobile } from '@/hooks/use-mobile'
 const courses = [
   {
     id: 1,
-    image: 'https://via.placeholder.com/300x400.png?text=Curso+1',
+    image: '/images/courses/course-1.png',
     title: 'Indicadores de Recrutamento e Seleção',
     tag: 'Popular',
   },
   {
     id: 2,
-    image: 'https://via.placeholder.com/300x400.png?text=Curso+2',
+    image: '/images/courses/course-2.png',
     title: 'Oratória e Persuasão para Líderes',
     tag: 'Novo',
   },
   {
     id: 3,
-    image: 'https://via.placeholder.com/300x400.png?text=Curso+3',
+    image: '/images/courses/course-3.png',
     title: 'Formação em RH Generalista',
     tag: 'Novo',
   },
   {
     id: 4,
-    image: 'https://via.placeholder.com/300x400.png?text=Curso+4',
+    image: '/images/courses/course-4.png',
     title: 'Formação em Análise e Desenvolvimento de Sistemas',
     tag: 'Novo',
   },
   {
     id: 5,
-    image: 'https://via.placeholder.com/300x400.png?text=Curso+4',
+    image: '/images/courses/course-5.png',
     title: 'Formação em Análise e Desenvolvimento de Sistemas',
     tag: 'Novo',
   },
@@ -61,7 +61,7 @@ export default function HeaderPagesCourses({
   buttonText,
   buttonUrl,
   breadcrumbs = [
-    { label: 'Home', href: '/' },
+    { label: 'Página Inicial', href: '/' },
     { label: 'Cursos', href: '/cursos' },
   ],
 }: HeaderPagesCoursesProps): JSX.Element {
@@ -69,14 +69,36 @@ export default function HeaderPagesCourses({
 
   if (isMobile) {
     return (
-      <section className="container mx-auto py-16 flex flex-col items-center justify-center text-center">
-        <h1 className="text-4xl font-bold">Hello World</h1>
+      <section className="container mx-auto py-10 flex flex-col items-center justify-center text-center">
+        {/* Breadcrumb */}
+        <Breadcrumbs
+          className={`${Styles.breadcrumbs}`}
+          itemClasses={{
+            separator: 'px-2',
+          }}
+          separator="/"
+        >
+          {breadcrumbs.map((crumb, index) => (
+            <BreadcrumbItem key={index} href={crumb.href}>
+              {crumb.label}
+            </BreadcrumbItem>
+          ))}
+        </Breadcrumbs>
+
+        {/* Título principal */}
+        <h3 className={`${Styles.subTitle} mb-1 text-secondary`}>{subtitle}</h3>
+        <h2 className={`${Styles.mainTitle} text-neutral`}>{title}</h2>
+        <p className={`${Styles.paragraphyTitle} text-neutral-400`}>
+          {description}
+        </p>
       </section>
     )
   }
 
   return (
-    <section className="container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8">
+    <section
+      className={`${Styles.pxResponsive} container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8`}
+    >
       <div className="w-full flex flex-col lg:flex-row items-start justify-between">
         {/* Texto principal */}
         <div className="text-center lg:text-left" style={{ width: '40%' }}>

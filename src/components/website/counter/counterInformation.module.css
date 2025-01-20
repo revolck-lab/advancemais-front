@@ -1,0 +1,14 @@
+@media (min-width: 768px) {
+  /* md breakpoint (tablets ou maiores) */
+  .pxResponsive {
+    width: 94%;
+  }
+}
+
+/* Para dispositivos menores que 768px (mobile) */
+@media (max-width: 767px) {
+  .pxResponsive {
+    width: 94%;
+    text-align: center;
+  }
+}
