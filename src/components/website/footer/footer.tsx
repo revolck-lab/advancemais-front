@@ -5,9 +5,24 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Instagram, Facebook, Linkedin, Youtube } from 'lucide-react'
 import { useIsMobile } from '@/hooks/use-mobile'
+import websiteRoutes from '@/config/routes/website-routes'
+import socials from '@/config/socials'
+import Socials from '@/components/ui/socials/socials'
 
 const Footer: React.FC = (): JSX.Element => {
   const isMobile = useIsMobile()
+
+  // Obtem as rotas necessárias
+  const homeRoute =
+    websiteRoutes.find((route) => route.label === 'Página Inicial')?.path || '/'
+  const aboutRoute =
+    websiteRoutes.find((route) => route.label === 'Sobre')?.path || '/sobre'
+  const contactRoute =
+    websiteRoutes.find((route) => route.label === 'Contato')?.path || '/contato'
+  const coursesRoute =
+    websiteRoutes.find((route) => route.label === 'Cursos')?.path || '/cursos'
+  const solutionsSubRoutes =
+    websiteRoutes.find((route) => route.label === 'Soluções')?.subLinks || []
 
   return (
     <footer className="bg-[#001a57] text-white">
@@ -63,9 +78,15 @@ const Footer: React.FC = (): JSX.Element => {
                   Sobre Nós
                 </h4>
                 <ul className="space-y-2 text-gray-400 text-sm">
-                  <li>Lorem Ipsum</li>
-                  <li>Lorem Ipsum</li>
-                  <li>Lorem Ipsum</li>
+                  <li>
+                    <Link href={aboutRoute}>Quem Somos</Link>
+                  </li>
+                  <li>
+                    <Link href={homeRoute}>Página Inicial</Link>
+                  </li>
+                  <li>
+                    <Link href={contactRoute}>Contato</Link>
+                  </li>
                 </ul>
               </div>
 
@@ -75,9 +96,14 @@ const Footer: React.FC = (): JSX.Element => {
                   Acesso Rápido
                 </h4>
                 <ul className="space-y-2 text-gray-400 text-sm">
-                  <li>Lorem Ipsum</li>
-                  <li>Lorem Ipsum</li>
-                  <li>Lorem Ipsum</li>
+                  <li>
+                    <Link href={coursesRoute}>Cursos</Link>
+                  </li>
+                  {solutionsSubRoutes.map((subLink) => (
+                    <li key={subLink.path}>
+                      <Link href={subLink.path}>{subLink.label}</Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
@@ -87,7 +113,9 @@ const Footer: React.FC = (): JSX.Element => {
                   Fale Conosco
                 </h4>
                 <ul className="space-y-2 text-gray-400 text-sm">
-                  <li>Fale Conosco</li>
+                  <li>
+                    <Link href={contactRoute}>Fale Conosco</Link>
+                  </li>
                   <li>Ouvidoria</li>
                   <li>FAQ</li>
                 </ul>
@@ -101,7 +129,6 @@ const Footer: React.FC = (): JSX.Element => {
         ) : (
           // Versão Desktop
           <div>
-            {/* Primeira Linha: 5 Colunas */}
             <div className="flex flex-wrap lg:flex-nowrap justify-between gap-8">
               {/* Logo e Redes Sociais */}
               <div className="flex-1 lg:basis-[30%] flex flex-col items-center lg:items-start">
@@ -116,7 +143,7 @@ const Footer: React.FC = (): JSX.Element => {
                   Siga Nossas Redes Sociais
                 </h4>
                 <div className="flex gap-4 mt-2">
-                  <Link href="https://facebook.com" aria-label="Facebook">
+                  {/* <Link href="https://facebook.com" aria-label="Facebook">
                     <Facebook
                       className="text-red-600 hover:text-white"
                       size={24}
@@ -139,7 +166,8 @@ const Footer: React.FC = (): JSX.Element => {
                       className="text-red-600 hover:text-white"
                       size={24}
                     />
-                  </Link>
+                  </Link> */}
+                  <Socials socials={socials} />
                 </div>
               </div>
 
@@ -149,9 +177,15 @@ const Footer: React.FC = (): JSX.Element => {
                   Sobre Nós
                 </h4>
                 <ul className="space-y-2 text-gray-400">
-                  <li>Lorem Ipsum</li>
-                  <li>Lorem Ipsum</li>
-                  <li>Lorem Ipsum</li>
+                  <li>
+                    <Link href={aboutRoute}>Quem Somos</Link>
+                  </li>
+                  <li>
+                    <Link href={homeRoute}>Página Inicial</Link>
+                  </li>
+                  <li>
+                    <Link href={contactRoute}>Contato</Link>
+                  </li>
                 </ul>
               </div>
 
@@ -161,9 +195,14 @@ const Footer: React.FC = (): JSX.Element => {
                   Acesso Rápido
                 </h4>
                 <ul className="space-y-2 text-gray-400">
-                  <li>Lorem Ipsum</li>
-                  <li>Lorem Ipsum</li>
-                  <li>Lorem Ipsum</li>
+                  <li>
+                    <Link href={coursesRoute}>Cursos</Link>
+                  </li>
+                  {solutionsSubRoutes.map((subLink) => (
+                    <li key={subLink.path}>
+                      <Link href={subLink.path}>{subLink.label}</Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
@@ -173,7 +212,9 @@ const Footer: React.FC = (): JSX.Element => {
                   Fale Conosco
                 </h4>
                 <ul className="space-y-2 text-gray-400">
-                  <li>Fale Conosco</li>
+                  <li>
+                    <Link href={contactRoute}>Fale Conosco</Link>
+                  </li>
                   <li>Ouvidoria</li>
                   <li>FAQ</li>
                 </ul>

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
+import websiteRoutes from './config/routes/website-routes'
+import dashboardRoutes from './config/routes/dashboard-routes'
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
@@ -10,53 +12,57 @@ export function middleware(request: NextRequest) {
     return NextResponse.rewrite(new URL('/website/pagina-inicial', request.url))
   }
 
-  // Rotas públicas no website
-  const websiteRoutes = [
-    '/pagina-inicial',
-    '/sobre',
-    '/cursos',
-    '/vagas',
-    '/solucoes',
-    '/solucoes/recrutamento-selecao',
-    '/solucoes/treinamento-company',
-    '/fale-conosco',
-  ]
-
-  // Verifica se o usuário está autenticado
-  const isAuthenticated = !!authToken
-
   // Reescreve rotas simplificadas para rotas internas no diretório `/website`
-  if (websiteRoutes.some((route) => pathname === route)) {
+  const isWebsiteRoute = websiteRoutes.some((route) =>
+    route.subLinks
+      ? route.subLinks.some((sub) => pathname.startsWith(sub.path))
+      : pathname.startsWith(route.path)
+  )
+
+  if (isWebsiteRoute) {
     return NextResponse.rewrite(new URL(`/website${pathname}`, request.url))
   }
 
-  // Protege as rotas do dashboard (requer autenticação)
-  if (!isAuthenticated && pathname.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/auth/login', request.url))
+  // Verifica rotas do dashboard
+  const isDashboardRoute = dashboardRoutes.some((category) =>
+    category.items.some((item) =>
+      item.submenu
+        ? item.submenu.some((sub) => pathname.startsWith(sub.href))
+        : pathname.startsWith(item.href || '')
+    )
+  )
+
+  if (isDashboardRoute) {
+    if (!authToken) {
+      // Se não autenticado, redireciona para login
+      return NextResponse.redirect(new URL('/auth/login', request.url))
+    }
+    return NextResponse.next()
   }
 
   // Impede que um usuário autenticado acesse a página de login
+  const isAuthenticated = !!authToken
   if (isAuthenticated && pathname === '/auth/login') {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
-  // Permite o acesso em outros casos
+  // Permite acesso a outras rotas sem autenticação temporariamente
   return NextResponse.next()
 }
 
-// Define as rotas onde o middleware deve ser aplicado
 export const config = {
   matcher: [
     '/',
-    '/pagina-inicial',
-    '/sobre',
-    '/cursos',
-    '/vagas',
-    '/solucoes',
-    '/solucoes/recrutamento-selecao',
-    '/solucoes/treinamento-company',
-    '/contato',
-    '/dashboard/:path*',
+    ...websiteRoutes.flatMap((route) =>
+      route.subLinks
+        ? [route.path, ...route.subLinks.map((sub) => sub.path)]
+        : [route.path]
+    ),
+    ...dashboardRoutes.flatMap((category) =>
+      category.items.flatMap((item) =>
+        item.submenu ? item.submenu.map((sub) => sub.href) : [item.href]
+      )
+    ),
     '/auth/login',
   ],
 }

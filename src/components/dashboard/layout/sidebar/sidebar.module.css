@@ -1,0 +1,16 @@
+.borderSection {
+  border-bottom: 1px solid #00267e;
+  margin-bottom: 5px;
+}
+
+.logoCollapse {
+  width: 50px;
+  height: auto;
+  max-width: none;
+}
+
+.logo {
+  width: 250px;
+  height: auto;
+  max-width: none;
+}

@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -14,76 +12,40 @@ import {
 } from '@/components/ui/menubar/menubar'
 import { ChevronDown, Menu, X } from 'lucide-react'
 import Styles from './header.module.css'
+import websiteRoutes from '@/config/routes/website-routes'
 
 const Header: React.FC = (): JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
-
-  const navLinks = [
-    { href: '/pagina-inicial', label: 'Página Inicial' },
-    { href: '/sobre', label: 'Sobre' },
-    {
-      label: 'Cursos',
-      href: '/cursos',
-    },
-    {
-      label: 'Soluções',
-      href: '/cursos',
-      subLinks: [
-        {
-          href: '/solucoes/recrutamento-selecao',
-          label: 'Recrutamento & Seleção',
-        },
-        {
-          href: '/solucoes/treinamento-company',
-          label: 'Treinamento In Company',
-        },
-      ],
-    },
-    { href: '/vagas', label: 'Vagas' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/contato', label: 'Contato' },
-  ]
-
-  const rightLinks = [
-    { href: '#', label: 'Vagas' },
-    { href: '#', label: 'Treinamentos' },
-    { href: '#', label: 'Blog' },
-  ]
-
-  const topLinks = [
-    { href: '#', label: 'Para empresas' },
-    { href: '#', label: 'Para estudantes' },
-    { href: '#', label: 'Para empregos' },
-  ]
 
   const closeMenu = () => {
     setIsClosing(true)
     setTimeout(() => {
       setIsMenuOpen(false)
       setIsClosing(false)
-    }, 300) // Tempo da animação
+    }, 300)
   }
+
+  // Pega a rota da página inicial dinamicamente
+  const homeRoute =
+    websiteRoutes.find((route) => route.label === 'Página Inicial')?.path || '/'
+
+  const mainRoutes = websiteRoutes.filter(
+    (route) => !route.path.startsWith('/para-')
+  )
+  const additionalRoutes = websiteRoutes.filter((route) =>
+    route.path.startsWith('/para-')
+  )
 
   return (
     <section className="bg-primary text-white">
       {/* Top Links */}
       <div className="py-4 px-6 md:px-12 hidden md:block">
         <div className="container mx-auto flex flex-wrap md:flex-nowrap justify-between items-center">
-          {/* Links superiores */}
           <div className="w-full md:w-auto flex flex-wrap md:flex-nowrap space-y-2 md:space-y-0 md:space-x-4">
-            {topLinks.map((link) => (
-              <Button key={link.label} variant="outline">
-                {link.label}
-              </Button>
-            ))}
-          </div>
-
-          {/* Links à direita */}
-          <div className="w-full md:w-auto flex items-center space-x-1">
-            {rightLinks.map((link) => (
-              <Button key={link.label} variant="link" className="p-0 text-sm">
-                {link.label}
+            {additionalRoutes.map((route) => (
+              <Button key={route.label} variant="outline">
+                <Link href={route.path}>{route.label}</Link>
               </Button>
             ))}
           </div>
@@ -94,7 +56,7 @@ const Header: React.FC = (): JSX.Element => {
       <header className="bg-[#00257D] py-6 px-6 md:px-12">
         <div className="container mx-auto flex flex-wrap md:flex-nowrap justify-between items-center">
           {/* Logo */}
-          <Link href="/pagina-inicial">
+          <Link href={homeRoute}>
             <Image src={Logo} alt="Advance+ Logo" width={240} height={40} />
           </Link>
 
@@ -108,24 +70,24 @@ const Header: React.FC = (): JSX.Element => {
 
           {/* Menu principal (desktop) */}
           <nav className="hidden md:flex space-x-8">
-            {navLinks.map((navItem, index) => (
+            {mainRoutes.map((route, index) => (
               <div key={index} className="relative group">
-                {navItem.subLinks ? (
+                {route.subLinks ? (
                   <Menubar>
                     <MenubarMenu>
                       <MenubarTrigger asChild>
                         <button
                           className={`${Styles.menuItem} flex items-center`}
                         >
-                          {navItem.label}
+                          {route.label}
                           <ChevronDown />
                         </button>
                       </MenubarTrigger>
                       <MenubarContent className="absolute left-0 mt-2 w-40 bg-white text-black rounded shadow-lg">
-                        {navItem.subLinks.map((subLink) => (
-                          <MenubarItem key={subLink.label}>
+                        {route.subLinks.map((subLink) => (
+                          <MenubarItem key={subLink.path}>
                             <Link
-                              href={subLink.href}
+                              href={subLink.path}
                               className="block px-4 py-2 hover:bg-gray-200"
                             >
                               {subLink.label}
@@ -136,8 +98,8 @@ const Header: React.FC = (): JSX.Element => {
                     </MenubarMenu>
                   </Menubar>
                 ) : (
-                  <Link href={navItem.href} className={`${Styles.menuItem}`}>
-                    {navItem.label}
+                  <Link href={route.path} className={`${Styles.menuItem}`}>
+                    {route.label}
                   </Link>
                 )}
               </div>
@@ -165,37 +127,32 @@ const Header: React.FC = (): JSX.Element => {
       {/* Menu mobile estilo canvas */}
       {isMenuOpen && (
         <>
-          {/* Fundo com blur */}
           <div
             className={`fixed inset-0 bg-opacity-50 z-40 ${Styles['menu-overlay']}`}
+            onClick={closeMenu}
           ></div>
-
-          {/* Menu deslizante */}
           <div
             className={`fixed top-0 right-0 h-full w-4/5 max-w-xs bg-[#00257D] text-white shadow-lg p-6 flex flex-col z-50 ${
               isClosing ? Styles['menu-slide-out'] : Styles['menu-slide-in']
             }`}
           >
-            {/* Botão para fechar o menu */}
             <button onClick={closeMenu} className="self-end text-white">
               <X size={24} />
             </button>
-
-            {/* Links do menu */}
             <nav className="mt-4 space-y-4">
-              {navLinks.map((navItem, index) => (
-                <div key={index} className="relative">
-                  {navItem.subLinks ? (
-                    <details className="group">
-                      <summary className="cursor-pointer flex justify-between items-center">
-                        {navItem.label}
+              {mainRoutes.map((route, index) => (
+                <div key={index}>
+                  {route.subLinks ? (
+                    <details>
+                      <summary className="flex justify-between items-center cursor-pointer">
+                        {route.label}
                         <ChevronDown className="w-4 h-4 ml-2" />
                       </summary>
                       <div className="mt-2 pl-4">
-                        {navItem.subLinks.map((subLink) => (
+                        {route.subLinks.map((subLink) => (
                           <Link
-                            key={subLink.label}
-                            href={subLink.href}
+                            key={subLink.path}
+                            href={subLink.path}
                             className="block py-2 hover:underline"
                           >
                             {subLink.label}
@@ -205,16 +162,14 @@ const Header: React.FC = (): JSX.Element => {
                     </details>
                   ) : (
                     <Link
-                      href={navItem.href}
+                      href={route.path}
                       className="block py-2 hover:underline"
                     >
-                      {navItem.label}
+                      {route.label}
                     </Link>
                   )}
                 </div>
               ))}
-
-              {/* Botões de ação no menu mobile */}
               <div className="mt-6">
                 <Link
                   href="/auth/login"

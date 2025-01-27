@@ -1,0 +1,8 @@
+.buttonCollapse {
+  color: #fff;
+}
+
+.buttonCollapse:hover {
+  color: #fff;
+  background-color: #0061d750;
+}
