@@ -1,3 +1,4 @@
+// src/middleware.ts
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
 import websiteRoutes from './config/routes/website-routes'
@@ -50,24 +51,26 @@ export function middleware(request: NextRequest) {
   return NextResponse.next()
 }
 
-// Transformar as rotas dinâmicas em arrays estáticos
-const websiteRoutesMatcher = websiteRoutes.flatMap((route) =>
+// Gerar arrays de rotas de forma estática
+const websiteRoutesMatcher: string[] = websiteRoutes.flatMap((route) =>
   route.subLinks
     ? [route.path, ...route.subLinks.map((sub) => sub.path)]
     : [route.path]
 )
 
-const dashboardRoutesMatcher = dashboardRoutes.flatMap((category) =>
+const dashboardRoutesMatcher: string[] = dashboardRoutes.flatMap((category) =>
   category.items.flatMap((item) =>
-    item.submenu ? item.submenu.map((sub) => sub.href) : [item.href]
+    item.submenu ? item.submenu.map((sub) => sub.href) : item.href ? [item.href] : []
   )
 )
 
+// Configuração do middleware com valores estáticos
 export const config = {
   matcher: [
     '/',
-    ...websiteRoutesMatcher,
-    ...dashboardRoutesMatcher,
     '/auth/login',
+    '/website/pagina-inicial',
+    ...websiteRoutesMatcher, // Agora os arrays são gerados de forma estática
+    ...dashboardRoutesMatcher,
   ],
 }

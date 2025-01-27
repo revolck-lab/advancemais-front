@@ -2,7 +2,7 @@ import { LayoutDashboard, Users } from 'lucide-react'
 
 export const dashboardRoutes = [
   {
-    category: 'ADMINISTRADOR',
+    category: 'ADMINISTRADOR', // Categoria principal
     items: [
       {
         title: 'WEBSITE',
