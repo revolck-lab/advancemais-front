@@ -1,8 +1,6 @@
 // src/middleware.ts
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
-import websiteRoutes from './config/routes/website-routes'
-import dashboardRoutes from './config/routes/dashboard-routes'
 
 // Middleware principal
 export function middleware(request: NextRequest) {
@@ -14,24 +12,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.rewrite(new URL('/website/pagina-inicial', request.url))
   }
 
-  // Reescreve rotas simplificadas para rotas internas no diretório `/website`
-  const isWebsiteRoute = websiteRoutes.some((route) =>
-    route.subLinks
-      ? route.subLinks.some((sub) => pathname.startsWith(sub.path))
-      : pathname.startsWith(route.path)
-  )
-
-  if (isWebsiteRoute) {
-    return NextResponse.rewrite(new URL(`/website${pathname}`, request.url))
-  }
-
-  // Verifica rotas do dashboard
-  const isDashboardRoute = dashboardRoutes.some((category) =>
-    category.items.some((item) =>
-      item.submenu
-        ? item.submenu.some((sub) => pathname.startsWith(sub.href))
-        : pathname.startsWith(item.href || '')
-    )
+  // Rotas protegidas (Dashboard)
+  const isDashboardRoute = dashboardRoutesMatcher.some((route) =>
+    pathname.startsWith(route)
   )
 
   if (isDashboardRoute) {
@@ -48,28 +31,48 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
-  // Permite acesso a outras rotas sem autenticação temporariamente
+  // Permite acesso a outras rotas
   return NextResponse.next()
 }
 
-// Geração estática dos matchers
-const websiteRoutesMatcher = websiteRoutes.flatMap((route) =>
-  route.subLinks ? [route.path, ...route.subLinks.map((sub) => sub.path)] : [route.path]
-)
+// Arrays estáticos de rotas do Website
+const websiteRoutesMatcher = [
+  '/',
+  '/sobre',
+  '/cursos',
+  '/solucoes',
+  '/solucoes/recrutamento-selecao',
+  '/solucoes/treinamento-company',
+  '/vagas',
+  '/blog',
+  '/contato',
+  '/para-empresas',
+  '/para-estudantes',
+  '/para-empregos',
+]
 
-const dashboardRoutesMatcher = dashboardRoutes.flatMap((category) =>
-  category.items.flatMap((item) =>
-    item.submenu ? item.submenu.map((sub) => sub.href) : item.href ? [item.href] : []
-  )
-)
+// Arrays estáticos de rotas do Dashboard
+const dashboardRoutesMatcher = [
+  '/dashboard/admin/website/pagina-inicial',
+  '/dashboard/admin/website/about',
+  '/dashboard/admin/website/courses',
+  '/dashboard/admin/website/recruitment',
+  '/dashboard/admin/website/training',
+  '/dashboard/admin/website/jobs',
+  '/dashboard/admin/website/blog',
+  '/dashboard/admin/website/contact',
+  '/dashboard/admin/professores',
+  '/dashboard/admin/users/list',
+  '/dashboard/admin/users/create',
+  '/dashboard/admin/settings',
+]
 
-// Exportar `matcher` diretamente como um array estático
+// Configuração estática do middleware
 export const config = {
   matcher: [
-    '/',
-    '/auth/login',
-    '/website/pagina-inicial',
-    ...websiteRoutesMatcher,
-    ...dashboardRoutesMatcher,
+    '/', // Redirecionamento raiz
+    '/auth/login', // Login
+    ...websiteRoutesMatcher, // Rotas do Website
+    ...dashboardRoutesMatcher, // Rotas do Dashboard
   ],
 }
