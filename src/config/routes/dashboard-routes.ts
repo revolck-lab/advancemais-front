@@ -8,10 +8,16 @@ export const dashboardRoutes = [
         title: 'WEBSITE',
         icon: LayoutDashboard,
         submenu: [
-          { title: 'Página Inicial', href: '/dashboard/admin/website/pagina-inicial' },
+          {
+            title: 'Página Inicial',
+            href: '/dashboard/admin/website/pagina-inicial',
+          },
           { title: 'Sobre', href: '/dashboard/admin/website/about' },
           { title: 'Cursos', href: '/dashboard/admin/website/courses' },
-          { title: 'Recrutamento', href: '/dashboard/admin/website/recruitment' },
+          {
+            title: 'Recrutamento',
+            href: '/dashboard/admin/website/recruitment',
+          },
           { title: 'Treinamento', href: '/dashboard/admin/website/training' },
           { title: 'Vagas', href: '/dashboard/admin/website/jobs' },
           { title: 'Blog', href: '/dashboard/admin/website/blog' },
@@ -26,7 +32,7 @@ export const dashboardRoutes = [
     ],
   },
   {
-    category: 'GERENCIAMENTO',
+    category: 'GERENCIAMENTO', // Outra categoria
     items: [
       {
         title: 'Usuários',
@@ -44,11 +50,5 @@ export const dashboardRoutes = [
     ],
   },
 ]
-
-export const staticDashboardRoutes = dashboardRoutes.flatMap((category) =>
-  category.items.flatMap((item) =>
-    item.submenu ? item.submenu.map((sub) => sub.href) : item.href ? [item.href] : []
-  )
-)
 
 export default dashboardRoutes
