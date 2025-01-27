@@ -4,6 +4,7 @@ import { NextRequest } from 'next/server'
 import websiteRoutes from './config/routes/website-routes'
 import dashboardRoutes from './config/routes/dashboard-routes'
 
+// Middleware principal
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const authToken = request.cookies.get('authToken')
@@ -51,30 +52,24 @@ export function middleware(request: NextRequest) {
   return NextResponse.next()
 }
 
-// Função para gerar rotas estaticamente
-function generateMatchers() {
-  // Gerar rotas de website
-  const websiteRoutesMatcher = websiteRoutes.flatMap((route) =>
-    route.subLinks ? [route.path, ...route.subLinks.map((sub) => sub.path)] : [route.path]
-  )
+// Geração estática dos matchers
+const websiteRoutesMatcher = websiteRoutes.flatMap((route) =>
+  route.subLinks ? [route.path, ...route.subLinks.map((sub) => sub.path)] : [route.path]
+)
 
-  // Gerar rotas de dashboard
-  const dashboardRoutesMatcher = dashboardRoutes.flatMap((category) =>
-    category.items.flatMap((item) =>
-      item.submenu ? item.submenu.map((sub) => sub.href) : item.href ? [item.href] : []
-    )
+const dashboardRoutesMatcher = dashboardRoutes.flatMap((category) =>
+  category.items.flatMap((item) =>
+    item.submenu ? item.submenu.map((sub) => sub.href) : item.href ? [item.href] : []
   )
+)
 
-  // Retornar os matchers combinados
-  return [
+// Exportar `matcher` diretamente como um array estático
+export const config = {
+  matcher: [
     '/',
     '/auth/login',
+    '/website/pagina-inicial',
     ...websiteRoutesMatcher,
     ...dashboardRoutesMatcher,
-  ]
-}
-
-// Gerar rotas estaticamente no momento da construção
-export const config = {
-  matcher: generateMatchers(),
+  ],
 }
