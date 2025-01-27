@@ -2,60 +2,64 @@
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+
+// Importar rotas se ainda quiser usar dentro do middleware,
+// mas NÃO as use no objeto config, pois o Next não permite.
 import websiteRoutes from './config/routes/website-routes'
 import dashboardRoutes from './config/routes/dashboard-routes'
 
-// ------------------------------------
-// 1) Montar os arrays de rotas ANTES
-// ------------------------------------
+// ------------------------------------------------------
+// 1) Exportar config.matcher como array LITERAL e estático
+//    --> copie todas as rotas manualmente, sem spreads ou loops
+// ------------------------------------------------------
 
-const websiteRoutesMatcher: string[] = []
-for (const route of websiteRoutes) {
-  if (route.subLinks && route.subLinks.length > 0) {
-    for (const sub of route.subLinks) {
-      websiteRoutesMatcher.push(sub.path)
-    }
-  }
-  websiteRoutesMatcher.push(route.path)
-}
-
-const dashboardRoutesMatcher: string[] = []
-for (const category of dashboardRoutes) {
-  for (const item of category.items) {
-    if (item.submenu && item.submenu.length > 0) {
-      for (const sub of item.submenu) {
-        dashboardRoutesMatcher.push(sub.href)
-      }
-    } else if (item.href) {
-      dashboardRoutesMatcher.push(item.href)
-    }
-  }
-}
-
-// Cria o array final com todas as rotas “literalmente”
-// Você pode usar concat ou spread aqui, pois agora é top-level e não dentro de config
-const allRoutes = [
-  '/',
-  '/auth/login',
-  '/website/pagina-inicial',
-  // Rotas do website
-  ...websiteRoutesMatcher,
-  // Rotas do dashboard
-  ...dashboardRoutesMatcher,
-]
-
-// ------------------------------------
-// 2) Exportar config com matcher ESTÁTICO
-// ------------------------------------
 export const config = {
-  matcher: allRoutes,
+  matcher: [
+    '/',
+    '/auth/login',
+
+    // Exemplo de páginas do "website"
+    // (estas aqui têm que ser todas as que você precisa que o middleware intercepte)
+    '/sobre',
+    '/cursos',
+    '/solucoes',
+    '/solucoes/recrutamento-selecao',
+    '/solucoes/treinamento-company',
+    '/vagas',
+    '/blog',
+    '/contato',
+    '/para-empresas',
+    '/para-estudantes',
+    '/para-empregos',
+
+    // Páginas específicas de /website/ (caso queira interceptar via matcher)
+    // Por exemplo, se quer /website/pagina-inicial explicitamente:
+    '/website/pagina-inicial',
+
+    // Exemplos de páginas do "dashboard"
+    '/dashboard/admin/website/pagina-inicial',
+    '/dashboard/admin/website/about',
+    '/dashboard/admin/website/courses',
+    '/dashboard/admin/website/recruitment',
+    '/dashboard/admin/website/training',
+    '/dashboard/admin/website/jobs',
+    '/dashboard/admin/website/blog',
+    '/dashboard/admin/website/contact',
+    '/dashboard/admin/professores',
+    '/dashboard/admin/users/list',
+    '/dashboard/admin/users/create',
+    '/dashboard/admin/settings',
+    // ... Inclua aqui TODAS as rotas que o middleware deve tratar ...
+  ],
 }
 
-// ------------------------------------
-// 3) Função principal do middleware
-// ------------------------------------
+// ------------------------------------------------------
+// 2) Função middleware pode continuar usando a lógica dinâmica
+//    com websiteRoutes e dashboardRoutes, sem problemas
+// ------------------------------------------------------
+
 export function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname
+  const { pathname } = request.nextUrl
   const authToken = request.cookies.get('authToken')
 
   // Redireciona a raiz `/` para `/website/pagina-inicial`
