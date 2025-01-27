@@ -51,26 +51,30 @@ export function middleware(request: NextRequest) {
   return NextResponse.next()
 }
 
-// Gerar arrays de rotas de forma estática
-const websiteRoutesMatcher: string[] = websiteRoutes.flatMap((route) =>
-  route.subLinks
-    ? [route.path, ...route.subLinks.map((sub) => sub.path)]
-    : [route.path]
-)
-
-const dashboardRoutesMatcher: string[] = dashboardRoutes.flatMap((category) =>
-  category.items.flatMap((item) =>
-    item.submenu ? item.submenu.map((sub) => sub.href) : item.href ? [item.href] : []
+// Função para gerar rotas estaticamente
+function generateMatchers() {
+  // Gerar rotas de website
+  const websiteRoutesMatcher = websiteRoutes.flatMap((route) =>
+    route.subLinks ? [route.path, ...route.subLinks.map((sub) => sub.path)] : [route.path]
   )
-)
 
-// Configuração do middleware com valores estáticos
-export const config = {
-  matcher: [
+  // Gerar rotas de dashboard
+  const dashboardRoutesMatcher = dashboardRoutes.flatMap((category) =>
+    category.items.flatMap((item) =>
+      item.submenu ? item.submenu.map((sub) => sub.href) : item.href ? [item.href] : []
+    )
+  )
+
+  // Retornar os matchers combinados
+  return [
     '/',
     '/auth/login',
-    '/website/pagina-inicial',
-    ...websiteRoutesMatcher, // Agora os arrays são gerados de forma estática
+    ...websiteRoutesMatcher,
     ...dashboardRoutesMatcher,
-  ],
+  ]
+}
+
+// Gerar rotas estaticamente no momento da construção
+export const config = {
+  matcher: generateMatchers(),
 }
