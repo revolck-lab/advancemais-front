@@ -1,6 +1,6 @@
 const websiteRoutes = [
   {
-    path: '/?',
+    path: '/',
     label: 'Página Inicial',
     requiresAuth: false,
   },
@@ -46,22 +46,10 @@ const websiteRoutes = [
     label: 'Contato',
     requiresAuth: false,
   },
-  // Botões adicionais no menu superior
-  {
-    path: '/para-empresas',
-    label: 'Para empresas',
-    requiresAuth: false,
-  },
-  {
-    path: '/para-estudantes',
-    label: 'Para estudantes',
-    requiresAuth: false,
-  },
-  {
-    path: '/para-empregos',
-    label: 'Para empregos',
-    requiresAuth: false,
-  },
 ]
+
+export const staticWebsiteRoutes = websiteRoutes.flatMap((route) =>
+  route.subLinks ? [route.path, ...route.subLinks.map((sub) => sub.path)] : [route.path]
+)
 
 export default websiteRoutes
