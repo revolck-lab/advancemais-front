@@ -10,9 +10,12 @@ export const dashboardRoutes = [
         submenu: [
           {
             title: 'Página Inicial',
-            href: '/dashboard/admin/website/pagina-inicial',
+            href: '/dashboard/admin/website/home',
           },
-          { title: 'Sobre', href: '/dashboard/admin/website/about' },
+          {
+            title: 'Sobre',
+            href: '/dashboard/admin/website/course',
+          },
           { title: 'Cursos', href: '/dashboard/admin/website/courses' },
           {
             title: 'Recrutamento',
@@ -32,7 +35,7 @@ export const dashboardRoutes = [
     ],
   },
   {
-    category: 'GERENCIAMENTO', // Outra categoria
+    category: 'GERENCIAMENTO',
     items: [
       {
         title: 'Usuários',
