@@ -50,19 +50,24 @@ export function middleware(request: NextRequest) {
   return NextResponse.next()
 }
 
+// Transformar as rotas dinâmicas em arrays estáticos
+const websiteRoutesMatcher = websiteRoutes.flatMap((route) =>
+  route.subLinks
+    ? [route.path, ...route.subLinks.map((sub) => sub.path)]
+    : [route.path]
+)
+
+const dashboardRoutesMatcher = dashboardRoutes.flatMap((category) =>
+  category.items.flatMap((item) =>
+    item.submenu ? item.submenu.map((sub) => sub.href) : [item.href]
+  )
+)
+
 export const config = {
   matcher: [
     '/',
-    ...websiteRoutes.flatMap((route) =>
-      route.subLinks
-        ? [route.path, ...route.subLinks.map((sub) => sub.path)]
-        : [route.path]
-    ),
-    ...dashboardRoutes.flatMap((category) =>
-      category.items.flatMap((item) =>
-        item.submenu ? item.submenu.map((sub) => sub.href) : [item.href]
-      )
-    ),
+    ...websiteRoutesMatcher,
+    ...dashboardRoutesMatcher,
     '/auth/login',
   ],
 }
