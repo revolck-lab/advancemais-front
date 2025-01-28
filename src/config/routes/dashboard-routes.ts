@@ -14,7 +14,7 @@ export const dashboardRoutes = [
           },
           {
             title: 'Sobre',
-            href: '/dashboard/admin/website/course',
+            href: '/dashboard/admin/website/about',
           },
           { title: 'Cursos', href: '/dashboard/admin/website/courses' },
           {

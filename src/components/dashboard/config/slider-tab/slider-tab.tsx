@@ -60,16 +60,20 @@ function SortableBanner({
       ref={setNodeRef}
       style={style}
       className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-      {...attributes}
-      {...listeners}
     >
-      <Image
-        src={banner.image}
-        alt={banner.title}
-        width={500}
-        height={200}
-        className="w-full h-40 object-cover"
-      />
+      {/* 
+        Tornamos a imagem o "handle" de arraste:
+        Adicionamos cursor de mover, e passamos {...attributes} {...listeners} apenas aqui.
+      */}
+      <div className="cursor-move" {...attributes} {...listeners}>
+        <Image
+          src={banner.image}
+          alt={banner.title}
+          width={500}
+          height={200}
+          className="w-full h-40 object-cover"
+        />
+      </div>
       <div className="p-4">
         <h3 className="font-semibold text-lg truncate">
           {banner.title || 'Sem título'}
@@ -111,23 +115,33 @@ export function SliderTab() {
   const [banners, setBanners] = React.useState<Banner[]>([
     {
       id: '1',
-      image: '/images/banner1.jpg',
-      title: 'Promoção de Verão (Web)',
-      url: 'https://example.com/verao',
+      image: '/images/banners/desktop-foqueemseunegocio.jpg',
+      title: 'Foque em seu negócio',
+      url: '#',
       status: true,
       targetDevice: 'web',
     },
     {
       id: '2',
-      image: '/images/banner2.jpg',
-      title: 'Promoção de Inverno (Mobile)',
-      url: 'https://example.com/inverno',
+      image: '/images/banners/mobile-foqueemseunegocio.jpg',
+      title: 'Foque em seu negócio',
+      url: '#',
       status: true,
       targetDevice: 'mobile',
     },
   ])
+
+  // States relacionados ao formulário e edição:
   const [isDialogOpen, setIsDialogOpen] = React.useState(false)
   const [editingBanner, setEditingBanner] = React.useState<Banner | null>(null)
+
+  // States relacionados a deleção:
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
+  const [bannerToDelete, setBannerToDelete] = React.useState<string | null>(
+    null
+  )
+
+  // State temporário para armazenar dados do banner antes de salvar
   const [tempBanner, setTempBanner] = React.useState<Banner>({
     id: '',
     image: '',
@@ -136,6 +150,7 @@ export function SliderTab() {
     status: true,
     targetDevice: 'web',
   })
+
   const [previewImage, setPreviewImage] = React.useState<string | null>(null)
   const [selectedDevice, setSelectedDevice] = React.useState<'web' | 'mobile'>(
     'web'
@@ -147,30 +162,25 @@ export function SliderTab() {
     (banner) => banner.targetDevice === selectedDevice
   )
 
-  function handleConfirmBanner() {
-    if (!tempBanner.image) {
-      alert('Por favor, faça upload de uma imagem antes de confirmar.')
-      return
-    }
-
-    if (editingBanner) {
-      setBanners((prev) =>
-        prev.map((banner) =>
-          banner.id === editingBanner.id ? { ...tempBanner } : banner
-        )
-      )
-    } else {
-      setBanners((prev) => [
-        ...prev,
-        { ...tempBanner, id: `banner-${Date.now()}` },
-      ])
-    }
-    closeDialog()
+  // --- Ações de abrir e fechar os modais ---
+  function openBannerDialogForCreate() {
+    setEditingBanner(null)
+    setTempBanner({
+      id: '',
+      image: '',
+      title: '',
+      url: '',
+      status: true,
+      targetDevice: 'web',
+    })
+    setPreviewImage(null)
+    setIsDialogOpen(true)
   }
 
   function closeDialog() {
     setIsDialogOpen(false)
     setEditingBanner(null)
+    // Reseta o banner temporário:
     setTempBanner({
       id: '',
       image: '',
@@ -182,10 +192,38 @@ export function SliderTab() {
     setPreviewImage(null)
   }
 
-  function handleDeleteBanner(id: string) {
-    setBanners((prev) => prev.filter((banner) => banner.id !== id))
+  // --- Ações de criar e editar banners ---
+  function handleConfirmBanner() {
+    if (!tempBanner.image) {
+      alert('Por favor, faça upload de uma imagem antes de confirmar.')
+      return
+    }
+
+    if (editingBanner) {
+      // Edição de um banner existente
+      setBanners((prev) =>
+        prev.map((banner) =>
+          banner.id === editingBanner.id ? { ...tempBanner } : banner
+        )
+      )
+    } else {
+      // Criação de um novo banner
+      setBanners((prev) => [
+        ...prev,
+        { ...tempBanner, id: `banner-${Date.now()}` },
+      ])
+    }
+    closeDialog()
   }
 
+  function handleEditBanner(banner: Banner) {
+    setEditingBanner(banner)
+    setTempBanner(banner)
+    setPreviewImage(banner.image)
+    setIsDialogOpen(true)
+  }
+
+  // --- Ações de upload de imagem ---
   function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     if (file) {
@@ -198,13 +236,20 @@ export function SliderTab() {
     }
   }
 
-  function handleEditBanner(banner: Banner) {
-    setEditingBanner(banner)
-    setTempBanner(banner)
-    setPreviewImage(banner.image)
-    setIsDialogOpen(true)
+  // --- Ações de deleção ---
+  function handleDeleteBanner(id: string) {
+    setBannerToDelete(id)
+    setIsDeleteDialogOpen(true)
   }
 
+  function confirmDeleteBanner() {
+    if (!bannerToDelete) return
+    setBanners((prev) => prev.filter((banner) => banner.id !== bannerToDelete))
+    setIsDeleteDialogOpen(false)
+    setBannerToDelete(null)
+  }
+
+  // --- Ativação/Desativação do banner ---
   function handleToggleStatus(id: string) {
     setBanners((prev) =>
       prev.map((banner) =>
@@ -213,6 +258,7 @@ export function SliderTab() {
     )
   }
 
+  // --- Drag and Drop ---
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
     if (over && active.id !== over.id) {
@@ -230,27 +276,16 @@ export function SliderTab() {
         <CardHeader className="flex justify-between items-center">
           <CardTitle>Lista de Banners</CardTitle>
           <Button
-            onClick={() => {
-              setEditingBanner(null)
-              setTempBanner({
-                id: '',
-                image: '',
-                title: '',
-                url: '',
-                status: true,
-                targetDevice: 'web',
-              })
-              setPreviewImage(null)
-              setIsDialogOpen(true)
-            }}
+            onClick={openBannerDialogForCreate}
             disabled={!canAddMoreBanners}
           >
             + Novo Banner
           </Button>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Seletor de dispositivo */}
           <div className="flex justify-end space-x-4">
-            <label>
+            <label className="flex items-center space-x-1">
               <input
                 type="radio"
                 name="device"
@@ -258,9 +293,9 @@ export function SliderTab() {
                 checked={selectedDevice === 'web'}
                 onChange={() => setSelectedDevice('web')}
               />
-              Web
+              <span>Web</span>
             </label>
-            <label>
+            <label className="flex items-center space-x-1">
               <input
                 type="radio"
                 name="device"
@@ -268,9 +303,11 @@ export function SliderTab() {
                 checked={selectedDevice === 'mobile'}
                 onChange={() => setSelectedDevice('mobile')}
               />
-              Mobile
+              <span>Mobile</span>
             </label>
           </div>
+
+          {/* Lista de banners filtrados */}
           {filteredBanners.length === 0 ? (
             <p className="text-gray-500 text-center">
               Nenhum banner adicionado.
@@ -301,6 +338,7 @@ export function SliderTab() {
         </CardContent>
       </Card>
 
+      {/* Modal de criação/edição */}
       {isDialogOpen && (
         <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
           <DialogContent>
@@ -386,6 +424,32 @@ export function SliderTab() {
                   Confirmar
                 </Button>
               </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Modal de confirmação de deleção */}
+      {isDeleteDialogOpen && (
+        <Dialog
+          open={isDeleteDialogOpen}
+          onOpenChange={() => setIsDeleteDialogOpen(false)}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Deletar Banner</DialogTitle>
+            </DialogHeader>
+            <p>Tem certeza de que deseja deletar este banner?</p>
+            <div className="flex justify-end space-x-2 mt-4">
+              <Button
+                variant="secondary"
+                onClick={() => setIsDeleteDialogOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button variant="destructive" onClick={confirmDeleteBanner}>
+                Deletar
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
