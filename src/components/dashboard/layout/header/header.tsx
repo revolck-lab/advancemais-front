@@ -1,9 +1,12 @@
+// src\components\dashboard\layout\header\header.tsx
+'use client'
+
+import { useRouter } from 'next/navigation'
 import { Bell, Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
 import Image from 'next/image'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input1'
+import { Button } from '@/components/ui/button1'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +17,21 @@ import { useSidebar } from '@/components/dashboard/layout/sidebar/sidebar-contex
 import Styles from './header.module.css'
 
 export function Header() {
+  const router = useRouter()
   const { isCollapsed, toggleSidebar } = useSidebar()
+
+  // Função de Logout
+  function handleLogout() {
+    // Remove token do localStorage
+    localStorage.removeItem('authToken')
+
+    // Apaga o cookie (expira agora)
+    // Se você colocou "SameSite=Lax" ou "Path=/" ao definir, mantenha aqui
+    document.cookie = 'authToken=; Path=/; Max-Age=0; SameSite=Lax'
+
+    // Redireciona para a tela de login
+    router.push('/auth/login')
+  }
 
   return (
     <header
@@ -46,12 +63,11 @@ export function Header() {
               size="icon"
               className="h-8 w-8 rounded-full"
             >
-              {/* Substituindo <img> por <Image> */}
               <Image
                 src="/placeholder.svg"
                 alt="Profile"
-                height={32} // Definindo altura da imagem
-                width={32} // Definindo largura da imagem
+                height={32}
+                width={32}
                 className="rounded-full"
               />
             </Button>
@@ -59,7 +75,9 @@ export function Header() {
           <DropdownMenuContent align="end">
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+
+            {/* Chama handleLogout ao clicar */}
+            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

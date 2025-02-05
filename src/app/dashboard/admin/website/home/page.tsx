@@ -1,97 +1,53 @@
 'use client'
 
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs/tabs'
+import { useState } from 'react'
+import { cn } from '@/lib/utils'
+
 import { SliderTab } from '@/components/dashboard/config/slider-tab/slider-tab'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card/card'
-import styles from './page.module.css'
 import BusinessInfo from '@/components/dashboard/config/business-info/business-info'
 import BannersSlot from '@/components/dashboard/config/banners-slot/banners-slot'
 import BusinessGroup from '@/components/dashboard/config/business-group/business-group'
 
+const tabs = [
+  { key: 'slider', label: 'Slider', component: <SliderTab /> },
+  { key: 'business-info', label: 'Business Info', component: <BusinessInfo /> },
+  { key: 'banners', label: 'Banners', component: <BannersSlot /> },
+  {
+    key: 'business-group',
+    label: 'Business Group',
+    component: <BusinessGroup />,
+  },
+]
+
 export default function AdminPage() {
+  const [activeTab, setActiveTab] = useState('slider')
+
   return (
-    <div className="container mx-auto py-8 px-4 md:px-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
-          Dashboard
-        </h1>
-      </div>
+    <div className="flex h-screen bg-gray-50">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white shadow-md border-r border-gray-200 p-6">
+        <ul className="space-y-4">
+          {tabs.map((tab) => (
+            <li
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={cn(
+                'cursor-pointer py-2 px-4 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all',
+                activeTab === tab.key && 'bg-gray-100 text-blue-500'
+              )}
+            >
+              {tab.label}
+            </li>
+          ))}
+        </ul>
+      </aside>
 
-      {/* Tabs */}
-      <Tabs defaultValue="slider" className="space-y-4">
-        <TabsList className={`flex space-x-4 border-b ${styles.tabsList}`}>
-          <TabsTrigger
-            value="slider"
-            className="pb-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 border-b-2 border-transparent focus:border-blue-500 focus:text-gray-900 dark:focus:text-gray-100 transition"
-          >
-            Slider
-          </TabsTrigger>
-          <TabsTrigger
-            value="business-info"
-            className="pb-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 border-b-2 border-transparent focus:border-blue-500 focus:text-gray-900 dark:focus:text-gray-100 transition"
-          >
-            Business Info
-          </TabsTrigger>
-          <TabsTrigger
-            value="banners"
-            className="pb-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 border-b-2 border-transparent focus:border-blue-500 focus:text-gray-900 dark:focus:text-gray-100 transition"
-          >
-            Banners
-          </TabsTrigger>
-          <TabsTrigger
-            value="business-group"
-            className="pb-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 border-b-2 border-transparent focus:border-blue-500 focus:text-gray-900 dark:focus:text-gray-100 transition"
-          >
-            Business Group
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Content */}
-        <TabsContent value="slider">
-          <SliderTab />
-        </TabsContent>
-        <TabsContent value="business-info">
-          <Card>
-            <CardHeader>
-              <CardTitle>Business Information</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BusinessInfo />
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="banners">
-          <Card>
-            <CardHeader>
-              <CardTitle>Banners Group</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BannersSlot />
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="business-group">
-          <Card>
-            <CardHeader>
-              <CardTitle>Business Group Info</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BusinessGroup />
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {/* Content */}
+      <main className="flex-1 bg-white p-8 overflow-y-auto">
+        <div className="rounded-lg shadow-md p-6 bg-gray-100">
+          {tabs.find((tab) => tab.key === activeTab)?.component}
+        </div>
+      </main>
     </div>
   )
 }

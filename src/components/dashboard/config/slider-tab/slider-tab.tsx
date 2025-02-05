@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card/card'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button1'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
 import { Switch } from '@/components/ui/switch/switch'

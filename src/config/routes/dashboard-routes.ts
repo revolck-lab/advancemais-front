@@ -2,30 +2,33 @@ import { LayoutDashboard, Users } from 'lucide-react'
 
 export const dashboardRoutes = [
   {
-    category: 'ADMINISTRADOR',
+    category: 'ADMINISTRAÇÃO',
     items: [
       {
-        title: 'WEBSITE',
+        title: 'Configurações do Site',
         icon: LayoutDashboard,
-        submenu: [
-          {
-            title: 'Página Inicial',
-            href: '/dashboard/admin/website/home',
-          },
-          {
-            title: 'Sobre',
-            href: '/dashboard/admin/website/about',
-          },
-          { title: 'Cursos', href: '/dashboard/admin/website/courses' },
-          {
-            title: 'Recrutamento',
-            href: '/dashboard/admin/website/recruitment',
-          },
-          { title: 'Treinamento', href: '/dashboard/admin/website/training' },
-          { title: 'Vagas', href: '/dashboard/admin/website/jobs' },
-          { title: 'Blog', href: '/dashboard/admin/website/blog' },
-          { title: 'Contato', href: '/dashboard/admin/website/contact' },
-        ],
+        href: '/dashboard/admin/website',
+        // submenu: [
+        //   {
+        //     title: 'Configurações do Site',
+        //     href: '/dashboard/admin/website',
+        //   },
+        //   {
+        //     title: 'Página Inicial',
+        //     href: '/dashboard/admin/website/home',
+        //   },
+        //   {
+        //     title: 'Sobre',
+        //     href: '/dashboard/admin/website/about',
+        //   },
+        //   { title: 'Cursos', href: '/dashboard/admin/website/courses' },
+        //   {
+        //     title: 'Recrutamento',
+        //     href: '/dashboard/admin/website/recruitment',
+        //   },
+        //   { title: 'Treinamento', href: '/dashboard/admin/website/training' },
+        //   { title: 'Contato', href: '/dashboard/admin/website/contact' },
+        // ],
       },
       {
         title: 'Professores',

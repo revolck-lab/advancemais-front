@@ -1,53 +1,104 @@
 // src/app/dashboard/layout.tsx
 'use client'
 
+import { useEffect, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { TooltipProvider } from '@radix-ui/react-tooltip'
+
 import {
   SidebarProvider,
   useSidebar,
 } from '@/components/dashboard/layout/sidebar/sidebar-context'
-import { TooltipProvider } from '@radix-ui/react-tooltip'
 import { Sidebar } from '@/components/dashboard/layout/sidebar/sidebar'
 import { Header } from '@/components/dashboard/layout/header/header'
+import PageHeader from '@/components/dashboard/layout/page-header/page-header'
+import LoadingChildren from '@/components/dashboard/layout/loading-children/loading-children'
+import { getBreadcrumbConfig } from '@/config/dashboard/breadcrumb'
 import { cn } from '@/lib/utils'
+
+import Styles from './layout.module.css'
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const router = useRouter()
+  const [isLoadingInitial, setIsLoadingInitial] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  useEffect(() => {
+    // Verifica se o token está presente nos cookies
+    const hasToken = document.cookie
+      .split('; ')
+      .some((cookie) => cookie.startsWith('authToken='))
+
+    if (!hasToken) {
+      // Redireciona para login se o token não estiver presente
+      router.push('/auth/login')
+    } else {
+      // Autenticação bem-sucedida
+      setIsAuthenticated(true)
+      setIsLoadingInitial(false)
+    }
+  }, [router])
+
+  // Carregador inicial
+  if (isLoadingInitial) {
+    return (
+      <div className={Styles['loader-container']}>
+        <div className={Styles.loader}></div>
+      </div>
+    )
+  }
+
+  // Bloqueia a renderização caso o usuário não esteja autenticado
+  if (!isAuthenticated) {
+    return null
+  }
+
   return (
-    <html lang="pt-BR">
-      <body>
-        <TooltipProvider>
-          <SidebarProvider>
-            <DashboardMain>{children}</DashboardMain>
-          </SidebarProvider>
-        </TooltipProvider>
-      </body>
-    </html>
+    <TooltipProvider>
+      <SidebarProvider>
+        <div className="flex min-h-screen flex-col bg-gray-100">
+          <Sidebar />
+          <Header />
+          <DashboardMain>{children}</DashboardMain>
+        </div>
+      </SidebarProvider>
+    </TooltipProvider>
   )
 }
 
 function DashboardMain({ children }: { children: React.ReactNode }) {
   const { isCollapsed } = useSidebar()
+  const pathname = usePathname()
+  const breadcrumbConfig = getBreadcrumbConfig(pathname)
+
+  const [isLoadingChildren, setIsLoadingChildren] = useState(false)
+
+  useEffect(() => {
+    setIsLoadingChildren(true)
+
+    const timeout = setTimeout(() => {
+      setIsLoadingChildren(false)
+    }, 500)
+
+    return () => clearTimeout(timeout)
+  }, [pathname])
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-100">
-      <Sidebar />
-      <Header />
-
-      <main
-        className={cn(
-          'flex-1 pt-24 px-10 transition-all duration-300',
-          isCollapsed ? 'ml-16' : 'ml-64'
-        )}
-      >
-        {children}
-      </main>
-
-      <footer className="bg-gray-800 text-white p-4 text-center">
-        Footer © {new Date().getFullYear()}
-      </footer>
-    </div>
+    <main
+      className={cn(
+        'flex-1 pt-24 px-10 transition-all duration-300 relative',
+        isCollapsed ? 'ml-16' : 'ml-64'
+      )}
+    >
+      <PageHeader
+        title={breadcrumbConfig.title}
+        breadcrumbs={breadcrumbConfig.breadcrumbs}
+      />
+      {isLoadingChildren ? <LoadingChildren /> : children}
+    </main>
   )
 }

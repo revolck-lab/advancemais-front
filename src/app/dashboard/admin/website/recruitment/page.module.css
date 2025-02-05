@@ -1,0 +1,10 @@
+.tabsList {
+  /* Adiciona espaçamento inferior consistente para Tabs */
+  margin-bottom: 1rem;
+}
+
+.tabsList > button[data-state='active'] {
+  /* Estilo especial para a aba ativa */
+  color: #1d4ed8; /* Azul forte */
+  border-color: #1d4ed8; /* Azul forte */
+}

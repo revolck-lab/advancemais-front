@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { ChevronDown } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button1'
 import {
   Collapsible,
   CollapsibleContent,

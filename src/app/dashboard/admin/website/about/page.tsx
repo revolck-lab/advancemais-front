@@ -6,17 +6,12 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs/tabs'
-import { SliderTab } from '@/components/dashboard/config/slider-tab/slider-tab'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card/card'
 import styles from './page.module.css'
-import BusinessInfo from '@/components/dashboard/config/business-info/business-info'
-import BannersSlot from '@/components/dashboard/config/banners-slot/banners-slot'
-import BusinessGroup from '@/components/dashboard/config/business-group/business-group'
+import HeaderPagesAPI from '@/components/dashboard/config/header-page/header-page'
+import { headerConfig } from '@/config/dashboard/website/header-config'
+import MissionBusiness from '@/components/dashboard/config/mission-business/missionbusiness'
+import WhyChooseUs from '@/components/dashboard/config/what-business/what-business'
+import AboutBusiness from '@/components/dashboard/config/about-business/about-business'
 
 export default function AdminPage() {
   return (
@@ -35,61 +30,40 @@ export default function AdminPage() {
             value="slider"
             className="pb-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 border-b-2 border-transparent focus:border-blue-500 focus:text-gray-900 dark:focus:text-gray-100 transition"
           >
-            Slider
+            Header Page
           </TabsTrigger>
           <TabsTrigger
             value="business-info"
             className="pb-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 border-b-2 border-transparent focus:border-blue-500 focus:text-gray-900 dark:focus:text-gray-100 transition"
           >
-            Business Info
+            Missão, visão e valores
           </TabsTrigger>
           <TabsTrigger
             value="banners"
             className="pb-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 border-b-2 border-transparent focus:border-blue-500 focus:text-gray-900 dark:focus:text-gray-100 transition"
           >
-            Banners
+            Porque Advance+?
           </TabsTrigger>
           <TabsTrigger
             value="business-group"
             className="pb-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 border-b-2 border-transparent focus:border-blue-500 focus:text-gray-900 dark:focus:text-gray-100 transition"
           >
-            Business Group
+            Sobre a empresa
           </TabsTrigger>
         </TabsList>
 
         {/* Content */}
         <TabsContent value="slider">
-          <SliderTab />
+          <HeaderPagesAPI {...headerConfig.about} />
         </TabsContent>
         <TabsContent value="business-info">
-          <Card>
-            <CardHeader>
-              <CardTitle>Business Information</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BusinessInfo />
-            </CardContent>
-          </Card>
+          <MissionBusiness />
         </TabsContent>
         <TabsContent value="banners">
-          <Card>
-            <CardHeader>
-              <CardTitle>Banners Group</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BannersSlot />
-            </CardContent>
-          </Card>
+          <WhyChooseUs />
         </TabsContent>
         <TabsContent value="business-group">
-          <Card>
-            <CardHeader>
-              <CardTitle>Business Group Info</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BusinessGroup />
-            </CardContent>
-          </Card>
+          <AboutBusiness />
         </TabsContent>
       </Tabs>
     </div>

@@ -11,7 +11,7 @@ import {
   CarouselNext,
   type CarouselApi,
 } from '@/components/ui/carousel/carousel'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button1'
 
 const LogoCarousel: React.FC = () => {
   const logos = [

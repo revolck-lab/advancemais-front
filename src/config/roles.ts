@@ -1,0 +1,10 @@
+export enum UserRole {
+  PROFESSOR = 1,
+  ALUNO = 2,
+  EMPRESA = 3,
+  ADMINISTRADOR = 4,
+  RECRUTADORES = 5,
+  SETOR_PEDAGOGICO = 6,
+  RECURSOS_HUMANOS = 7,
+  SUPER_ADMIN = 8,
+}
