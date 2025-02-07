@@ -7,14 +7,18 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs/tabs'
 import styles from './page.module.css'
-import StatsSection from '@/components/dashboard/config/status-business/status-business'
-import HeaderPagesAPI from '@/components/dashboard/config/header-page/header-page'
 import { headerConfig } from '@/config/dashboard/website/header-config'
-import RecruitmentChallenges from '@/components/dashboard/config/recruitment-challenges/recruitment-challenges'
-import PlatformAdvantages from '@/components/dashboard/config/platform-advantages/platform-advantages'
-import RecruitmentService from '@/components/dashboard/config/recruitment-service/recruitment-service'
-import HowItWorks from '@/components/dashboard/config/how-works/how-works'
 import { recruitmentConfig } from '@/config/dashboard/website/recruitmentservice'
+import { DynamicComponents } from '@/components/dashboard/DynamicComponents'
+
+const {
+  HeaderPagesAPI,
+  StatsSection,
+  RecruitmentChallenges,
+  PlatformAdvantages,
+  RecruitmentService,
+  HowItWorks,
+} = DynamicComponents
 
 export default function AdminPage() {
   return (
@@ -81,7 +85,7 @@ export default function AdminPage() {
           <PlatformAdvantages />
         </TabsContent>
         <TabsContent value="recrutamento">
-          <RecruitmentService {...recruitmentConfig.recruitment}/>
+          <RecruitmentService {...recruitmentConfig.recruitment} />
         </TabsContent>
         <TabsContent value="how-works">
           <HowItWorks />

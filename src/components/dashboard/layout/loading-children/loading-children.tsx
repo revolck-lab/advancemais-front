@@ -1,9 +1,21 @@
-import Styles from './loading-children.module.css'
+// src/components/dashboard/layout/loading-children/loading-children.tsx
+import React from 'react'
+import styles from './loading-children.module.css'
 
-export default function LoadingChildren() {
+interface LoadingChildrenProps {
+  fullScreen?: boolean
+}
+
+export default function LoadingChildren({
+  fullScreen = false,
+}: LoadingChildrenProps) {
   return (
-    <div className={Styles.loaderContainer}>
-      <div className={Styles.loader}></div>
+    <div
+      className={
+        fullScreen ? styles.fullScreenLoaderContainer : styles.loaderContainer
+      }
+    >
+      <div className={styles.loader}></div>
     </div>
   )
 }

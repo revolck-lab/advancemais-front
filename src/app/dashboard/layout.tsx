@@ -16,8 +16,6 @@ import LoadingChildren from '@/components/dashboard/layout/loading-children/load
 import { getBreadcrumbConfig } from '@/config/dashboard/breadcrumb'
 import { cn } from '@/lib/utils'
 
-import Styles from './layout.module.css'
-
 export default function DashboardLayout({
   children,
 }: {
@@ -43,13 +41,9 @@ export default function DashboardLayout({
     }
   }, [router])
 
-  // Carregador inicial
+  // Exibe o loader em tela cheia durante o carregamento inicial
   if (isLoadingInitial) {
-    return (
-      <div className={Styles['loader-container']}>
-        <div className={Styles.loader}></div>
-      </div>
-    )
+    return <LoadingChildren fullScreen />
   }
 
   // Bloqueia a renderização caso o usuário não esteja autenticado
@@ -78,12 +72,11 @@ function DashboardMain({ children }: { children: React.ReactNode }) {
   const [isLoadingChildren, setIsLoadingChildren] = useState(false)
 
   useEffect(() => {
+    // Exibe o loader durante as transições de rota
     setIsLoadingChildren(true)
-
     const timeout = setTimeout(() => {
       setIsLoadingChildren(false)
     }, 500)
-
     return () => clearTimeout(timeout)
   }, [pathname])
 

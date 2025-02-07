@@ -4,9 +4,10 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
 import { SliderTab } from '@/components/dashboard/config/slider-tab/slider-tab'
-import BusinessInfo from '@/components/dashboard/config/business-info/business-info'
-import BannersSlot from '@/components/dashboard/config/banners-slot/banners-slot'
-import BusinessGroup from '@/components/dashboard/config/business-group/business-group'
+import { DynamicComponents } from '@/components/dashboard/DynamicComponents'
+
+const { BusinessInfo, BannersSlot, BusinessGroup } =
+  DynamicComponents
 
 const tabs = [
   { key: 'slider', label: 'Slider', component: <SliderTab /> },

@@ -1,15 +1,33 @@
-.loader-container {
-  position: absolute; /* Relativo ao main */
+/* src/components/dashboard/layout/loading-children/loading-children.module.css */
+
+/* Loader para elementos relativos (ex: no main) */
+.loaderContainer {
+  position: absolute; /* Relativo ao elemento pai */
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center; /* Centraliza horizontalmente */
-  align-items: center; /* Centraliza verticalmente */
-  background: rgba(255, 255, 255, 0.7); /* Fundo com translucidez */
-  backdrop-filter: blur(10px); /* Efeito vidro fosco */
-  z-index: 10; /* Não ultrapassa o loader inicial */
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+/* Loader para tela cheia (fullScreen) */
+.fullScreenLoaderContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
 }
 
 .loader {

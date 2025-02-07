@@ -7,9 +7,10 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs/tabs'
 import styles from './page.module.css'
-import HeaderPagesAPI from '@/components/dashboard/config/header-page/header-page'
 import { headerConfig } from '@/config/dashboard/website/header-config'
-import ContactPage from '@/components/dashboard/config/contact-form/contact-form'
+import { DynamicComponents } from '@/components/dashboard/DynamicComponents'
+
+const { HeaderPagesAPI, ContactPage } = DynamicComponents
 
 export default function AdminPage() {
   return (

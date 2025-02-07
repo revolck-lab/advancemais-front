@@ -7,11 +7,12 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs/tabs'
 import styles from './page.module.css'
-import HeaderPagesAPI from '@/components/dashboard/config/header-page/header-page'
 import { headerConfig } from '@/config/dashboard/website/header-config'
-import MissionBusiness from '@/components/dashboard/config/mission-business/missionbusiness'
-import WhyChooseUs from '@/components/dashboard/config/what-business/what-business'
-import AboutBusiness from '@/components/dashboard/config/about-business/about-business'
+
+import { DynamicComponents } from '@/components/dashboard/DynamicComponents'
+
+const { HeaderPagesAPI, MissionBusiness, WhyChooseUs, AboutBusiness } =
+  DynamicComponents
 
 export default function AdminPage() {
   return (

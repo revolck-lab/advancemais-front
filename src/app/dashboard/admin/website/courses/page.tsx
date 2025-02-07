@@ -7,8 +7,9 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs/tabs'
 import styles from './page.module.css'
-import CourseHeader from '@/components/dashboard/config/course-header/course-header'
-import StatsSection from '@/components/dashboard/config/status-business/status-business'
+import { DynamicComponents } from '@/components/dashboard/DynamicComponents'
+
+const { CourseHeader, StatsSection } = DynamicComponents
 
 export default function AdminPage() {
   return (

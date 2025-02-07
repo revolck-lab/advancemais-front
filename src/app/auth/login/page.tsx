@@ -1,5 +1,4 @@
 // src/app/auth/login/page.tsx
-
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -10,11 +9,10 @@ import { Input } from '@/components/ui/input/input'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { useToast } from '@/hooks/use-toast'
 import { loginUser } from '@/app/api/auth/apiClient'
-
 import { AxiosError } from 'axios'
 
+import LoadingChildren from '@/components/dashboard/layout/loading-children/loading-children'
 import Logo from '/public/images/logo_branco.webp'
-import Styles from './loginpage.module.css'
 
 const LoginPage: React.FC = () => {
   const router = useRouter()
@@ -30,7 +28,7 @@ const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Simula splash de carregamento inicial
+  // Simula splash de carregamento inicial (loader em tela cheia)
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1000)
     return () => clearTimeout(timer)
@@ -70,11 +68,7 @@ const LoginPage: React.FC = () => {
     setValue(formattedValue)
 
     // Se não tem 11 (CPF) ou 14 (CNPJ), marcamos como erro
-    if (numericValue.length !== 11 && numericValue.length !== 14) {
-      setHasError(true)
-    } else {
-      setHasError(false)
-    }
+    setHasError(numericValue.length !== 11 && numericValue.length !== 14)
   }
 
   /**
@@ -87,7 +81,7 @@ const LoginPage: React.FC = () => {
   }
 
   const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible)
+    setPasswordVisible((prev) => !prev)
   }
 
   /**
@@ -112,20 +106,18 @@ const LoginPage: React.FC = () => {
         toast({
           title: 'Login bem-sucedido!',
           description: 'Você está conectado(a) ao Advance+. Bem-vindo(a)!',
-          variant: 'default', // ou 'success', dependendo do seu setup
+          variant: 'default',
         })
 
         // 1) Salva no localStorage (se precisar usar no Axios interceptors)
         localStorage.setItem('authToken', response.token)
 
         // 2) Define o cookie para que o middleware possa ler
-        //    (para fins de exemplo, não httpOnly)
         document.cookie = `authToken=${response.token}; Path=/; Max-Age=86400; SameSite=Lax`
 
         // Redireciona
         router.push('/dashboard')
       } else {
-        // Resposta inesperada da API (sem token)
         toast({
           title: 'Erro inesperado',
           description: 'Não foi possível concluir o login. Tente novamente.',
@@ -134,12 +126,10 @@ const LoginPage: React.FC = () => {
       }
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        // Erro HTTP via Axios (status 401, etc.)
         const status = error.response?.status
         const errorMsg = error.response?.data?.error || ''
 
         if (status === 401 && errorMsg === 'Invalid credentials') {
-          // CPF/CNPJ existe, mas senha está errada
           toast({
             title: 'Senha incorreta',
             description:
@@ -147,7 +137,6 @@ const LoginPage: React.FC = () => {
             variant: 'destructive',
           })
         } else if (status === 401 && errorMsg === 'User not found') {
-          // Nenhum usuário com esse CPF/CNPJ
           toast({
             title: 'Usuário não cadastrado',
             description:
@@ -155,7 +144,6 @@ const LoginPage: React.FC = () => {
             variant: 'destructive',
           })
         } else {
-          // Erro genérico
           toast({
             title: 'Não foi possível entrar',
             description:
@@ -164,7 +152,6 @@ const LoginPage: React.FC = () => {
           })
         }
       } else {
-        // Erro não-Axios (throw manual, erro interno etc.)
         toast({
           title: 'Não foi possível entrar',
           description:
@@ -177,15 +164,9 @@ const LoginPage: React.FC = () => {
     }
   }
 
-  /**
-   * Splash/loader inicial
-   */
+  // Exibe o loader em tela cheia enquanto "splash" inicial está ativo
   if (isLoading) {
-    return (
-      <div className={Styles['loader-container']}>
-        <div className={Styles.loader} />
-      </div>
-    )
+    return <LoadingChildren fullScreen />
   }
 
   return (

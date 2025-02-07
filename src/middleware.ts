@@ -1,98 +1,66 @@
 // src/middleware.ts
-
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Importar suas rotas de "website" e "dashboard" (caso esteja usando)
-import websiteRoutes from './config/routes/website-routes'
-import dashboardRoutes from './config/routes/dashboard-routes'
+// Expressão regular para identificar os prefixos das rotas do website
+const websiteRegex =
+  /^\/(sobre|cursos|solucoes|vagas|blog|contato|para-empresas|para-estudantes|para-empregos)(\/|$)/
 
 export const config = {
-  // Lista de rotas para as quais o middleware deve rodar
+  // Aplica o middleware apenas para as rotas necessárias,
+  // evitando processamento para recursos estáticos.
   matcher: [
-    // Páginas comuns
     '/',
-    '/auth/login',
-
-    // Exemplo de páginas do "website"
-    '/sobre',
-    '/cursos',
-    '/solucoes',
-    '/solucoes/recrutamento-selecao',
-    '/solucoes/treinamento-company',
-    '/vagas',
-    '/blog',
-    '/contato',
-    '/para-empresas',
-    '/para-estudantes',
-    '/para-empregos',
-
-    // Se você usa subdiretório /website/ explicitamente
-    '/website/pagina-inicial',
-
-    // Exemplo de páginas do "dashboard"
-    '/dashboard/admin/website/pagina-inicial',
-    '/dashboard/admin/website/about',
-    '/dashboard/admin/website/courses',
-    '/dashboard/admin/website/recruitment',
-    '/dashboard/admin/website/training',
-    '/dashboard/admin/website/jobs',
-    '/dashboard/admin/website/blog',
-    '/dashboard/admin/website/contact',
-    '/dashboard/admin/professores',
-    '/dashboard/admin/users/list',
-    '/dashboard/admin/users/create',
-    '/dashboard/admin/settings',
-    // ... Inclua aqui TODAS as rotas que o middleware deve interceptar ...
+    '/auth/:path*',
+    '/dashboard/:path*',
+    '/sobre/:path*',
+    '/cursos/:path*',
+    '/solucoes/:path*',
+    '/vagas/:path*',
+    '/blog/:path*',
+    '/contato/:path*',
+    '/para-empresas/:path*',
+    '/para-estudantes/:path*',
+    '/para-empregos/:path*',
+    '/website/:path*',
   ],
 }
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const authToken = request.cookies.get('authToken') // <-- Verifica se existe 'authToken' no cookie
+  const authToken = request.cookies.get('authToken')
 
-  // 1) Se a requisição é para "/", reescreve para "/website/pagina-inicial"
+  // 1. Se o usuário acessar a raiz ("/"), reescreve para "/website/pagina-inicial"
   if (pathname === '/') {
     return NextResponse.rewrite(new URL('/website/pagina-inicial', request.url))
   }
 
-  // 2) Verifica se a rota pertence ao website (conforme sua lista `websiteRoutes`):
-  const isWebsiteRoute = websiteRoutes.some((route) => {
-    // Se o route tiver subLinks, verifica se o pathname inicia com algum deles
-    if (route.subLinks) {
-      return route.subLinks.some((sub) => pathname.startsWith(sub.path))
-    }
-    // Caso contrário, verifica se inicia com route.path
-    return pathname.startsWith(route.path)
-  })
-  if (isWebsiteRoute) {
-    // Reescreve para subcaminho /website
-    return NextResponse.rewrite(new URL(`/website${pathname}`, request.url))
-  }
-
-  // 3) Verifica se a rota pertence ao dashboard
-  const isDashboardRoute = dashboardRoutes.some((category) =>
-    category.items.some((item) =>
-      item.submenu
-        ? item.submenu.some((sub) => pathname.startsWith(sub.href))
-        : pathname.startsWith(item.href || '')
-    )
-  )
-  if (isDashboardRoute) {
-    // Se não estiver autenticado, redireciona para /auth/login
+  // 2. Rotas do Dashboard:
+  // Se a rota começa com "/dashboard" e o usuário não está autenticado, redireciona para "/auth/login".
+  if (pathname.startsWith('/dashboard')) {
     if (!authToken) {
       return NextResponse.redirect(new URL('/auth/login', request.url))
     }
-    // Se estiver autenticado, segue normalmente
     return NextResponse.next()
   }
 
-  // 4) Impede que um usuário autenticado acesse a página de login
-  const isAuthenticated = !!authToken
-  if (isAuthenticated && pathname === '/auth/login') {
+  // 3. Rotas de autenticação:
+  // Se o usuário autenticado tentar acessar "/auth/login", redireciona para o dashboard.
+  if (pathname === '/auth/login' && authToken) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
-  // 5) Caso contrário, segue a rota normalmente
+  // 4. Se o pathname já começa com "/website", deixa seguir normalmente.
+  if (pathname.startsWith('/website')) {
+    return NextResponse.next()
+  }
+
+  // 5. Se o pathname corresponder a um dos prefixos do website (ex: "/sobre", "/cursos", etc.),
+  // reescreve para "/website" + pathname.
+  if (websiteRegex.test(pathname)) {
+    return NextResponse.rewrite(new URL(`/website${pathname}`, request.url))
+  }
+
+  // 6. Para todas as outras rotas, deixa seguir normalmente.
   return NextResponse.next()
 }

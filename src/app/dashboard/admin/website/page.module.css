@@ -1,6 +1,23 @@
 .card {
+  /* Transição suave para transform, background e cor */
   transition: all 0.3s ease-in-out;
+  /* Evita sublinhados e outros estilos em descendentes */
+  text-decoration: none;
 }
+
+/* Efeito ao passar o mouse */
 .card:hover {
   transform: translateY(-5px) scale(1.05);
+  background-color: #ff202a; /* Fundo vermelho */
+  color: #ffffff; /* Texto branco */
+}
+
+/* A imagem também terá uma transição suave */
+.cardImage {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Ao passar o mouse no card, a imagem sofre efeito (grayscale + brightness) */
+.card:hover .cardImage {
+  filter: grayscale(100%) brightness(0.8);
 }

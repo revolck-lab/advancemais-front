@@ -7,13 +7,17 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs/tabs'
 import styles from './page.module.css'
-import HeaderPagesAPI from '@/components/dashboard/config/header-page/header-page'
 import { headerConfig } from '@/config/dashboard/website/header-config'
-import PlatformAdvantages from '@/components/dashboard/config/platform-advantages/platform-advantages'
-import RecruitmentService from '@/components/dashboard/config/recruitment-service/recruitment-service'
-import InCompanyTraining from '@/components/dashboard/config/in-company/in-company'
-import StrongConnectionSection from '@/components/dashboard/config/connection-strong/connection-strong'
 import { recruitmentConfig } from '@/config/dashboard/website/recruitmentservice'
+import { DynamicComponents } from '@/components/dashboard/DynamicComponents'
+
+const {
+  HeaderPagesAPI,
+  InCompanyTraining,
+  StrongConnectionSection,
+  PlatformAdvantages,
+  RecruitmentService,
+} = DynamicComponents
 
 export default function AdminPage() {
   return (
