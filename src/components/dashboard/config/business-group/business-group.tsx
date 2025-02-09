@@ -1,8 +1,12 @@
+// src/components/dashboard/config/business-group/business-group.tsx
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button1'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
 import Image from 'next/image'
+import { FileUpload } from '@/components/ui/file-upload/file-upload'
+import { TextareaDashboard } from '@/components/ui/textarea/textarea-dashboard'
+import { useToast } from '@/hooks/use-toast'
 
 type GroupState = {
   title: string
@@ -14,6 +18,7 @@ type GroupState = {
 }
 
 export default function BusinessGroup() {
+  const { toast } = useToast()
   const [group1, setGroup1] = useState<GroupState>({
     title: 'Conheça nosso serviço de Consultoria Empresarial',
     description:
@@ -34,24 +39,21 @@ export default function BusinessGroup() {
     buttonUrl: '#',
   })
 
-  const handleImageUpload = (
-    groupKey: 'group1' | 'group2',
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0]
-    if (file) {
+  const handleImageUpload = (groupKey: 'group1' | 'group2', files: File[]) => {
+    if (files.length > 0) {
+      const file = files[0]
       const imageUrl = URL.createObjectURL(file)
       if (groupKey === 'group1') {
         setGroup1((prev) => ({
           ...prev,
           previewImage: imageUrl,
-          image: file.name, // Simulação de nome de arquivo salvo
+          image: file.name, // Simula nome do arquivo salvo
         }))
       } else {
         setGroup2((prev) => ({
           ...prev,
           previewImage: imageUrl,
-          image: file.name, // Simulação de nome de arquivo salvo
+          image: file.name,
         }))
       }
     }
@@ -81,9 +83,14 @@ export default function BusinessGroup() {
       !group1.buttonText ||
       !group1.buttonUrl
     ) {
-      alert('Preencha todos os campos do Grupo 1 antes de salvar.')
+      toast({
+        title: 'Erro ao salvar!',
+        description: 'Preencha todos os campos do Grupo 1 antes de salvar.',
+        variant: 'danger',
+      })
       return
     }
+
     if (
       !group2.title ||
       !group2.description ||
@@ -91,7 +98,11 @@ export default function BusinessGroup() {
       !group2.buttonText ||
       !group2.buttonUrl
     ) {
-      alert('Preencha todos os campos do Grupo 2 antes de salvar.')
+      toast({
+        title: 'Erro ao salvar!',
+        description: 'Preencha todos os campos do Grupo 2 antes de salvar.',
+        variant: 'danger',
+      })
       return
     }
 
@@ -101,7 +112,11 @@ export default function BusinessGroup() {
       group2,
     })
 
-    alert('Informações salvas com sucesso!')
+    toast({
+      title: 'Salvo com sucesso!',
+      description: 'As informações foram salvas com sucesso.',
+      variant: 'success',
+    })
   }
 
   const renderGroup = (
@@ -136,12 +151,13 @@ export default function BusinessGroup() {
             >
               Imagem
             </Label>
-            <Input
-              id={`${groupKey}-image`}
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleImageUpload(groupKey, e)}
-              className="mt-2 w-full border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg"
+            <FileUpload
+              multiple={false}
+              maxFiles={1}
+              maxSize={5 * 1024 * 1024} // 5MB máximo
+              allowedFormats={['image/jpeg', 'image/png', 'image/webp']}
+              onUpload={(files) => handleImageUpload(groupKey, files)}
+              onRemove={() => handleDeleteImage(groupKey)}
             />
           </div>
         )}
@@ -153,7 +169,7 @@ export default function BusinessGroup() {
         <div>
           <Label
             htmlFor={`${groupKey}-title`}
-            className="text-lg font-medium text-gray-700"
+            className="text-base font-normal text-neutral required"
           >
             Título
           </Label>
@@ -164,10 +180,17 @@ export default function BusinessGroup() {
             value={group.title}
             onChange={(e) =>
               groupKey === 'group1'
-                ? setGroup1((prev) => ({ ...prev, title: e.target.value }))
-                : setGroup2((prev) => ({ ...prev, title: e.target.value }))
+                ? setGroup1((prev) => ({
+                    ...prev,
+                    title: e.target.value.substring(0, 100),
+                  }))
+                : setGroup2((prev) => ({
+                    ...prev,
+                    title: e.target.value.substring(0, 100),
+                  }))
             }
             className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={100}
           />
         </div>
 
@@ -175,26 +198,24 @@ export default function BusinessGroup() {
         <div>
           <Label
             htmlFor={`${groupKey}-description`}
-            className="text-lg font-medium text-gray-700"
+            className="text-base font-normal text-neutral required"
           >
             Descrição
           </Label>
-          <textarea
-            id={`${groupKey}-description`}
-            placeholder={`Digite a descrição do ${groupTitle}`}
+          <TextareaDashboard
             value={group.description}
-            onChange={(e) =>
+            onChange={(value) =>
               groupKey === 'group1'
                 ? setGroup1((prev) => ({
                     ...prev,
-                    description: e.target.value,
+                    description: value.substring(0, 500),
                   }))
                 : setGroup2((prev) => ({
                     ...prev,
-                    description: e.target.value,
+                    description: value.substring(0, 500),
                   }))
             }
-            className="w-full border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg p-3 text-gray-900 h-28 mt-2"
+            placeholder={`Digite a descrição do ${groupTitle}`}
           />
         </div>
 
@@ -202,7 +223,7 @@ export default function BusinessGroup() {
         <div>
           <Label
             htmlFor={`${groupKey}-buttonText`}
-            className="text-lg font-medium text-gray-700"
+            className="text-base font-normal text-neutral required"
           >
             Texto do Botão
           </Label>
@@ -213,10 +234,17 @@ export default function BusinessGroup() {
             value={group.buttonText}
             onChange={(e) =>
               groupKey === 'group1'
-                ? setGroup1((prev) => ({ ...prev, buttonText: e.target.value }))
-                : setGroup2((prev) => ({ ...prev, buttonText: e.target.value }))
+                ? setGroup1((prev) => ({
+                    ...prev,
+                    buttonText: e.target.value.substring(0, 50),
+                  }))
+                : setGroup2((prev) => ({
+                    ...prev,
+                    buttonText: e.target.value.substring(0, 50),
+                  }))
             }
             className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={50}
           />
         </div>
 
@@ -224,7 +252,7 @@ export default function BusinessGroup() {
         <div>
           <Label
             htmlFor={`${groupKey}-buttonUrl`}
-            className="text-lg font-medium text-gray-700"
+            className="text-base font-normal text-neutral required"
           >
             URL do Botão
           </Label>
@@ -246,19 +274,16 @@ export default function BusinessGroup() {
   )
 
   return (
-    <div className="p-8 max-w-4xl mx-auto bg-gray-50 shadow-lg rounded-2xl border border-gray-200">
-      <h1 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
-        Configurar Grupos de Informações do Negócio
-      </h1>
-
+    <div className="p-4 mx-auto">
       {renderGroup(group1, 'group1', 'Grupo 1')}
+      <div className="border-t border-neutral-100 my-6"></div>
       {renderGroup(group2, 'group2', 'Grupo 2')}
 
       {/* Botão Salvar */}
-      <div className="flex justify-end mt-6">
+      <div className="flex justify-end">
         <Button
           onClick={handleSave}
-          className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition"
+          className="px-8 py-6 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition"
         >
           Salvar
         </Button>

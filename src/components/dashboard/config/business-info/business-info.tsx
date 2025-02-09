@@ -88,7 +88,7 @@ export default function BusinessInfo() {
             <div className="w-full">
               <Label
                 htmlFor="image"
-                className="text-lg font-medium text-gray-700"
+                className="text-lg font-medium text-gray-700 required"
               >
                 Imagem
               </Label>
@@ -109,7 +109,7 @@ export default function BusinessInfo() {
           <div>
             <Label
               htmlFor="title"
-              className="text-base font-normal text-neutral"
+              className="text-base font-normal text-neutral required"
             >
               Título
             </Label>
@@ -128,7 +128,7 @@ export default function BusinessInfo() {
           <div>
             <Label
               htmlFor="description"
-              className="text-base font-normal text-neutral"
+              className="text-base font-normal text-neutral required"
             >
               Descrição
             </Label>

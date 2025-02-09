@@ -1,3 +1,4 @@
+// src/components/dashboard/config/banners-slot/banners-slot.tsx
 import React, { useState } from 'react'
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core'
 import {
@@ -8,12 +9,7 @@ import {
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import Image from 'next/image'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card/card'
 import { Button } from '@/components/ui/button1'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
@@ -23,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog/dialog'
+import { FileUpload } from '@/components/ui/file-upload/file-upload'
 
 interface Banner {
   id: string
@@ -50,7 +47,7 @@ function SortableBanner({ banner, onEdit, onDelete }: SortableBannerProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className="w-full max-w-[300px] mx-auto rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+      className="w-full max-w-[300px] mx-auto rounded-lg bg-white border-1 border-neutral-100 overflow-hidden"
     >
       <div
         className="cursor-move"
@@ -68,20 +65,23 @@ function SortableBanner({ banner, onEdit, onDelete }: SortableBannerProps) {
       </div>
       <div className="p-4">
         <h3 className="font-semibold text-sm truncate">{banner.title}</h3>
-        <p className="text-xs text-gray-500 truncate">
-          <a
-            href={banner.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
-          >
-            {banner.url || 'Sem URL'}
-          </a>
+        <p className="text-sm truncate">
+          {banner.url ? (
+            <a
+              href={banner.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-secondary hover:text-secondary-800 text-sm hover:underline"
+            >
+              Clique aqui para visualizar a URL
+            </a>
+          ) : (
+            'Sem URL'
+          )}
         </p>
         <div className="flex justify-between mt-3">
           <Button
-            size="sm"
-            variant="outline"
+            className="py-2 px-4 shadow-none bg-neutral-50 text-neutral hover:text-white hover:bg-neutral-400"
             onClick={(e) => {
               e.stopPropagation()
               onEdit(banner)
@@ -90,8 +90,7 @@ function SortableBanner({ banner, onEdit, onDelete }: SortableBannerProps) {
             Editar
           </Button>
           <Button
-            size="sm"
-            variant="destructive"
+            className="py-2 px-4 transition-all bg-secondary-200 text-white hover:bg-secondary"
             onClick={(e) => {
               e.stopPropagation()
               onDelete(banner.id)
@@ -175,12 +174,7 @@ export default function BannersSlot() {
   const closeDialog = () => {
     setIsDialogOpen(false)
     setEditingBanner(null)
-    setTempBanner({
-      id: '',
-      url: '',
-      title: '',
-      image: '',
-    })
+    setTempBanner({ id: '', url: '', title: '', image: '' })
     setPreviewImage(null)
   }
 
@@ -197,18 +191,6 @@ export default function BannersSlot() {
     setBanners((prev) => prev.filter((banner) => banner.id !== bannerToDelete))
     setBannerToDelete(null)
     setIsDeleteDialogOpen(false)
-  }
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const imageUrl = URL.createObjectURL(file)
-      setTempBanner((prev) => ({
-        ...prev,
-        image: imageUrl,
-      }))
-      setPreviewImage(imageUrl)
-    }
   }
 
   const handleEditBanner = (banner: Banner) => {
@@ -232,30 +214,23 @@ export default function BannersSlot() {
   const canAddMoreBanners = banners.length < 5
 
   return (
-    <div className="p-8 max-w-4xl mx-auto bg-gray-50 shadow-lg rounded-2xl border border-gray-200">
-      <h1 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
-        Configurar Banners da Página Principal
-      </h1>
-
-      <Card className="mb-6">
-        <CardHeader className="flex justify-between items-center">
-          <CardTitle>Banners</CardTitle>
-          <Button
-            onClick={() => {
-              setEditingBanner(null)
-              setTempBanner({
-                id: '',
-                url: '',
-                title: '',
-                image: '',
-              })
-              setPreviewImage(null)
-              setIsDialogOpen(true)
-            }}
-            disabled={!canAddMoreBanners}
-          >
-            + Novo Banner
-          </Button>
+    <div className="p-0">
+      <Card className="border-0 shadow-none">
+        <CardHeader className="flex justify-end">
+          <div className="flex justify-end w-full">
+            <Button
+              onClick={() => {
+                setEditingBanner(null)
+                setTempBanner({ id: '', url: '', title: '', image: '' })
+                setPreviewImage(null)
+                setIsDialogOpen(true)
+              }}
+              disabled={!canAddMoreBanners}
+              className="bg-primary px-5 py-5 text-white hover:text-white hover:bg-primary-800"
+            >
+              Novo Banner
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <DndContext
@@ -266,7 +241,7 @@ export default function BannersSlot() {
               items={banners.map((banner) => banner.id)}
               strategy={verticalListSortingStrategy}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
                 {banners.map((banner) => (
                   <SortableBanner
                     key={banner.id}
@@ -281,18 +256,20 @@ export default function BannersSlot() {
         </CardContent>
       </Card>
 
-      {/* Modal para adicionar/editar */}
+      {/* Modal para adicionar/editar banner */}
       {isDialogOpen && (
         <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
-                {editingBanner ? 'Editar Banner' : 'Adicionar Banner'}
+                {editingBanner ? 'Editando Banner' : 'Adicionando Banner'}
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="image">Imagem</Label>
+                <Label htmlFor="image" className="required">
+                  Imagem
+                </Label>
                 {previewImage && (
                   <Image
                     src={previewImage}
@@ -302,15 +279,45 @@ export default function BannersSlot() {
                     className="w-full h-40 object-cover rounded-lg mb-2"
                   />
                 )}
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
+                <FileUpload
+                  multiple={false}
+                  maxFiles={1}
+                  maxSize={5 * 1024 * 1024} // 5MB
+                  allowedFormats={['image/jpeg', 'image/png', 'image/webp']}
+                  onUpload={(files) => {
+                    const file = files[0]
+                    if (file) {
+                      const imageUrl = URL.createObjectURL(file)
+                      setTempBanner((prev) => ({
+                        ...prev,
+                        image: imageUrl,
+                      }))
+                      setPreviewImage(imageUrl)
+                    }
+                  }}
+                  onRemove={() => {
+                    setTempBanner((prev) => ({ ...prev, image: '' }))
+                    setPreviewImage(null)
+                  }}
+                  defaultFiles={
+                    editingBanner?.image
+                      ? [
+                          {
+                            ...new File([], 'Imagem Atual'),
+                            path: editingBanner.image,
+                            name: 'Imagem Atual',
+                            size: 1024,
+                            type: 'image/jpeg',
+                          },
+                        ]
+                      : []
+                  }
                 />
               </div>
               <div>
-                <Label htmlFor="title">Título</Label>
+                <Label htmlFor="title" className="required">
+                  Título
+                </Label>
                 <Input
                   id="title"
                   type="text"
@@ -325,7 +332,9 @@ export default function BannersSlot() {
                 />
               </div>
               <div>
-                <Label htmlFor="url">URL</Label>
+                <Label htmlFor="url" className="required">
+                  URL
+                </Label>
                 <Input
                   id="url"
                   type="text"
@@ -340,10 +349,25 @@ export default function BannersSlot() {
                 />
               </div>
               <div className="flex justify-end space-x-2">
-                <Button variant="secondary" onClick={closeDialog}>
+                <Button
+                  className="py-2 px-4 bg-neutral-50 text-neutral hover:text-white hover:bg-neutral-400"
+                  onClick={closeDialog}
+                >
                   Cancelar
                 </Button>
-                <Button onClick={handleConfirmBanner}>Salvar</Button>
+                <Button
+                  className={`py-2 px-4 transition-all ${
+                    !tempBanner.image || !tempBanner.title || !tempBanner.url
+                      ? 'bg-primary-200 text-white cursor-not-allowed'
+                      : 'bg-primary text-white hover:bg-primary-800'
+                  }`}
+                  disabled={
+                    !tempBanner.image || !tempBanner.title || !tempBanner.url
+                  }
+                  onClick={handleConfirmBanner}
+                >
+                  Salvar
+                </Button>
               </div>
             </div>
           </DialogContent>
@@ -364,11 +388,15 @@ export default function BannersSlot() {
             <div className="flex justify-end space-x-2 mt-4">
               <Button
                 variant="secondary"
+                className="py-2 px-4 bg-neutral-50 text-neutral hover:text-white hover:bg-neutral-400"
                 onClick={() => setIsDeleteDialogOpen(false)}
               >
                 Cancelar
               </Button>
-              <Button variant="destructive" onClick={confirmDeleteBanner}>
+              <Button
+                className="py-2 px-4 transition-all bg-secondary text-white hover:bg-secondary-800"
+                onClick={confirmDeleteBanner}
+              >
                 Deletar
               </Button>
             </div>

@@ -316,7 +316,7 @@ export function SliderTab() {
         <Modal
           open={isDialogOpen}
           onOpenChange={closeDialog}
-          title={editingBanner ? 'Editar Slider' : 'Adicionar Slider'}
+          title={editingBanner ? 'Editando Slider' : 'Adicionando Slider'}
         >
           <div className="space-y-4">
             <div>
@@ -423,7 +423,7 @@ export function SliderTab() {
             </div>
             <div className="flex justify-end space-x-2">
               <Button
-                className="py-2 px-4 bg-neutral-50 text-neutral"
+                className="py-2 px-4 bg-neutral-50 text-neutral hover:text-white hover:bg-neutral-400"
                 onClick={closeDialog}
               >
                 Cancelar
@@ -450,10 +450,10 @@ export function SliderTab() {
         <Modal
           open={isDeleteDialogOpen}
           onOpenChange={() => setIsDeleteDialogOpen(false)}
-          title="Deletar Banner"
+          title="Deletar slider"
         >
           <p className="text-neutral-400">
-            Tem certeza de que deseja deletar este banner?
+            Tem certeza de que deseja deletar este slider?
           </p>
           <div className="flex justify-end space-x-2 mt-4">
             <Button
@@ -465,7 +465,7 @@ export function SliderTab() {
             </Button>
             <Button
               variant="destructive"
-              className="py-2 px-4 transition-all bg-secondary text-white cursor-not-allowed hover:bg-secondary-800"
+              className="py-2 px-4 transition-all bg-secondary text-white hover:bg-secondary-800"
               onClick={confirmDeleteBanner}
             >
               Deletar
