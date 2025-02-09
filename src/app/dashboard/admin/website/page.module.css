@@ -1,23 +1,41 @@
 .card {
-  /* Transição suave para transform, background e cor */
+  position: relative;
   transition: all 0.3s ease-in-out;
-  /* Evita sublinhados e outros estilos em descendentes */
-  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #ececec;
 }
 
-/* Efeito ao passar o mouse */
 .card:hover {
   transform: translateY(-5px) scale(1.05);
-  background-color: #ff202a; /* Fundo vermelho */
-  color: #ffffff; /* Texto branco */
+  background-color: #ff202a; /* Fundo ao hover */
+  color: #fff; /* Texto branco ao hover */
 }
 
-/* A imagem também terá uma transição suave */
+/* Imagem principal */
 .cardImage {
-  transition: all 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 10;
 }
 
-/* Ao passar o mouse no card, a imagem sofre efeito (grayscale + brightness) */
+/* Imagem de hover, caso exista */
+.cardImageHover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+  z-index: 20;
+}
+
+/* Some a imagem normal no hover e mostra a de hover */
 .card:hover .cardImage {
-  filter: grayscale(100%) brightness(0.8);
+  opacity: 0;
+}
+
+.card:hover .cardImageHover {
+  display: block;
+  opacity: 1;
 }

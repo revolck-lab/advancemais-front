@@ -83,7 +83,7 @@ function DashboardMain({ children }: { children: React.ReactNode }) {
   return (
     <main
       className={cn(
-        'flex-1 pt-24 px-10 transition-all duration-300 relative',
+        'flex-1 pt-24 px-14 transition-all duration-300 relative',
         isCollapsed ? 'ml-16' : 'ml-64'
       )}
     >

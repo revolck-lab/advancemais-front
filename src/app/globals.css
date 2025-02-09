@@ -216,3 +216,8 @@ a:hover {
 /*=======================
    DASHBOARD
 =======================*/
+
+.required::after {
+  content: ' *';
+  color: var(--secondary-color);
+}

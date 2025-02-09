@@ -1,20 +1,10 @@
+// src/components/dashboard/config/slider-tab/slider-tab.tsx
 import * as React from 'react'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card/card'
-import { Button } from '@/components/ui/button1'
+import { Card, CardContent, CardHeader } from '@/components/ui/card/card'
+import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
 import { Switch } from '@/components/ui/switch/switch'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog/dialog'
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core'
 import {
   arrayMove,
@@ -24,6 +14,9 @@ import {
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import Image from 'next/image'
+import { Modal } from '@/components/ui/modal/modal'
+import { FilterSelect } from '@/components/ui/filter-select/filter-select'
+import { FileUpload } from '@/components/ui/file-upload/file-upload'
 
 interface Banner {
   id: string
@@ -59,12 +52,8 @@ function SortableBanner({
     <div
       ref={setNodeRef}
       style={style}
-      className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+      className="bg-white border-1 border-neutral-100 rounded-lg overflow-hidden"
     >
-      {/* 
-        Tornamos a imagem o "handle" de arraste:
-        Adicionamos cursor de mover, e passamos {...attributes} {...listeners} apenas aqui.
-      */}
       <div className="cursor-move" {...attributes} {...listeners}>
         <Image
           src={banner.image}
@@ -78,15 +67,19 @@ function SortableBanner({
         <h3 className="font-semibold text-lg truncate">
           {banner.title || 'Sem título'}
         </h3>
-        <p className="text-sm text-gray-500 truncate">
-          <a
-            href={banner.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
-          >
-            {banner.url || 'Sem URL'}
-          </a>
+        <p className="text-sm truncate">
+          {banner.url ? (
+            <a
+              href={banner.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-secondary hover:text-secondary-800 text-sm hover:underline"
+            >
+              Clique aqui para visualizar a URL
+            </a>
+          ) : (
+            'Sem URL'
+          )}
         </p>
         <div className="flex justify-between items-center mt-2">
           <Switch
@@ -94,12 +87,17 @@ function SortableBanner({
             onCheckedChange={() => onToggleStatus(banner.id)}
           />
           <div className="space-x-2">
-            <Button size="sm" onClick={() => onEdit(banner)}>
+            <Button
+              size="sm"
+              className="py-2 px-4 bg-neutral-50 text-neutral"
+              onClick={() => onEdit(banner)}
+            >
               Editar
             </Button>
             <Button
               variant="destructive"
               size="sm"
+              className="py-2 px-4 transition-all bg-secondary-200 text-white hover:bg-secondary"
               onClick={() => onDelete(banner.id)}
             >
               Deletar
@@ -131,17 +129,12 @@ export function SliderTab() {
     },
   ])
 
-  // States relacionados ao formulário e edição:
   const [isDialogOpen, setIsDialogOpen] = React.useState(false)
   const [editingBanner, setEditingBanner] = React.useState<Banner | null>(null)
-
-  // States relacionados a deleção:
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
   const [bannerToDelete, setBannerToDelete] = React.useState<string | null>(
     null
   )
-
-  // State temporário para armazenar dados do banner antes de salvar
   const [tempBanner, setTempBanner] = React.useState<Banner>({
     id: '',
     image: '',
@@ -150,19 +143,16 @@ export function SliderTab() {
     status: true,
     targetDevice: 'web',
   })
-
   const [previewImage, setPreviewImage] = React.useState<string | null>(null)
-  const [selectedDevice, setSelectedDevice] = React.useState<'web' | 'mobile'>(
-    'web'
-  )
-
+  const [selectedDevices, setSelectedDevices] = React.useState<
+    ('web' | 'mobile')[]
+  >(['web'])
   const canAddMoreBanners = banners.length < 10
 
-  const filteredBanners = banners.filter(
-    (banner) => banner.targetDevice === selectedDevice
+  const filteredBanners = banners.filter((banner) =>
+    selectedDevices.includes(banner.targetDevice)
   )
 
-  // --- Ações de abrir e fechar os modais ---
   function openBannerDialogForCreate() {
     setEditingBanner(null)
     setTempBanner({
@@ -180,7 +170,6 @@ export function SliderTab() {
   function closeDialog() {
     setIsDialogOpen(false)
     setEditingBanner(null)
-    // Reseta o banner temporário:
     setTempBanner({
       id: '',
       image: '',
@@ -192,7 +181,6 @@ export function SliderTab() {
     setPreviewImage(null)
   }
 
-  // --- Ações de criar e editar banners ---
   function handleConfirmBanner() {
     if (!tempBanner.image) {
       alert('Por favor, faça upload de uma imagem antes de confirmar.')
@@ -200,14 +188,12 @@ export function SliderTab() {
     }
 
     if (editingBanner) {
-      // Edição de um banner existente
       setBanners((prev) =>
         prev.map((banner) =>
           banner.id === editingBanner.id ? { ...tempBanner } : banner
         )
       )
     } else {
-      // Criação de um novo banner
       setBanners((prev) => [
         ...prev,
         { ...tempBanner, id: `banner-${Date.now()}` },
@@ -223,20 +209,6 @@ export function SliderTab() {
     setIsDialogOpen(true)
   }
 
-  // --- Ações de upload de imagem ---
-  function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0]
-    if (file) {
-      const imageUrl = URL.createObjectURL(file)
-      setTempBanner((prev) => ({
-        ...prev,
-        image: imageUrl,
-      }))
-      setPreviewImage(imageUrl)
-    }
-  }
-
-  // --- Ações de deleção ---
   function handleDeleteBanner(id: string) {
     setBannerToDelete(id)
     setIsDeleteDialogOpen(true)
@@ -249,7 +221,6 @@ export function SliderTab() {
     setBannerToDelete(null)
   }
 
-  // --- Ativação/Desativação do banner ---
   function handleToggleStatus(id: string) {
     setBanners((prev) =>
       prev.map((banner) =>
@@ -258,7 +229,6 @@ export function SliderTab() {
     )
   }
 
-  // --- Drag and Drop ---
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
     if (over && active.id !== over.id) {
@@ -271,47 +241,51 @@ export function SliderTab() {
   }
 
   return (
-    <div className="p-4">
-      <Card>
-        <CardHeader className="flex justify-between items-center">
-          <CardTitle>Lista de Banners</CardTitle>
-          <Button
-            onClick={openBannerDialogForCreate}
-            disabled={!canAddMoreBanners}
-          >
-            + Novo Banner
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Seletor de dispositivo */}
-          <div className="flex justify-end space-x-4">
-            <label className="flex items-center space-x-1">
-              <input
-                type="radio"
-                name="device"
-                value="web"
-                checked={selectedDevice === 'web'}
-                onChange={() => setSelectedDevice('web')}
+    <div className="p-0">
+      <Card className="border-0 shadow-none">
+        <CardHeader className="flex justify-between items-center p-4">
+          <div className="flex items-center justify-between w-full gap-4">
+            <div className="flex-1 max-w-xs">
+              <FilterSelect
+                items={[
+                  { label: 'Web', value: 'web' },
+                  { label: 'Mobile', value: 'mobile' },
+                ]}
+                multiple={true}
+                initialValues={selectedDevices}
+                onSave={(selected) =>
+                  setSelectedDevices(selected as ('web' | 'mobile')[])
+                }
+                onCancel={() => {}}
+                placeholder="Dispositivos"
               />
-              <span>Web</span>
-            </label>
-            <label className="flex items-center space-x-1">
-              <input
-                type="radio"
-                name="device"
-                value="mobile"
-                checked={selectedDevice === 'mobile'}
-                onChange={() => setSelectedDevice('mobile')}
-              />
-              <span>Mobile</span>
-            </label>
+            </div>
+            <Button
+              onClick={openBannerDialogForCreate}
+              className="bg-primary px-5 py-3 text-white hover:text-white hover:bg-primary-800"
+              disabled={!canAddMoreBanners}
+            >
+              Adicionar
+            </Button>
           </div>
-
-          {/* Lista de banners filtrados */}
+        </CardHeader>
+        <CardContent className="p-4">
           {filteredBanners.length === 0 ? (
-            <p className="text-gray-500 text-center">
-              Nenhum banner adicionado.
-            </p>
+            <>
+              <div className="relative w-[250px] h-[250px] mx-auto m-0">
+                <Image
+                  src="/images/dashboard/empyt_state/empy_state_slider.webp"
+                  alt="Nenhuma imagem cadastrada"
+                  fill
+                  quality={100} // Garante a qualidade máxima da renderização
+                  className="object-contain"
+                />
+              </div>
+
+              <p className="text-gray-500 text-center pb-5 m-0">
+                Nenhuma imagem adicionada ao slider até o momento.
+              </p>
+            </>
           ) : (
             <DndContext
               collisionDetection={closestCenter}
@@ -338,121 +312,166 @@ export function SliderTab() {
         </CardContent>
       </Card>
 
-      {/* Modal de criação/edição */}
       {isDialogOpen && (
-        <Dialog open={isDialogOpen} onOpenChange={closeDialog}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {editingBanner ? 'Editar Banner' : 'Adicionar Banner'}
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="image">Imagem</Label>
-                {previewImage && (
-                  <Image
-                    src={previewImage}
-                    alt="Preview"
-                    width={500}
-                    height={200}
-                    className="w-full h-40 object-cover rounded-lg mb-2"
-                  />
-                )}
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                />
-              </div>
-              <div>
-                <Label htmlFor="title">Título</Label>
-                <Input
-                  id="title"
-                  type="text"
-                  placeholder="Título do banner"
-                  value={tempBanner.title}
-                  onChange={(e) =>
-                    setTempBanner((prev) => ({
-                      ...prev,
-                      title: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="url">URL</Label>
-                <Input
-                  id="url"
-                  type="text"
-                  placeholder="URL do banner"
-                  value={tempBanner.url}
-                  onChange={(e) =>
-                    setTempBanner((prev) => ({
-                      ...prev,
-                      url: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="targetDevice">Dispositivo</Label>
-                <select
-                  id="targetDevice"
-                  value={tempBanner.targetDevice}
-                  onChange={(e) =>
-                    setTempBanner((prev) => ({
-                      ...prev,
-                      targetDevice: e.target.value as 'web' | 'mobile',
-                    }))
-                  }
-                  className="w-full border rounded-md p-2"
-                >
-                  <option value="web">Web</option>
-                  <option value="mobile">Mobile</option>
-                </select>
-              </div>
-              <div className="flex justify-end space-x-2">
-                <Button variant="secondary" onClick={closeDialog}>
-                  Cancelar
-                </Button>
-                <Button
-                  onClick={handleConfirmBanner}
-                  disabled={!tempBanner.image}
-                >
-                  Confirmar
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {/* Modal de confirmação de deleção */}
-      {isDeleteDialogOpen && (
-        <Dialog
-          open={isDeleteDialogOpen}
-          onOpenChange={() => setIsDeleteDialogOpen(false)}
+        <Modal
+          open={isDialogOpen}
+          onOpenChange={closeDialog}
+          title={editingBanner ? 'Editar Slider' : 'Adicionar Slider'}
         >
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Deletar Banner</DialogTitle>
-            </DialogHeader>
-            <p>Tem certeza de que deseja deletar este banner?</p>
-            <div className="flex justify-end space-x-2 mt-4">
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="image" className="required">
+                Imagem
+              </Label>
+              {previewImage && (
+                <Image
+                  src={previewImage}
+                  alt="Preview"
+                  width={500}
+                  height={200}
+                  className="w-full h-40 object-cover rounded-lg mb-2"
+                />
+              )}
+              <FileUpload
+                multiple={false}
+                maxFiles={1}
+                allowedFormats={['image/jpeg', 'image/png', 'image/webp']}
+                onUpload={(files) => {
+                  const file = files[0]
+                  if (file) {
+                    const imageUrl = URL.createObjectURL(file)
+                    setTempBanner((prev) => ({
+                      ...prev,
+                      image: imageUrl,
+                    }))
+                    setPreviewImage(imageUrl)
+                  }
+                }}
+                onRemove={() => {
+                  setTempBanner((prev) => ({ ...prev, image: '' }))
+                  setPreviewImage(null)
+                }}
+                defaultFiles={
+                  editingBanner?.image
+                    ? [
+                        {
+                          ...new File([], 'Imagem Atual'), // Simula um arquivo
+                          path: editingBanner.image,
+                          name: 'Imagem Atual',
+                          size: 1024, // Você pode ajustar para o tamanho real, se necessário
+                          type: 'image/jpeg', // Defina o tipo correto de arquivo
+                        },
+                      ]
+                    : []
+                }
+              />
+            </div>
+            <div>
+              <Label htmlFor="title" className="required">
+                Título
+              </Label>
+              <Input
+                id="title"
+                type="text"
+                placeholder="Título do banner"
+                value={tempBanner.title}
+                onChange={(e) =>
+                  setTempBanner((prev) => ({
+                    ...prev,
+                    title: e.target.value,
+                  }))
+                }
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="url" className="required">
+                URL
+              </Label>
+              <Input
+                id="url"
+                type="text"
+                placeholder="URL do banner"
+                value={tempBanner.url}
+                onChange={(e) =>
+                  setTempBanner((prev) => ({
+                    ...prev,
+                    url: e.target.value,
+                  }))
+                }
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="targetDevice" className="required">
+                Dispositivo
+              </Label>
+              <select
+                id="targetDevice"
+                value={tempBanner.targetDevice}
+                onChange={(e) =>
+                  setTempBanner((prev) => ({
+                    ...prev,
+                    targetDevice: e.target.value as 'web' | 'mobile',
+                  }))
+                }
+                className="w-full border rounded-md p-2"
+              >
+                <option value="web">Web</option>
+                <option value="mobile">Mobile</option>
+              </select>
+            </div>
+            <div className="flex justify-end space-x-2">
               <Button
-                variant="secondary"
-                onClick={() => setIsDeleteDialogOpen(false)}
+                className="py-2 px-4 bg-neutral-50 text-neutral"
+                onClick={closeDialog}
               >
                 Cancelar
               </Button>
-              <Button variant="destructive" onClick={confirmDeleteBanner}>
-                Deletar
+              <Button
+                onClick={handleConfirmBanner}
+                className={`py-2 px-4 transition-all ${
+                  !tempBanner.image || !tempBanner.title || !tempBanner.url
+                    ? 'bg-primary-200 text-white cursor-not-allowed'
+                    : 'bg-primary text-white hover:bg-primary-800'
+                }`}
+                disabled={
+                  !tempBanner.image || !tempBanner.title || !tempBanner.url
+                }
+              >
+                Confirmar
               </Button>
             </div>
-          </DialogContent>
-        </Dialog>
+          </div>
+        </Modal>
+      )}
+
+      {isDeleteDialogOpen && (
+        <Modal
+          open={isDeleteDialogOpen}
+          onOpenChange={() => setIsDeleteDialogOpen(false)}
+          title="Deletar Banner"
+        >
+          <p className="text-neutral-400">
+            Tem certeza de que deseja deletar este banner?
+          </p>
+          <div className="flex justify-end space-x-2 mt-4">
+            <Button
+              variant="secondary"
+              className="py-2 px-4 bg-neutral-50 text-neutral"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              className="py-2 px-4 transition-all bg-secondary text-white cursor-not-allowed hover:bg-secondary-800"
+              onClick={confirmDeleteBanner}
+            >
+              Deletar
+            </Button>
+          </div>
+        </Modal>
       )}
     </div>
   )
