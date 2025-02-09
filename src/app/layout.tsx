@@ -1,10 +1,8 @@
-// src/app/layout.tsx
 import type { Metadata } from 'next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import './globals.css'
-
-// Importa o componente cliente que terá o <Toaster />
 import { ToasterClient } from '@/components/ui/toast/toaster-client'
+import { ToastProvider } from '@/components/ui/toast/toast'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -20,13 +18,10 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head />
       <body suppressHydrationWarning>
-        {/* Componente client que possui <Toaster /> */}
-        <ToasterClient />
-
-        {/* Restante da aplicação */}
-        {children}
-
-        {/* SpeedInsights (somente no client side, se quiser manter) */}
+        <ToastProvider>
+          <ToasterClient />
+          {children}
+        </ToastProvider>
         {typeof window !== 'undefined' && <SpeedInsights />}
       </body>
     </html>

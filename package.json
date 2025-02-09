@@ -33,6 +33,7 @@
     "@radix-ui/react-toast": "^1.2.5",
     "@radix-ui/react-tooltip": "^1.1.4",
     "@shadcn/ui": "^0.0.4",
+    "@tinymce/tinymce-react": "^5.1.1",
     "@types/react-dropzone": "^4.2.2",
     "@vercel/speed-insights": "^1.1.0",
     "animata": "^1.1.0",

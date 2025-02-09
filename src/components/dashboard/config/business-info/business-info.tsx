@@ -1,10 +1,16 @@
+// src/components/dashboard/config/business-info/business-info.tsx
 import React, { useState } from 'react'
-import { Button } from '@/components/ui/button1'
+import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
 import Image from 'next/image'
+import { TextareaDashboard } from '@/components/ui/textarea/textarea-dashboard'
+import { FileUpload } from '@/components/ui/file-upload/file-upload'
+import { useToast } from '@/hooks/use-toast'
 
 export default function BusinessInfo() {
+  const { toast } = useToast()
+
   const [title, setTitle] = useState<string>(
     'Acelere o crescimento do seu negócio'
   )
@@ -16,15 +22,17 @@ export default function BusinessInfo() {
   )
   const [previewImage, setPreviewImage] = useState<string | null>(image)
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
+  // Função chamada ao fazer upload de uma nova imagem
+  const handleImageUpload = (files: File[]) => {
+    if (files.length > 0) {
+      const file = files[0]
       const imageUrl = URL.createObjectURL(file)
       setPreviewImage(imageUrl)
       setImage(file.name) // Simulação de nome de arquivo salvo
     }
   }
 
+  // Função chamada ao remover a imagem
   const handleDeleteImage = () => {
     setPreviewImage(null)
     setImage(null)
@@ -32,7 +40,11 @@ export default function BusinessInfo() {
 
   const handleSave = () => {
     if (!title || !description || !image) {
-      alert('Preencha todos os campos antes de salvar.')
+      toast({
+        title: 'Erro ao salvar!',
+        description: 'Preencha todos os campos antes de salvar.',
+        variant: 'danger',
+      })
       return
     }
 
@@ -43,15 +55,16 @@ export default function BusinessInfo() {
       image,
     })
 
-    alert('Informações salvas com sucesso!')
+    toast({
+      title: 'Salvo com sucesso!',
+      description: 'As informações foram salvas com sucesso.',
+      variant: 'success',
+    })
   }
 
   return (
-    <div className="p-8 max-w-4xl mx-auto bg-gray-50 shadow-lg rounded-2xl border border-gray-200">
-      <h1 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
-        Configurar Informações do Negócio
-      </h1>
-
+    <div className="p-4 mx-auto">
+      {/* O toast será exibido globalmente via o hook useToast */}
       <div className="flex flex-col md:flex-row gap-8">
         {/* Coluna da Imagem */}
         <div className="flex flex-col items-center justify-start space-y-4 w-full md:w-1/2">
@@ -79,12 +92,12 @@ export default function BusinessInfo() {
               >
                 Imagem
               </Label>
-              <Input
-                id="image"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="mt-2 w-full border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg"
+              <FileUpload
+                maxFiles={1}
+                maxSize={5 * 1024 * 1024} // 5MB máximo
+                allowedFormats={['image/jpeg', 'image/png', 'image/webp']}
+                onUpload={handleImageUpload}
+                onRemove={handleDeleteImage}
               />
             </div>
           )}
@@ -96,7 +109,7 @@ export default function BusinessInfo() {
           <div>
             <Label
               htmlFor="title"
-              className="text-lg font-medium text-gray-700"
+              className="text-base font-normal text-neutral"
             >
               Título
             </Label>
@@ -105,8 +118,9 @@ export default function BusinessInfo() {
               type="text"
               placeholder="Digite o título"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value.substring(0, 100))}
               className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+              maxLength={100} // Caso o componente Input suporte
             />
           </div>
 
@@ -114,16 +128,14 @@ export default function BusinessInfo() {
           <div>
             <Label
               htmlFor="description"
-              className="text-lg font-medium text-gray-700"
+              className="text-base font-normal text-neutral"
             >
               Descrição
             </Label>
-            <textarea
-              id="description"
-              placeholder="Digite a descrição"
+            <TextareaDashboard
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg p-3 text-gray-900 h-28 mt-2"
+              onChange={(value) => setDescription(value.substring(0, 500))}
+              placeholder="Digite a descrição"
             />
           </div>
 

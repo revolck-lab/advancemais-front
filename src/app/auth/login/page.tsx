@@ -27,6 +27,7 @@ const LoginPage: React.FC = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [remember, setRemember] = useState(false)
 
   // Simula splash de carregamento inicial (loader em tela cheia)
   useEffect(() => {
@@ -106,14 +107,19 @@ const LoginPage: React.FC = () => {
         toast({
           title: 'Login bem-sucedido!',
           description: 'Você está conectado(a) ao Advance+. Bem-vindo(a)!',
-          variant: 'default',
+          variant: 'success',
         })
 
-        // 1) Salva no localStorage (se precisar usar no Axios interceptors)
-        localStorage.setItem('authToken', response.token)
-
-        // 2) Define o cookie para que o middleware possa ler
-        document.cookie = `authToken=${response.token}; Path=/; Max-Age=86400; SameSite=Lax`
+        if (remember) {
+          // Se o usuário marcar "Me mantenha conectado", salva em localStorage (persistente)
+          localStorage.setItem('authToken', response.token)
+          document.cookie = `authToken=${response.token}; Path=/; Max-Age=86400; SameSite=Lax`
+        } else {
+          // Caso contrário, salva em sessionStorage (válido somente na sessão atual)
+          sessionStorage.setItem('authToken', response.token)
+          // Cookie sem Max-Age funciona como session cookie (será removido ao fechar o navegador)
+          document.cookie = `authToken=${response.token}; Path=/; SameSite=Lax`
+        }
 
         // Redireciona
         router.push('/dashboard')
@@ -121,7 +127,7 @@ const LoginPage: React.FC = () => {
         toast({
           title: 'Erro inesperado',
           description: 'Não foi possível concluir o login. Tente novamente.',
-          variant: 'destructive',
+          variant: 'danger',
         })
       }
     } catch (error: unknown) {
@@ -134,21 +140,21 @@ const LoginPage: React.FC = () => {
             title: 'Senha incorreta',
             description:
               'Ops, parece que sua senha não confere. Por favor, tente novamente ou recupere sua senha.',
-            variant: 'destructive',
+            variant: 'danger',
           })
         } else if (status === 401 && errorMsg === 'User not found') {
           toast({
             title: 'Usuário não cadastrado',
             description:
               'Não encontramos uma conta com este CPF/CNPJ. Verifique seus dados ou faça seu cadastro.',
-            variant: 'destructive',
+            variant: 'danger',
           })
         } else {
           toast({
             title: 'Não foi possível entrar',
             description:
               'Verifique suas credenciais ou tente novamente mais tarde.',
-            variant: 'destructive',
+            variant: 'danger',
           })
         }
       } else {
@@ -156,7 +162,7 @@ const LoginPage: React.FC = () => {
           title: 'Não foi possível entrar',
           description:
             'Ocorreu um erro inesperado. Tente novamente mais tarde.',
-          variant: 'destructive',
+          variant: 'danger',
         })
       }
     } finally {
@@ -239,6 +245,8 @@ const LoginPage: React.FC = () => {
                   size="md"
                   color="primary"
                   radius="sm"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
                 >
                   Me mantenha conectado
                 </Checkbox>
@@ -257,6 +265,8 @@ const LoginPage: React.FC = () => {
                   size="sm"
                   color="primary"
                   radius="sm"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
                 >
                   Me mantenha conectado
                 </Checkbox>
