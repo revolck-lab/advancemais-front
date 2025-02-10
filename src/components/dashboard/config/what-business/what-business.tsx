@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
 import IconSelectorModal from '@/components/ui/icon-selector/icon-selector-modal'
+import { Label } from '@/components/ui/label/label'
+import { Input } from '@/components/ui/input/input'
+import { TextareaDashboard } from '@/components/ui/textarea/textarea-dashboard'
+import InputIcons from '@/components/ui/select-icons/inputIcons'
 
 export default function WhatBusiness() {
   const [title, setTitle] = useState<string>('Por que escolher a AdvanceMais?')
@@ -43,12 +47,7 @@ export default function WhatBusiness() {
   ])
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-  const [currentBoxId, setCurrentBoxId] = useState<number | null>(null)
-
-  const handleOpenModal = (id: number) => {
-    setCurrentBoxId(id)
-    setIsModalOpen(true)
-  }
+  const [currentBoxId] = useState<number | null>(null)
 
   const handleIconSelect = (icon: string) => {
     if (currentBoxId !== null) {
@@ -60,54 +59,71 @@ export default function WhatBusiness() {
   }
 
   return (
-    <div className="p-8 max-w-5xl mx-auto bg-gray-50 shadow-lg rounded-2xl border border-gray-200">
-      <h1 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
-        Configurar Informações - Por que nos escolher?
-      </h1>
-
+    <div className="p-4 mx-auto">
       {/* Campos principais */}
       <div className="space-y-4">
         <div>
-          <label className="block text-lg font-medium text-gray-700">
-            Título Principal
-          </label>
-          <input
+          <Label
+            htmlFor="title"
+            className="text-base font-normal text-neutral required"
+          >
+            Título
+          </Label>
+          <Input
+            id="title"
             type="text"
+            placeholder="Digite o título"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => setTitle(e.target.value.substring(0, 100))}
+            className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={100} // Caso o componente Input suporte
           />
         </div>
         <div>
-          <label className="block text-lg font-medium text-gray-700">
-            Descrição Principal
-          </label>
-          <textarea
+          <Label
+            htmlFor="description"
+            className="text-base font-normal text-neutral required"
+          >
+            Descrição
+          </Label>
+          <TextareaDashboard
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 h-20"
+            onChange={(value) => setDescription(value.substring(0, 500))}
+            placeholder="Digite a descrição"
           />
         </div>
         <div>
-          <label className="block text-lg font-medium text-gray-700">
+          <Label
+            htmlFor="buttonText"
+            className="text-base font-normal text-neutral required"
+          >
             Texto do Botão
-          </label>
-          <input
+          </Label>
+          <Input
+            id="buttonText"
             type="text"
+            placeholder="Digite o texto do botão"
             value={buttonLabel}
-            onChange={(e) => setButtonLabel(e.target.value)}
-            className="w-full mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => setButtonLabel(e.target.value.substring(0, 100))}
+            className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={100}
           />
         </div>
         <div>
-          <label className="block text-lg font-medium text-gray-700">
+          <Label
+            htmlFor="buttonURL"
+            className="text-base font-normal text-neutral required"
+          >
             URL do Botão
-          </label>
-          <input
+          </Label>
+          <Input
+            id="buttonURL"
             type="text"
+            placeholder="Digite o texto do botão"
             value={buttonUrl}
-            onChange={(e) => setButtonUrl(e.target.value)}
-            className="w-full mt-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => setButtonUrl(e.target.value.substring(0, 100))}
+            className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={100}
           />
         </div>
       </div>
@@ -117,52 +133,69 @@ export default function WhatBusiness() {
         {boxes.map((box) => (
           <div
             key={box.id}
-            className="p-4 bg-blue-900 rounded-lg shadow-md text-white space-y-4"
+            className="p-4 bg-white rounded-lg border-1 border-neutral-100 text-neutral space-y-4"
           >
             <div className="flex items-center justify-between">
-              <button
-                onClick={() => handleOpenModal(box.id)}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-              >
-                Alterar Ícone
-              </button>
-              <span className="text-gray-100">
+              {/* Componente InputIcons para alterar o ícone */}
+              <div className="flex items-center">
+                <InputIcons
+                  onIconSelect={(iconName) =>
+                    setBoxes((prev) =>
+                      prev.map((b) =>
+                        b.id === box.id ? { ...b, icon: iconName } : b
+                      )
+                    )
+                  }
+                />
+              </div>
+              <span className="text-neutral">
                 <strong>{box.icon}</strong>
               </span>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200">
+              <Label
+                htmlFor={`titleBox-${box.id}`}
+                className="text-base font-normal text-neutral required"
+              >
                 Título do Box
-              </label>
-              <input
+              </Label>
+              <Input
+                id={`titleBox-${box.id}`}
                 type="text"
+                placeholder="Digite o título"
                 value={box.title}
                 onChange={(e) =>
                   setBoxes((prev) =>
                     prev.map((b) =>
-                      b.id === box.id ? { ...b, title: e.target.value } : b
-                    )
-                  )
-                }
-                className="w-full mt-2 p-2 border rounded-lg text-gray-900 focus:ring-2 focus:ring-red-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-200">
-                Descrição do Box
-              </label>
-              <textarea
-                value={box.description}
-                onChange={(e) =>
-                  setBoxes((prev) =>
-                    prev.map((b) =>
                       b.id === box.id
-                        ? { ...b, description: e.target.value }
+                        ? { ...b, title: e.target.value.substring(0, 50) }
                         : b
                     )
                   )
                 }
-                className="w-full mt-2 p-2 border rounded-lg text-gray-900 focus:ring-2 focus:ring-red-500 h-20"
+                className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+                maxLength={50}
+              />
+            </div>
+            <div>
+              <Label
+                htmlFor={`descriptionBox-${box.id}`}
+                className="text-base font-normal text-neutral required"
+              >
+                Descrição do Box
+              </Label>
+              <TextareaDashboard
+                value={box.description}
+                onChange={(value: string) =>
+                  setBoxes((prev) =>
+                    prev.map((b) =>
+                      b.id === box.id
+                        ? { ...b, description: value.substring(0, 200) }
+                        : b
+                    )
+                  )
+                }
+                placeholder="Digite a descrição"
               />
             </div>
           </div>

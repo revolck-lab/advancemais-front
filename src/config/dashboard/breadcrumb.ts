@@ -25,6 +25,18 @@ export function getBreadcrumbConfig(pathname: string): BreadcrumbConfig {
           { label: 'Página inicial' },
         ],
       }
+    case '/dashboard/admin/website/about':
+      return {
+        title: 'Configuração da Página inicial',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          {
+            label: 'Configurações do Website',
+            href: '/dashboard/admin/website',
+          },
+          { label: 'Sobre' },
+        ],
+      }
     default:
       return {
         title: 'Dashboard',
