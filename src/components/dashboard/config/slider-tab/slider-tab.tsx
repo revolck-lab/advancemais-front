@@ -17,6 +17,7 @@ import Image from 'next/image'
 import { Modal } from '@/components/ui/modal/modal'
 import { FilterSelect } from '@/components/ui/filter-select/filter-select'
 import { FileUpload } from '@/components/ui/file-upload/file-upload'
+import { toast } from '@/hooks/use-toast'
 
 interface Banner {
   id: string
@@ -240,6 +241,39 @@ export function SliderTab() {
     }
   }
 
+  const handleSave = () => {
+    // Verificar se há banners inválidos
+    const invalidBanners = banners.filter(
+      (banner) => !banner.image || !banner.title || !banner.url
+    )
+
+    if (invalidBanners.length > 0) {
+      toast({
+        title: 'Erro ao salvar!',
+        description: 'Alguns banners possuem campos incompletos.',
+        variant: 'danger',
+      })
+      return
+    }
+
+    try {
+      // Simular envio para API/externo
+      console.log('Dados salvos:', banners)
+
+      toast({
+        title: 'Salvo com sucesso!',
+        description: 'A configuração dos banners foi atualizada.',
+        variant: 'success',
+      })
+    } catch {
+      toast({
+        title: 'Erro ao salvar!',
+        description: 'Ocorreu um erro ao tentar salvar as configurações.',
+        variant: 'danger',
+      })
+    }
+  }
+
   return (
     <div className="p-0">
       <Card className="border-0 shadow-none">
@@ -309,6 +343,16 @@ export function SliderTab() {
               </SortableContext>
             </DndContext>
           )}
+
+          {/* Botão Salvar */}
+          <div className="flex justify-end">
+            <Button
+              onClick={handleSave}
+              className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition"
+            >
+              Salvar
+            </Button>
+          </div>
         </CardContent>
       </Card>
 

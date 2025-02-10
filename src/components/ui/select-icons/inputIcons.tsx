@@ -6,10 +6,18 @@ import type { LucideProps } from 'lucide-react'
 
 interface InputIconsProps {
   onIconSelect?: (iconName: string) => void
+  // Se desejar, você pode incluir uma propriedade para definir o ícone inicial
+  defaultIcon?: string
 }
 
-const InputIcons: React.FC<InputIconsProps> = ({ onIconSelect }) => {
-  const [selectedIcon, setSelectedIcon] = useState<string | null>(null)
+const InputIcons: React.FC<InputIconsProps> = ({
+  onIconSelect,
+  defaultIcon,
+}) => {
+  // Inicializa o estado com defaultIcon, se fornecido.
+  const [selectedIcon, setSelectedIcon] = useState<string | null>(
+    defaultIcon ?? null
+  )
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleIconSelect = (iconName: string) => {
@@ -42,6 +50,7 @@ const InputIcons: React.FC<InputIconsProps> = ({ onIconSelect }) => {
         <SelectIcons
           onSelect={handleIconSelect}
           onClose={() => setIsModalOpen(false)}
+          initialSelectedIcon={selectedIcon ?? undefined}
         />
       )}
     </div>

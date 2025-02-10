@@ -4,6 +4,8 @@ import { Label } from '@/components/ui/label/label'
 import { Input } from '@/components/ui/input/input'
 import { TextareaDashboard } from '@/components/ui/textarea/textarea-dashboard'
 import InputIcons from '@/components/ui/select-icons/inputIcons'
+import { Button } from '@/components/ui/button/button'
+import { toast } from '@/hooks/use-toast'
 
 export default function WhatBusiness() {
   const [title, setTitle] = useState<string>('Por que escolher a AdvanceMais?')
@@ -56,6 +58,28 @@ export default function WhatBusiness() {
       )
     }
     setIsModalOpen(false)
+  }
+
+  const handleSave = () => {
+    if (!title || !description) {
+      toast({
+        title: 'Erro ao salvar!',
+        description: 'Preencha todos os campos antes de salvar.',
+        variant: 'danger',
+      })
+      return
+    }
+
+    console.log('Salvando...', {
+      title,
+      description,
+    })
+
+    toast({
+      title: 'Salvo com sucesso!',
+      description: 'As informações foram salvas com sucesso.',
+      variant: 'success',
+    })
   }
 
   return (
@@ -208,6 +232,16 @@ export default function WhatBusiness() {
         onClose={() => setIsModalOpen(false)}
         onSelect={handleIconSelect}
       />
+
+      {/* Botão Salvar */}
+      <div className="flex justify-end mt-5">
+        <Button
+          onClick={handleSave}
+          className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition"
+        >
+          Salvar
+        </Button>
+      </div>
     </div>
   )
 }
