@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
-import { Button } from '@/components/ui/button1'
+import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
+import { TextareaDashboard } from '@/components/ui/textarea/textarea-dashboard'
+import { useToast } from '@/hooks/use-toast'
 
 export default function CourseHeader() {
+  const { toast } = useToast()
   const [subtitle, setSubtitle] = useState<string>('Conheça nossos Cursos')
   const [title, setTitle] = useState<string>(
     'Capacite-se para transformar o futuro'
@@ -16,7 +19,11 @@ export default function CourseHeader() {
 
   const handleSave = () => {
     if (!subtitle || !title || !description || !buttonLabel || !buttonUrl) {
-      alert('Preencha todos os campos antes de salvar.')
+      toast({
+        title: 'Erro ao salvar!',
+        description: 'Preencha todos os campos antes de salvar.',
+        variant: 'danger',
+      })
       return
     }
 
@@ -29,21 +36,21 @@ export default function CourseHeader() {
       buttonUrl,
     })
 
-    alert('Informações salvas com sucesso!')
+    toast({
+      title: 'Salvo com sucesso!',
+      description: 'As informações foram salvas com sucesso.',
+      variant: 'success',
+    })
   }
 
   return (
-    <div className="p-8 max-w-4xl mx-auto bg-gray-50 shadow-lg rounded-2xl border border-gray-200">
-      <h1 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
-        Configurar Cabeçalho dos Cursos
-      </h1>
-
-      <div className="flex flex-col space-y-6">
-        {/* Subtitle */}
+    <div className="p-4 mx-auto">
+      {/* Campos principais */}
+      <div className="space-y-4">
         <div>
           <Label
             htmlFor="subtitle"
-            className="text-lg font-medium text-gray-700"
+            className="text-base font-normal text-neutral required"
           >
             Subtítulo
           </Label>
@@ -52,14 +59,16 @@ export default function CourseHeader() {
             type="text"
             placeholder="Digite o subtítulo"
             value={subtitle}
-            onChange={(e) => setSubtitle(e.target.value)}
+            onChange={(e) => setSubtitle(e.target.value.substring(0, 50))}
             className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={50}
           />
         </div>
-
-        {/* Title */}
         <div>
-          <Label htmlFor="title" className="text-lg font-medium text-gray-700">
+          <Label
+            htmlFor="title"
+            className="text-base font-normal text-neutral required"
+          >
             Título
           </Label>
           <Input
@@ -67,73 +76,68 @@ export default function CourseHeader() {
             type="text"
             placeholder="Digite o título"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value.substring(0, 100))}
             className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={100}
           />
         </div>
-
-        {/* Description */}
         <div>
           <Label
             htmlFor="description"
-            className="text-lg font-medium text-gray-700"
+            className="text-base font-normal text-neutral required"
           >
             Descrição
           </Label>
-          <textarea
-            id="description"
-            placeholder="Digite a descrição"
+          <TextareaDashboard
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg p-3 text-gray-900 h-28 mt-2"
+            onChange={(value) => setDescription(value.substring(0, 500))}
+            placeholder="Digite a descrição"
           />
         </div>
-
-        {/* Button Label */}
         <div>
           <Label
-            htmlFor="buttonLabel"
-            className="text-lg font-medium text-gray-700"
+            htmlFor="buttonText"
+            className="text-base font-normal text-neutral required"
           >
             Texto do Botão
           </Label>
           <Input
-            id="buttonLabel"
+            id="buttonText"
             type="text"
             placeholder="Digite o texto do botão"
             value={buttonLabel}
-            onChange={(e) => setButtonLabel(e.target.value)}
+            onChange={(e) => setButtonLabel(e.target.value.substring(0, 100))}
             className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={100}
           />
         </div>
-
-        {/* Button URL */}
         <div>
           <Label
-            htmlFor="buttonUrl"
-            className="text-lg font-medium text-gray-700"
+            htmlFor="buttonURL"
+            className="text-base font-normal text-neutral required"
           >
             URL do Botão
           </Label>
           <Input
-            id="buttonUrl"
+            id="buttonURL"
             type="text"
-            placeholder="Digite a URL do botão"
+            placeholder="Digite o texto do botão"
             value={buttonUrl}
-            onChange={(e) => setButtonUrl(e.target.value)}
+            onChange={(e) => setButtonUrl(e.target.value.substring(0, 100))}
             className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={100}
           />
         </div>
+      </div>
 
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <Button
-            onClick={handleSave}
-            className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition"
-          >
-            Salvar
-          </Button>
-        </div>
+      {/* Botão Salvar */}
+      <div className="flex justify-end mt-5">
+        <Button
+          onClick={handleSave}
+          className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition"
+        >
+          Salvar
+        </Button>
       </div>
     </div>
   )

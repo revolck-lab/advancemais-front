@@ -5,9 +5,18 @@ export const dashboardRoutes = [
     category: 'ADMINISTRAÇÃO',
     items: [
       {
-        title: 'Configurações do Site',
+        title: 'Configurações',
         icon: LayoutDashboard,
-        href: '/dashboard/admin/website',
+        submenu: [
+          {
+            title: 'Site principal',
+            href: '/dashboard/admin/website',
+          },
+          {
+            title: 'Dashboard',
+            href: '/dashboard/admin/dashboard',
+          },
+        ],
         // submenu: [
         //   {
         //     title: 'Configurações do Site',

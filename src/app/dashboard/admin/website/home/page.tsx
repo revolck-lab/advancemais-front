@@ -7,7 +7,7 @@ const { BusinessInfo, BannersSlot, BusinessGroup } = DynamicComponents
 
 export default function ConfigHomePage() {
   const tabs = [
-    { key: 'Slider', label: 'Slider Header', component: <SliderTab /> },
+    { key: 'Slider', label: 'Slider', component: <SliderTab /> },
     {
       key: 'businessInfo',
       label: 'Informações do negócio',
@@ -20,13 +20,13 @@ export default function ConfigHomePage() {
     },
     {
       key: 'BusinessGroup',
-      label: 'Informações de negócios - Grupos',
+      label: 'Informações de serviços',
       component: <BusinessGroup />,
     },
   ]
 
   return (
-    <section className="p-6 pb-12 bg-gray-50 border border-[#ececec] rounded-lg">
+    <section className="p-6 pb-12 bg-white border border-[#ececec] rounded-lg mb-12">
       <TabsDashboard tabs={tabs} defaultValue="Slider" />
     </section>
   )

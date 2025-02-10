@@ -22,18 +22,18 @@ export default function ConfigAboutPage() {
     },
     {
       key: 'BannersSlot',
-      label: 'Banners',
+      label: 'Escolha Advance+',
       component: <WhyChooseUs />,
     },
     {
       key: 'BusinessGroup',
-      label: 'Informações de negócios - Grupos',
+      label: 'Sobre',
       component: <AboutBusiness />,
     },
   ]
 
   return (
-    <section className="p-6 pb-12 bg-gray-50 border border-[#ececec] rounded-lg">
+    <section className="p-6 pb-12 bg-white border border-[#ececec] rounded-lg mb-12">
       <TabsDashboard tabs={tabs} defaultValue="titleHeader" />
     </section>
   )

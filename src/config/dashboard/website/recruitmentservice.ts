@@ -13,7 +13,7 @@ export const recruitmentConfig = {
     title: 'Conheça nosso serviço de Treinamento In Company',
     description:
       'O segredo para uma empresa de sucesso está em uma capactação contínua da equipe. A Advance+ oferece treinamentos personalizados que pontecializam as habilibidades dos seus colaboradores, permitindo que você se concente no crescimento do seu negócio',
-    image: '/images/home/banner_site_3.webp',
+    image: '/images/home/banner_site_2.webp',
     pro_item1: 'Capacite sua equipe de maneira eficiente.',
     pro_item2: 'Treinamento prático e adaptado à sua empresa.',
     pro_item3: 'Profissionais especializados para conduzir os treinamentos.',

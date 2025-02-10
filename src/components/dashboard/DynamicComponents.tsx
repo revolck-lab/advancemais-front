@@ -66,4 +66,13 @@ export const DynamicComponents = {
         '@/components/dashboard/config/connection-strong/connection-strong'
       )
   ),
+  SEOPage: createDynamicComponent(
+    () => import('@/components/dashboard/config/seo/seo')
+  ),
+  GlobalConfig: createDynamicComponent(
+    () => import('@/components/dashboard/config/global-config/globalConfig')
+  ),
+  SmtpConfig: createDynamicComponent(
+    () => import('@/components/dashboard/config/smtp-config/smtp-config')
+  ),
 }

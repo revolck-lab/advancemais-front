@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
-import { Button } from '@/components/ui/button1'
+import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
+import { TextareaDashboard } from '@/components/ui/textarea/textarea-dashboard'
+import { useToast } from '@/hooks/use-toast'
 
 export default function StatsSection() {
+  const { toast } = useToast()
   const [subtitle, setSubtitle] = useState<string>('Impulsione sua carreira')
   const [title, setTitle] = useState<string>('no mercado de trabalho')
   const [stats, setStats] = useState<
@@ -45,7 +48,11 @@ export default function StatsSection() {
       !title ||
       stats.some((stat) => !stat.number || !stat.description)
     ) {
-      alert('Preencha todos os campos antes de salvar.')
+      toast({
+        title: 'Erro ao salvar!',
+        description: 'Preencha todos os campos antes de salvar.',
+        variant: 'danger',
+      })
       return
     }
 
@@ -56,21 +63,21 @@ export default function StatsSection() {
       stats,
     })
 
-    alert('Informações salvas com sucesso!')
+    toast({
+      title: 'Salvo com sucesso!',
+      description: 'As informações foram salvas com sucesso.',
+      variant: 'success',
+    })
   }
 
   return (
-    <div className="p-8 max-w-5xl mx-auto bg-gray-50 shadow-lg rounded-2xl border border-gray-200">
-      <h1 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
-        Configurar Seção de Estatísticas
-      </h1>
-
+    <div className="p-4 mx-auto">
       {/* Campos principais */}
       <div className="space-y-4">
         <div>
           <Label
             htmlFor="subtitle"
-            className="text-lg font-medium text-gray-700"
+            className="text-base font-normal text-neutral required"
           >
             Subtítulo
           </Label>
@@ -79,12 +86,16 @@ export default function StatsSection() {
             type="text"
             placeholder="Digite o subtítulo"
             value={subtitle}
-            onChange={(e) => setSubtitle(e.target.value)}
+            onChange={(e) => setSubtitle(e.target.value.substring(0, 50))}
             className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={50}
           />
         </div>
         <div>
-          <Label htmlFor="title" className="text-lg font-medium text-gray-700">
+          <Label
+            htmlFor="title"
+            className="text-base font-normal text-neutral required"
+          >
             Título
           </Label>
           <Input
@@ -92,25 +103,24 @@ export default function StatsSection() {
             type="text"
             placeholder="Digite o título"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value.substring(0, 100))}
             className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+            maxLength={100}
           />
         </div>
       </div>
-
-      {/* Configuração dos Cards de Estatísticas */}
       <div className="mt-8 space-y-6">
-        {stats.map((stat) => (
-          <div
-            key={stat.id}
-            className="p-4 bg-gray-100 rounded-lg shadow-md space-y-4"
-          >
+        {stats.map((stat, index) => (
+          <div key={stat.id} className="rounded-lg space-y-4">
             <div>
               <Label
                 htmlFor={`number-${stat.id}`}
                 className="text-sm font-medium text-gray-700"
               >
-                Número em Destaque
+                Número em Destaque{' '}
+                <span className="bg-primary text-white rounded-xl px-1 py-1 text-xs ml-2">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
               </Label>
               <Input
                 id={`number-${stat.id}`}
@@ -130,14 +140,17 @@ export default function StatsSection() {
               >
                 Descrição
               </Label>
-              <textarea
+              <TextareaDashboard
                 id={`description-${stat.id}`}
-                placeholder="Digite a descrição"
                 value={stat.description}
-                onChange={(e) =>
-                  handleStatChange(stat.id, 'description', e.target.value)
+                onChange={(value: string) =>
+                  handleStatChange(
+                    stat.id,
+                    'description',
+                    value.substring(0, 500)
+                  )
                 }
-                className="w-full mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg p-3 text-gray-900 h-20"
+                placeholder="Digite a descrição"
               />
             </div>
           </div>
@@ -145,7 +158,7 @@ export default function StatsSection() {
       </div>
 
       {/* Botão Salvar */}
-      <div className="flex justify-end mt-6">
+      <div className="flex justify-end mt-5">
         <Button
           onClick={handleSave}
           className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition"

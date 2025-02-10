@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
-import { Button } from '@/components/ui/button1'
+import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
+import { TextareaDashboard } from '@/components/ui/textarea/textarea-dashboard'
+import { useToast } from '@/hooks/use-toast'
 
 export default function HowItWorks() {
+  const { toast } = useToast()
+
   const [subtitle, setSubtitle] = useState<string>('Como funciona?')
-  const [mainTitle, setMainTitle] = useState<string>('Feito para ser simples!')
-  const [mainDescription, setMainDescription] = useState<string>(
+  const [title, settitle] = useState<string>('Feito para ser simples!')
+  const [description, setDescription] = useState<string>(
     'Você não precisa ser um expert para utilizar o nosso sistema de recrutamento.'
   )
   const [steps, setSteps] = useState<
@@ -28,6 +32,36 @@ export default function HowItWorks() {
       description: 'Tudo estará pronto para que seus talentos se cadastrem.',
     },
   ])
+  const handleSave = () => {
+    if (
+      !subtitle ||
+      !title ||
+      !description ||
+      steps.some((step) => !step.title || !step.description)
+    ) {
+      toast({
+        title: 'Erro ao salvar!',
+        description:
+          'Preencha os campos de Título e Subtítulo antes de salvar.',
+        variant: 'danger',
+      })
+      return
+    }
+
+    // Simulação de salvar os dados
+    console.log('Salvando...', {
+      subtitle,
+      title,
+      description,
+      steps,
+    })
+
+    toast({
+      title: 'Salvo com sucesso!',
+      description: 'As informações foram salvas com sucesso.',
+      variant: 'success',
+    })
+  }
 
   const handleStepChange = (
     id: number,
@@ -39,98 +73,75 @@ export default function HowItWorks() {
     )
   }
 
-  const handleSave = () => {
-    if (
-      !subtitle ||
-      !mainTitle ||
-      !mainDescription ||
-      steps.some((step) => !step.title || !step.description)
-    ) {
-      alert('Preencha todos os campos antes de salvar.')
-      return
-    }
-
-    // Simulação de salvar os dados
-    console.log('Salvando...', {
-      subtitle,
-      mainTitle,
-      mainDescription,
-      steps,
-    })
-
-    alert('Informações salvas com sucesso!')
-  }
-
   return (
-    <div className="p-8 max-w-5xl mx-auto bg-gray-50 shadow-lg rounded-2xl border border-gray-200">
-      <h1 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
-        Configurar Seção - Como Funciona
-      </h1>
-
-      {/* Campos principais */}
-      <div className="space-y-4">
-        <div>
-          <Label
-            htmlFor="subtitle"
-            className="text-lg font-medium text-gray-700"
-          >
-            Subtítulo
-          </Label>
-          <Input
-            id="subtitle"
-            type="text"
-            placeholder="Digite o subtítulo"
-            value={subtitle}
-            onChange={(e) => setSubtitle(e.target.value)}
-            className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
-          />
-        </div>
-        <div>
-          <Label
-            htmlFor="mainTitle"
-            className="text-lg font-medium text-gray-700"
-          >
-            Título Principal
-          </Label>
-          <Input
-            id="mainTitle"
-            type="text"
-            placeholder="Digite o título principal"
-            value={mainTitle}
-            onChange={(e) => setMainTitle(e.target.value)}
-            className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
-          />
-        </div>
-        <div>
-          <Label
-            htmlFor="mainDescription"
-            className="text-lg font-medium text-gray-700"
-          >
-            Descrição Principal
-          </Label>
-          <textarea
-            id="mainDescription"
-            placeholder="Digite a descrição principal"
-            value={mainDescription}
-            onChange={(e) => setMainDescription(e.target.value)}
-            className="w-full border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg p-3 text-gray-900 h-20"
-          />
+    <div className="p-4 mx-auto">
+      {/* Seção de Título e Subtítulo na mesma linha */}
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex flex-col md:flex-row items-center gap-4 w-full">
+          {/* Subtítulo */}
+          <div className="w-full">
+            <Label
+              htmlFor="subtitle"
+              className="text-base font-normal text-neutral required"
+            >
+              Subtítulo
+            </Label>
+            <Input
+              id="subtitle"
+              type="text"
+              placeholder="Digite o subtítulo"
+              value={subtitle}
+              onChange={(e) => setSubtitle(e.target.value.substring(0, 100))}
+              className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+              maxLength={100}
+            />
+          </div>
+          {/* Título */}
+          <div className="w-full">
+            <Label
+              htmlFor="title"
+              className="text-base font-normal text-neutral required"
+            >
+              Título
+            </Label>
+            <Input
+              id="title"
+              type="text"
+              placeholder="Digite o título"
+              value={title}
+              onChange={(e) => settitle(e.target.value.substring(0, 100))}
+              className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+              maxLength={100}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Configuração dos Passos */}
-      <div className="mt-8 space-y-6">
+      <div className="mt-4">
+        <Label
+          htmlFor="description"
+          className="text-base font-normal text-neutral required"
+        >
+          Descrição
+        </Label>
+        <TextareaDashboard
+          id="description"
+          value={description}
+          onChange={(value: string) => setDescription(value.substring(0, 500))}
+          placeholder="Digite a descrição"
+        />
+      </div>
+
+      {/* Grid de Benefícios */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
         {steps.map((step) => (
-          <div
-            key={step.id}
-            className="p-4 bg-gray-100 rounded-lg shadow-md space-y-4"
-          >
+          <div key={step.id} className="p-4 border-1 rounded-lg space-y-4">
             <div>
               <Label
                 htmlFor={`title-${step.id}`}
                 className="text-sm font-medium text-gray-700"
               >
-                Título do Passo {step.id}
+                Título
               </Label>
               <Input
                 id={`title-${step.id}`}
@@ -148,16 +159,19 @@ export default function HowItWorks() {
                 htmlFor={`description-${step.id}`}
                 className="text-sm font-medium text-gray-700"
               >
-                Descrição do Passo {step.id}
+                Descrição
               </Label>
-              <textarea
+              <TextareaDashboard
                 id={`description-${step.id}`}
-                placeholder="Digite a descrição do passo"
                 value={step.description}
-                onChange={(e) =>
-                  handleStepChange(step.id, 'description', e.target.value)
+                onChange={(value: string) =>
+                  handleStepChange(
+                    step.id,
+                    'description',
+                    value.substring(0, 500)
+                  )
                 }
-                className="w-full mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg p-3 text-gray-900 h-20"
+                placeholder="Digite a descrição"
               />
             </div>
           </div>
@@ -165,7 +179,7 @@ export default function HowItWorks() {
       </div>
 
       {/* Botão Salvar */}
-      <div className="flex justify-end mt-6">
+      <div className="flex justify-end mt-5">
         <Button
           onClick={handleSave}
           className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition"

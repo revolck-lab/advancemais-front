@@ -1,14 +1,19 @@
 import React, { useState } from 'react'
-import { Button } from '@/components/ui/button1'
+import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
 import Image from 'next/image'
+import { TextareaDashboard } from '@/components/ui/textarea/textarea-dashboard'
+import { FileUpload } from '@/components/ui/file-upload/file-upload'
+import { useToast } from '@/hooks/use-toast'
 
 export default function PlatformAdvantages() {
-  const [mainTitle, setMainTitle] = useState<string>(
+  const { toast } = useToast()
+
+  const [title, setTitle] = useState<string>(
     'Nós ajudamos você a migrar para a advance+'
   )
-  const [mainDescription, setMainDescription] = useState<string>(
+  const [description, setDescription] = useState<string>(
     'Com a nossa plataforma você facilmente deixa tarefas chatas e repetitivas para trás com um sistema de recrutamento e seleção e foca no que mais importa em seu processo: escolher as pessoas certas!'
   )
   const [image, setImage] = useState<string | null>(
@@ -39,13 +44,20 @@ export default function PlatformAdvantages() {
     },
   ])
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
+  // Função chamada ao fazer upload de uma nova imagem
+  const handleImageUpload = (files: File[]) => {
+    if (files.length > 0) {
+      const file = files[0]
       const imageUrl = URL.createObjectURL(file)
       setPreviewImage(imageUrl)
       setImage(file.name) // Simulação de nome de arquivo salvo
     }
+  }
+
+  // Função chamada ao remover a imagem
+  const handleDeleteImage = () => {
+    setPreviewImage(null)
+    setImage(null)
   }
 
   const handleAdvantageChange = (
@@ -62,120 +74,128 @@ export default function PlatformAdvantages() {
 
   const handleSave = () => {
     if (
-      !mainTitle ||
-      !mainDescription ||
+      !title ||
+      !description ||
       !image ||
       advantages.some((adv) => !adv.title || !adv.description)
     ) {
-      alert('Preencha todos os campos antes de salvar.')
+      toast({
+        title: 'Erro ao salvar!',
+        description: 'Preencha todos os campos antes de salvar.',
+        variant: 'danger',
+      })
       return
     }
 
     // Simulação de salvar os dados
     console.log('Salvando...', {
-      mainTitle,
-      mainDescription,
+      title,
+      description,
       image,
       advantages,
     })
 
-    alert('Informações salvas com sucesso!')
+    toast({
+      title: 'Salvo com sucesso!',
+      description: 'As informações foram salvas com sucesso.',
+      variant: 'success',
+    })
   }
 
   return (
-    <div className="p-8 max-w-5xl mx-auto bg-gray-50 shadow-lg rounded-2xl border border-gray-200">
-      <h1 className="text-3xl font-semibold text-gray-900 mb-6 text-center">
-        Configurar Vantagens da Plataforma
-      </h1>
-
-      {/* Campos principais */}
-      <div className="space-y-4">
-        <div>
-          <Label
-            htmlFor="mainTitle"
-            className="text-lg font-medium text-gray-700"
-          >
-            Título Principal
-          </Label>
-          <Input
-            id="mainTitle"
-            type="text"
-            placeholder="Digite o título principal"
-            value={mainTitle}
-            onChange={(e) => setMainTitle(e.target.value)}
-            className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
-          />
+    <div className="p-4 mx-auto">
+      {/* O toast será exibido globalmente via o hook useToast */}
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Coluna da Imagem */}
+        <div className="flex flex-col items-center justify-start space-y-4 w-full md:w-1/2">
+          {previewImage ? (
+            <div className="relative group w-full">
+              <Image
+                src={previewImage}
+                alt="Preview"
+                width={400}
+                height={300}
+                className="rounded-lg shadow-md w-full h-auto object-cover"
+              />
+              <button
+                onClick={handleDeleteImage}
+                className="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                Deletar
+              </button>
+            </div>
+          ) : (
+            <div className="w-full">
+              <Label
+                htmlFor="image"
+                className="text-lg font-medium text-gray-700 required"
+              >
+                Imagem
+              </Label>
+              <FileUpload
+                maxFiles={1}
+                maxSize={5 * 1024 * 1024} // 5MB máximo
+                allowedFormats={['image/jpeg', 'image/png', 'image/webp']}
+                onUpload={handleImageUpload}
+                onRemove={handleDeleteImage}
+              />
+            </div>
+          )}
         </div>
-        <div>
-          <Label
-            htmlFor="mainDescription"
-            className="text-lg font-medium text-gray-700"
-          >
-            Descrição Principal
-          </Label>
-          <textarea
-            id="mainDescription"
-            placeholder="Digite a descrição principal"
-            value={mainDescription}
-            onChange={(e) => setMainDescription(e.target.value)}
-            className="w-full border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg p-3 text-gray-900 h-20"
-          />
-        </div>
-      </div>
 
-      {/* Configuração da Imagem */}
-      <div className="mt-8 space-y-4">
-        {previewImage ? (
-          <div className="relative group w-full">
-            <Image
-              src={previewImage}
-              alt="Preview"
-              width={500}
-              height={300}
-              className="rounded-lg shadow-md w-full h-auto object-cover"
-            />
-            <button
-              onClick={() => {
-                setPreviewImage(null)
-                setImage(null)
-              }}
-              className="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              Deletar
-            </button>
-          </div>
-        ) : (
+        {/* Coluna de Título e Descrição */}
+        <div className="flex flex-col space-y-6 w-full md:w-1/2">
+          {/* Título */}
           <div>
             <Label
-              htmlFor="image"
-              className="text-lg font-medium text-gray-700"
+              htmlFor="title"
+              className="text-base font-normal text-neutral required"
             >
-              Imagem
+              Título
             </Label>
             <Input
-              id="image"
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg"
+              id="title"
+              type="text"
+              placeholder="Digite o título"
+              value={title}
+              onChange={(e) => setTitle(e.target.value.substring(0, 100))}
+              className="mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg text-gray-900"
+              maxLength={100}
             />
           </div>
-        )}
+
+          {/* Descrição */}
+          <div>
+            <Label
+              htmlFor="description"
+              className="text-base font-normal text-neutral required"
+            >
+              Descrição
+            </Label>
+            <TextareaDashboard
+              value={description}
+              onChange={(value: string) =>
+                setDescription(value.substring(0, 500))
+              }
+              placeholder="Digite a descrição"
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Configuração das Vantagens */}
-      <div className="mt-8 space-y-6">
+      {/* Grid de Vantagens */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
         {advantages.map((advantage) => (
           <div
             key={advantage.id}
-            className="p-4 bg-gray-100 rounded-lg shadow-md space-y-4"
+            className="p-4 border border-gray-300 rounded-lg space-y-4"
           >
             <div>
               <Label
                 htmlFor={`title-${advantage.id}`}
                 className="text-sm font-medium text-gray-700"
               >
-                Título da Vantagem
+                Título da vantagem
               </Label>
               <Input
                 id={`title-${advantage.id}`}
@@ -195,18 +215,17 @@ export default function PlatformAdvantages() {
               >
                 Descrição da Vantagem
               </Label>
-              <textarea
+              <TextareaDashboard
                 id={`description-${advantage.id}`}
-                placeholder="Digite a descrição da vantagem"
                 value={advantage.description}
-                onChange={(e) =>
+                onChange={(value: string) =>
                   handleAdvantageChange(
                     advantage.id,
                     'description',
-                    e.target.value
+                    value.substring(0, 200)
                   )
                 }
-                className="w-full mt-2 border-gray-300 focus:ring-2 focus:ring-gray-400 rounded-lg p-3 text-gray-900 h-20"
+                placeholder="Digite a descrição"
               />
             </div>
           </div>
@@ -214,7 +233,7 @@ export default function PlatformAdvantages() {
       </div>
 
       {/* Botão Salvar */}
-      <div className="flex justify-end mt-6">
+      <div className="flex justify-end mt-5">
         <Button
           onClick={handleSave}
           className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition"

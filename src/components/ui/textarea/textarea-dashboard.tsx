@@ -5,12 +5,14 @@ interface TextareaDashboardProps {
   value: string
   onChange: (value: string) => void
   placeholder?: string
+  id?: string
   disabled?: boolean
 }
 
 export const TextareaDashboard: React.FC<TextareaDashboardProps> = ({
   value,
   onChange,
+  id,
   placeholder = 'Escreva aqui...',
   disabled = false,
 }) => {
@@ -18,6 +20,7 @@ export const TextareaDashboard: React.FC<TextareaDashboardProps> = ({
     <div className="border rounded-md shadow-sm bg-white">
       {/* TinyMCE Editor */}
       <Editor
+        id={id}
         apiKey="qp8r5m6er7s4fpckkcmt2hbbmi7jftb1i0q19y4xwds2g8vs"
         value={value}
         onEditorChange={(newValue) => onChange(newValue)}
