@@ -74,7 +74,7 @@ export function Sidebar() {
                     >
                       <item.icon className="h-4 w-4" />
                     </Button>
-                    {item.submenu && (
+                    {'submenu' in item && item.submenu && (
                       <div
                         className={cn(
                           'absolute left-full top-0 z-50 w-56 p-4 bg-[#1E1E2E] text-white shadow-lg rounded-md',
@@ -103,7 +103,7 @@ export function Sidebar() {
                   </div>
                 ) : (
                   <div key={itemIndex}>
-                    {item.submenu ? (
+                    {'submenu' in item && item.submenu ? (
                       <Collapsible>
                         <CollapsibleTrigger asChild>
                           <Button
@@ -140,12 +140,12 @@ export function Sidebar() {
                         </CollapsibleContent>
                       </Collapsible>
                     ) : (
-                      <Link href={item.href}>
+                      <Link href={'href' in item ? item.href : '#'}>
                         <Button
                           variant="ghost"
                           className={cn(
                             'w-full justify-start gap-2 hover:bg-white/10',
-                            pathname === item.href && 'bg-white/10'
+                            'href' in item && pathname === item.href && 'bg-white/10'
                           )}
                         >
                           <item.icon className="h-4 w-4" />
