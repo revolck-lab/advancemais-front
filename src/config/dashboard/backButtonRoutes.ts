@@ -11,4 +11,6 @@ export const allowedBackButtonRoutes: string[] = [
   '/dashboard/admin/website/training',
   '/dashboard/admin/website/contact',
   '/dashboard/admin/website/settings',
+  '/dashboard/perfil',
+  '/dashboard/business/candidatos',
 ]

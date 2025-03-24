@@ -1,83 +1,95 @@
-import React from 'react'
+'use client' // Adiciona a diretiva "use client" no topo do arquivo
 
-const PricingBox = (props: {
-  price: string
-  duration: string
-  packageName: string
-  subtitle: string
-  children: React.ReactNode
-}): JSX.Element => {
-  const { price, duration, packageName, subtitle, children } = props
+import React from 'react'
+import { useRouter } from 'next/navigation' // Importe o useRouter
+
+interface PlanoProps {
+  titulo: string
+  icone: React.ReactNode
+  preco: string
+  descricao: string
+  recursos: string[]
+  isPopular?: boolean
+}
+
+const Plano: React.FC<PlanoProps> = ({
+  titulo,
+  icone,
+  preco,
+  descricao,
+  recursos,
+  isPopular = false,
+}) => {
+  const router = useRouter() // Hook para navegação
+
+  const handleAssinarPlano = () => {
+    router.push(`/checkout?plano=${encodeURIComponent(titulo)}`) // Passa o plano como query parameter
+  }
 
   return (
-    <div className="w-full">
-      <div
-        className="wow fadeInUp shadow-three border-1 border-secondary rounded-lg relative z-10 bg-white px-8 py-10 hover:shadow-one"
-        data-wow-delay=".1s"
-      >
-        <div className="flex items-center justify-between">
-          <h3 className="price mb-2 text-3xl font-bold text-black dark:text-white">
-            R$<span className="amount">{price}</span>
-            <span className="time text-body-color">/{duration}</span>
-          </h3>
-          <h4 className="mb-2 text-xl font-bold text-dark dark:text-white">
-            {packageName}
-          </h4>
+    <div
+      className={`rounded-lg p-6 flex flex-col relative ${
+        isPopular
+          ? 'bg-white border-2 border-secondary-200'
+          : 'bg-white shadow-md border border-gray-200'
+      }`}
+    >
+      {isPopular && (
+        <div className="absolute -top-3 right-4 bg-secondary text-white text-xs px-3 py-1 rounded-full">
+          Mais popular
         </div>
-        <p className="mb-7 text-base text-body-color">{subtitle}</p>
-        <div className="mb-8 border-b border-body-color border-opacity-10 pb-8 dark:border-white dark:border-opacity-10">
-          <button className="flex w-full items-center justify-center rounded-sm bg-secondary p-3 text-base font-semibold text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp">
-            Assinar plano
-          </button>
-        </div>
-        <div>{children}</div>
-        <div className="absolute bottom-0 right-0 z-[-1]">
-          <svg
-            width="179"
-            height="158"
-            viewBox="0 0 179 158"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              opacity="0.5"
-              d="M75.0002 63.256C115.229 82.3657 136.011 137.496 141.374 162.673C150.063 203.47 207.217 197.755 202.419 167.738C195.393 123.781 137.273 90.3579 75.0002 63.256Z"
-              fill="url(#paint0_linear_70:153)"
-            />
-            <path
-              opacity="0.3"
-              d="M178.255 0.150879C129.388 56.5969 134.648 155.224 143.387 197.482C157.547 265.958 65.9705 295.709 53.1024 246.401C34.2588 174.197 100.939 83.7223 178.255 0.150879Z"
-              fill="url(#paint1_linear_70:153)"
-            />
-            <defs>
-              <linearGradient
-                id="paint0_linear_70:153"
-                x1="69.6694"
-                y1="29.9033"
-                x2="196.108"
-                y2="83.2919"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="#4A6CF7" stopOpacity="0.62" />
-                <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient
-                id="paint1_linear_70:153"
-                x1="165.348"
-                y1="-75.4466"
-                x2="-3.75136"
-                y2="103.645"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="#4A6CF7" stopOpacity="0.62" />
-                <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
+      )}
+      <div className="flex items-center gap-2 mb-4">
+        {icone}
+        <span className="text-gray-900">{titulo}</span>
       </div>
+      <div className="mb-0">
+        R$<span className="text-[2.7rem] font-bold text-gray-900">{preco}</span>
+        <span className="text-gray-500 text-sm">/mês</span>
+      </div>
+      <div className="text-sm text-gray-500 mb-4">
+        Aumente a produtividade e a criatividade com o acesso expandido.
+      </div>
+      <button
+        onClick={handleAssinarPlano} // Adiciona o evento de clique
+        className={`w-full text-white rounded py-2 mb-4 hover:${
+          isPopular ? 'bg-secondary' : 'bg-gray-800'
+        } ${isPopular ? 'bg-secondary' : 'bg-gray-700'}`}
+      >
+        Assinar plano
+      </button>
+      <div className="text-sm text-gray-500 mb-4">{descricao}</div>
+      <ul className="space-y-3">
+        {recursos.map((recurso) => (
+          <li
+            key={recurso}
+            className="flex items-center gap-2 text-gray-600 text-sm"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className={`w-5 h-5 ${isPopular ? 'text-secondary' : 'text-gray-400'}`}
+              fill="none"
+              stroke="currentColor"
+            >
+              <path
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M8 12L11 15L16 9"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {recurso}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
 
-export default PricingBox
+export default Plano

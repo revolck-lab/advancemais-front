@@ -52,7 +52,7 @@ export function Header() {
         <Input placeholder="Search..." className="w-[300px] bg-gray-100" />
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className="relative text-white">
           <Bell className="h-5 w-5" />
           <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-red-500" />
         </Button>
@@ -64,7 +64,7 @@ export function Header() {
               className="h-8 w-8 rounded-full"
             >
               <Image
-                src="/placeholder.svg"
+                src="/images/avatar.jpg"
                 alt="Profile"
                 height={32}
                 width={32}
@@ -72,12 +72,14 @@ export function Header() {
               />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuContent align="end" className="bg-white">
+            <DropdownMenuItem>
+              <a href="/dashboard/perfil">Meu perfil</a>
+            </DropdownMenuItem>
+            <DropdownMenuItem>Configurações</DropdownMenuItem>
 
             {/* Chama handleLogout ao clicar */}
-            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>Sair</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

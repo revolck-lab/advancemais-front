@@ -260,6 +260,7 @@ const JobsCareer: React.FC = () => {
           <h2 className="text-xl font-semibold mb-4">
             {filteredJobs.length} Vagas encontradas
           </h2>
+          <div className="space-y-4 my-5">VAGA EM DESTAQUE</div>
           <div className="space-y-4">
             {paginatedJobs.map((job) => (
               <div

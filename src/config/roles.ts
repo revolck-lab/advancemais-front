@@ -1,6 +1,6 @@
 export enum UserRole {
   PROFESSOR = 1,
-  ALUNO = 2,
+  ALUNO = 2, //ALUNO E CANDIDATO
   EMPRESA = 3,
   ADMINISTRADOR = 4,
   RECRUTADORES = 5,

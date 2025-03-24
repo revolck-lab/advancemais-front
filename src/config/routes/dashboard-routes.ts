@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users } from 'lucide-react'
+import { LayoutDashboard } from 'lucide-react'
 
 export const dashboardRoutes = [
   {
@@ -12,10 +12,10 @@ export const dashboardRoutes = [
             title: 'Site principal',
             href: '/dashboard/admin/website',
           },
-          {
-            title: 'Dashboard',
-            href: '/dashboard/admin/dashboard',
-          },
+          // {
+          //   title: 'Dashboard',
+          //   href: '/dashboard/admin/dashboard',
+          // },
         ],
         // submenu: [
         //   {
@@ -39,28 +39,35 @@ export const dashboardRoutes = [
         //   { title: 'Contato', href: '/dashboard/admin/website/contact' },
         // ],
       },
-      {
-        title: 'Professores',
-        icon: Users,
-        href: '/dashboard/admin/professores',
-      },
+      // {
+      //   title: 'Professores',
+      //   icon: Users,
+      //   href: '/dashboard/admin/professores',
+      // },
     ],
   },
   {
-    category: 'GERENCIAMENTO',
+    category: 'DASHBOARD',
     items: [
       {
-        title: 'Usuários',
-        icon: Users,
-        submenu: [
-          { title: 'Lista de Usuários', href: '/dashboard/admin/users/list' },
-          { title: 'Criar Usuário', href: '/dashboard/admin/users/create' },
-        ],
+        title: 'Página Inicial',
+        icon: LayoutDashboard,
+        href: '/dashboard/business',
+      },
+      {
+        title: 'Vagas',
+        icon: LayoutDashboard,
+        href: '/dashboard/business/vagas',
+      },
+      {
+        title: 'Lista de Candidatos',
+        icon: LayoutDashboard,
+        href: '/dashboard/business/candidatos',
       },
       {
         title: 'Configurações',
         icon: LayoutDashboard,
-        href: '/dashboard/admin/settings',
+        href: '/dashboard/empresa/pagina-inicial',
       },
     ],
   },

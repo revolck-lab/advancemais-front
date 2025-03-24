@@ -1,119 +1,73 @@
-'use client'
-import OfferList from './OfferList'
-import PricingBox from './PricingBox'
+import React from 'react'
+import { Briefcase, Crown, Rocket, Trophy } from 'lucide-react'
+import Plano from './PricingBox'
 import Styles from './pricing.module.css'
 
-const Pricing = (): JSX.Element => {
+const TabelaPrecos = () => {
   return (
-    <section
-      id="pricing"
-      className={`${Styles.pxResponsive} container mx-auto py-16 flex flex-col lg:flex-row items-center gap-8`}
-    >
-      <div className="container">
-        <div className="text-center mb-10">
-          <h3 className="text-4xl text-neutral sm:text-4xl mb-6">
-            Conheça nossos planos
-          </h3>
-        </div>
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
-          <PricingBox
-            packageName="Iniciante"
-            price="40"
-            duration="mês"
-            subtitle="Lorem ipsum dolor sit amet adiscing elit Mauris egestas enim."
-          >
-            <OfferList text="All UI Components" status="active" />
-            <OfferList text="Use with Unlimited Projects" status="active" />
-            <OfferList text="Commercial Use" status="active" />
-            <OfferList text="Email Support" status="active" />
-            <OfferList text="Lifetime Access" status="inactive" />
-            <OfferList text="Free Lifetime Updates" status="inactive" />
-          </PricingBox>
-          <PricingBox
-            packageName="Avançado"
-            price="399"
-            duration="mês"
-            subtitle="Lorem ipsum dolor sit amet adiscing elit Mauris egestas enim."
-          >
-            <OfferList text="All UI Components" status="active" />
-            <OfferList text="Use with Unlimited Projects" status="active" />
-            <OfferList text="Commercial Use" status="active" />
-            <OfferList text="Email Support" status="active" />
-            <OfferList text="Lifetime Access" status="active" />
-            <OfferList text="Free Lifetime Updates" status="inactive" />
-          </PricingBox>
-          <PricingBox
-            packageName="Completo"
-            price="589"
-            duration="mês"
-            subtitle="Lorem ipsum dolor sit amet adiscing elit Mauris egestas enim."
-          >
-            <OfferList text="All UI Components" status="active" />
-            <OfferList text="Use with Unlimited Projects" status="active" />
-            <OfferList text="Commercial Use" status="active" />
-            <OfferList text="Email Support" status="active" />
-            <OfferList text="Lifetime Access" status="active" />
-            <OfferList text="Free Lifetime Updates" status="active" />
-          </PricingBox>
-        </div>
+    <div className={`${Styles.pxResponsive} container w-full mx-auto py-24`}>
+      <div className="text-center animate-fade-in">
+        <h2 className="text-4xl font-bold text-neutral mb-0">
+          Escolha seu plano
+        </h2>
+        <p className="text-[1rem] text-neutral-400 leading-relaxed mb-8">
+          Você pode mudar de plano a qualquer momento.
+        </p>
       </div>
-
-      <div className="absolute bottom-0 left-0 z-[-1]">
-        <svg
-          width="239"
-          height="601"
-          viewBox="0 0 239 601"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect
-            opacity="0.3"
-            x="-184.451"
-            y="600.973"
-            width="196"
-            height="541.607"
-            rx="2"
-            transform="rotate(-128.7 -184.451 600.973)"
-            fill="url(#paint0_linear_93:235)"
-          />
-          <rect
-            opacity="0.3"
-            x="-188.201"
-            y="385.272"
-            width="59.7544"
-            height="541.607"
-            rx="2"
-            transform="rotate(-128.7 -188.201 385.272)"
-            fill="url(#paint1_linear_93:235)"
-          />
-          <defs>
-            <linearGradient
-              id="paint0_linear_93:235"
-              x1="-90.1184"
-              y1="420.414"
-              x2="-90.1184"
-              y2="1131.65"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#4A6CF7" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient
-              id="paint1_linear_93:235"
-              x1="-159.441"
-              y1="204.714"
-              x2="-159.441"
-              y2="915.952"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#4A6CF7" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-        </svg>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 ">
+        <Plano
+          titulo="Inicial"
+          icone={<Briefcase className="w-5 h-5 text-neutral" />}
+          preco="49,99"
+          descricao="Comece a recrutar com eficiência"
+          recursos={[
+            '3 vagas ativas',
+            '30 dias de divulgação',
+            'Acesso a candidatos qualificados',
+            'Painel de controle básico',
+          ]}
+        />
+        <Plano
+          titulo="Intermediario"
+          icone={<Trophy className="w-5 h-5 text-neutral" />}
+          preco="74,99"
+          descricao="Amplie seu alcance de recrutamento"
+          recursos={[
+            '10 vagas ativas',
+            '30 dias de divulgação',
+            'Acesso a candidatos qualificados',
+            'Painel de controle básico',
+          ]}
+        />
+        <Plano
+          titulo="Avançado"
+          icone={<Crown className="w-5 h-5 text-secondary" />}
+          preco="99,99"
+          descricao="Solução completa para grandes equipes"
+          recursos={[
+            '20 vagas ativas',
+            '30 dias de divulgação',
+            'Acesso a candidatos qualificados',
+            'Painel de controle básico',
+          ]}
+          isPopular
+        />
+        <Plano
+          titulo="Destaque"
+          icone={<Rocket className="w-5 h-5 text-neutral" />}
+          preco="199,99"
+          descricao="Recrutamento sem limites"
+          recursos={[
+            'Vagas ilimitadas',
+            '30 dias de divulgação',
+            'Acesso a candidatos qualificados',
+            'Painel de controle avançado',
+            '1 vaga em destaque',
+          ]}
+        />
       </div>
-    </section>
+    </div>
   )
 }
 
-export default Pricing
+export default TabelaPrecos

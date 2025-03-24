@@ -10,4 +10,9 @@
   .pxResponsive {
     width: 94%;
   }
+
+  .titleMobile {
+    font-size: 30px;
+    text-align: center;
+  }
 }

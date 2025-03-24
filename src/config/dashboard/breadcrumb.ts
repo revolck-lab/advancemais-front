@@ -105,6 +105,40 @@ export function getBreadcrumbConfig(pathname: string): BreadcrumbConfig {
           { label: 'Configurações gerais' },
         ],
       }
+    //Perfil
+    case '/dashboard/perfil':
+      return {
+        title: 'Meu perfil',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Meu perfil' },
+        ],
+      }
+    //Candidatos
+    case '/dashboard/business/candidatos':
+      return {
+        title: 'Lista de Candidatos',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Lista de Candidatos' },
+        ],
+      }
+
+    //Business
+    case '/dashboard/business':
+      return {
+        title: 'Painel de Recrutamento',
+        breadcrumbs: [{ label: 'Painel de Recrutamento' }],
+      }
+    //Business
+    case '/dashboard/business/vagas':
+      return {
+        title: 'Minhas vagas',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Minhas vagas' },
+        ],
+      }
     default:
       return {
         title: 'Dashboard',

@@ -62,6 +62,11 @@ const websiteRoutes = [
     label: 'Para empregos',
     requiresAuth: false,
   },
+  {
+    path: '/checkout',
+    label: 'Checkout',
+    requiresAuth: false,
+  },
 ]
 
 export default websiteRoutes
