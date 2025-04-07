@@ -57,6 +57,7 @@ import {
 import { format, subDays } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { useState, useEffect } from 'react'
+import AddTeacherModal from './AddTeacherModal'
 
 // Tipos
 type Teacher = {
@@ -243,15 +244,19 @@ export default function ProfessorsPage() {
 
   return (
     <div className="container mx-auto py-6 space-y-6 bg-white px-5 border rounded-md mb-10 shadow-sm">
-      <div className="flex flex-col md:flex-row gap-4 justify-between">
-        <div className="relative w-full md:w-[300px]">
+      <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+        {/* Lado Esquerdo: Search */}
+        <div className="w-full md:w-auto">
           <Search
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onClear={() => setSearchTerm('')}
           />
         </div>
+
+        {/* Lado Direito: Botões */}
         <div className="flex flex-wrap gap-2">
+          <AddTeacherModal />
           <FilterButton
             statusFilter={statusFilter}
             setStatusFilter={setStatusFilter}
