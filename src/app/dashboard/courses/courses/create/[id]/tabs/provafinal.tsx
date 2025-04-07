@@ -301,7 +301,7 @@ export default function ProvaFinal() {
 
       {/* New Exam Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-white">
           <DialogHeader>
             <DialogTitle className="text-lg font-medium">Nova prova final</DialogTitle>
           </DialogHeader>
@@ -403,7 +403,7 @@ export default function ProvaFinal() {
 
       {/* Configuration Dialog */}
       <Dialog open={isConfigDialogOpen} onOpenChange={setIsConfigDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-white">
           <DialogHeader>
             <DialogTitle className="text-lg font-medium">Configurações da prova</DialogTitle>
           </DialogHeader>
