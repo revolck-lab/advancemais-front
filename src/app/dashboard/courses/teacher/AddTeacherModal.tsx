@@ -44,7 +44,7 @@ export default function AddTeacherModal() {
   })
   const [date, setDate] = useState<Date | undefined>(undefined)
 
-interface FormDataType {
+  interface FormDataType {
     id: string
     name: string
     email: string
@@ -52,23 +52,23 @@ interface FormDataType {
     hireDate: string | null
     salary: string
     status: 'active' | 'suspend' | 'pending'
-}
+  }
 
-const handleChange = (
+  const handleChange = (
     field: keyof FormDataType,
     value: FormDataType[keyof FormDataType]
-): void => {
+  ): void => {
     setFormData((prev: FormDataType) => ({
-        ...prev,
-        [field]: value,
+      ...prev,
+      [field]: value,
     }))
-}
+  }
 
-interface TeacherFormSubmitEvent extends React.FormEvent<HTMLFormElement> {
-    preventDefault: () => void;
-}
+  interface TeacherFormSubmitEvent extends React.FormEvent<HTMLFormElement> {
+    preventDefault: () => void
+  }
 
-const handleSubmit = (e: TeacherFormSubmitEvent): void => {
+  const handleSubmit = (e: TeacherFormSubmitEvent): void => {
     e.preventDefault()
 
     // Aqui você adicionaria a lógica para salvar o novo professor
@@ -77,16 +77,16 @@ const handleSubmit = (e: TeacherFormSubmitEvent): void => {
     // Fecha o modal e reseta o formulário
     setOpen(false)
     setFormData({
-        id: '',
-        name: '',
-        email: '',
-        subject: '',
-        hireDate: null,
-        salary: '',
-        status: 'pending',
+      id: '',
+      name: '',
+      email: '',
+      subject: '',
+      hireDate: null,
+      salary: '',
+      status: 'pending',
     })
     setDate(undefined)
-}
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -97,7 +97,7 @@ const handleSubmit = (e: TeacherFormSubmitEvent): void => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] bg-white">
         <DialogHeader>
           <DialogTitle>Adicionar Novo Professor</DialogTitle>
           <DialogDescription>
