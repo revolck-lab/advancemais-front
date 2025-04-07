@@ -42,7 +42,6 @@ export const dashboardRoutes = [
       {
         title: 'Cursos',
         icon: LayoutDashboard,
-        href: '/dashboard/courses',
         submenu: [
           {
             title: 'Página Inicial',
