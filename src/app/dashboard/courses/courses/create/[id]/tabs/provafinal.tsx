@@ -32,8 +32,6 @@ import {
   TableRow,
 } from '@/components/ui/table/table'
 import { 
-  BookOpen, 
-  Video, 
   Plus, 
   MoreVertical,
   Settings,
@@ -154,18 +152,6 @@ export default function ProvaFinal() {
         <p className="text-gray-600 mb-4">
           Configure a prova final do curso para avaliar os alunos.
         </p>
-
-        {/* Help Links */}
-        <div className="flex gap-6 mb-8">
-          <a href="#" className="flex items-center text-primary text-sm">
-            <BookOpen className="h-4 w-4 mr-1" />
-            Veja como funciona
-          </a>
-          <a href="#" className="flex items-center text-primary text-sm">
-            <Video className="h-4 w-4 mr-1" />
-            Assista ao vídeo
-          </a>
-        </div>
 
         <div className="flex justify-between mb-4">
           <div className="relative w-full max-w-md">
