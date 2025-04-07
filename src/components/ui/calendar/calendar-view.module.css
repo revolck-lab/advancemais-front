@@ -1,0 +1,172 @@
+.calendarContainer {
+  width: 100%;
+}
+
+.calendarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.calendarTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.calendarSubtitle {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: bold;
+  padding: 10px;
+  background-color: var(--secondary-color);
+  border-radius: 10px;
+  color: #fff;
+}
+
+.navigationButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+}
+
+.weekdayHeader {
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.calendarDay {
+  min-height: 80px;
+  padding: 0.25rem;
+  border: 1px solid #e4e4e4;
+  border-radius: 0.375rem;
+}
+
+.calendarDay:hover {
+  background-color: #ffeaea;
+}
+
+.emptyDay {
+  background-color: rgba(var(--muted), 0.2);
+}
+
+.currentDay {
+  border-color: var(--primary);
+}
+
+.dayNumber {
+  text-align: right;
+  padding: 0.25rem;
+}
+
+.eventsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.eventBadge {
+  font-size: 0.75rem;
+  justify-content: flex-start;
+  font-weight: normal;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  border-width: 1px;
+}
+
+.inicioEvent {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: rgb(6, 95, 70);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.inicioEvent:hover {
+  background-color: rgba(16, 185, 129, 0.2);
+}
+
+.fimEvent {
+  background-color: rgba(244, 63, 94, 0.1);
+  color: rgb(159, 18, 57);
+  border-color: rgba(244, 63, 94, 0.2);
+}
+
+.fimEvent:hover {
+  background-color: rgba(244, 63, 94, 0.2);
+}
+
+.avaliacaoEvent {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: rgb(146, 64, 14);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.avaliacaoEvent:hover {
+  background-color: rgba(245, 158, 11, 0.2);
+}
+
+.legendContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendDot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+}
+
+.legendDotInicio {
+  background-color: rgb(16, 185, 129);
+}
+
+.legendDotFim {
+  background-color: rgb(244, 63, 94);
+}
+
+.legendDotAvaliacao {
+  background-color: rgb(245, 158, 11);
+}
+
+.legendText {
+  font-size: 0.75rem;
+}
+
+/* Modo escuro */
+:global(.dark).inicioEvent {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: rgb(110, 231, 183);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+:global(.dark).fimEvent {
+  background-color: rgba(244, 63, 94, 0.2);
+  color: rgb(251, 113, 133);
+  border-color: rgba(244, 63, 94, 0.3);
+}
+
+:global(.dark).avaliacaoEvent {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: rgb(251, 191, 36);
+  border-color: rgba(245, 158, 11, 0.3);
+}

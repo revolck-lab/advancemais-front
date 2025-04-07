@@ -39,11 +39,70 @@ export const dashboardRoutes = [
         //   { title: 'Contato', href: '/dashboard/admin/website/contact' },
         // ],
       },
-      // {
-      //   title: 'Professores',
-      //   icon: Users,
-      //   href: '/dashboard/admin/professores',
-      // },
+      {
+        title: 'Cursos',
+        icon: LayoutDashboard,
+        href: '/dashboard/courses',
+        submenu: [
+          {
+            title: 'Página Inicial',
+            href: '/dashboard/courses',
+          },
+          {
+            title: 'Cursos',
+            href: '/dashboard/courses/courses',
+          },
+          {
+            title: 'Matrículas',
+            href: '/dashboard/courses/students',
+          },
+          {
+            title: 'Bibliotecas',
+            href: '/dashboard/courses/library',
+          },
+          {
+            title: 'Professores',
+            href: '/dashboard/courses/teacher',
+          },
+          {
+            title: 'Provas',
+            href: '/dashboard/courses/evidence',
+          },
+          {
+            title: 'Certificados',
+            href: '/dashboard/courses/certificate',
+          },
+          {
+            title: 'Depoimentos',
+            href: '/dashboard/courses/testimonials',
+          },
+          {
+            title: 'Configurações',
+            href: '/dashboard/courses/config',
+          },
+        ],
+        // submenu: [
+        //   {
+        //     title: 'Configurações do Site',
+        //     href: '/dashboard/admin/website',
+        //   },
+        //   {
+        //     title: 'Página Inicial',
+        //     href: '/dashboard/admin/website/home',
+        //   },
+        //   {
+        //     title: 'Sobre',
+        //     href: '/dashboard/admin/website/about',
+        //   },
+        //   { title: 'Cursos', href: '/dashboard/admin/website/courses' },
+        //   {
+        //     title: 'Recrutamento',
+        //     href: '/dashboard/admin/website/recruitment',
+        //   },
+        //   { title: 'Treinamento', href: '/dashboard/admin/website/training' },
+        //   { title: 'Contato', href: '/dashboard/admin/website/contact' },
+        // ],
+      },
     ],
   },
   {

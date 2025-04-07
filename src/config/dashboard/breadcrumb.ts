@@ -139,6 +139,80 @@ export function getBreadcrumbConfig(pathname: string): BreadcrumbConfig {
           { label: 'Minhas vagas' },
         ],
       }
+    //Courses
+    case '/dashboard/courses/students':
+      return {
+        title: 'Matrículas',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Matrículas' },
+        ],
+      }
+    case '/dashboard/courses/courses':
+      return {
+        title: 'Painel de Cursos',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Cursos' },
+        ],
+      }
+    case '/dashboard/courses/teacher':
+      return {
+        title: 'Professores',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Professores' },
+        ],
+      }
+    case '/dashboard/courses/library':
+      return {
+        title: 'Biblioteca',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Biblioteca' },
+        ],
+      }
+    case '/dashboard/courses/certificate':
+      return {
+        title: 'Certificados',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Certificados' },
+        ],
+      }
+    case '/dashboard/courses/evidence':
+      return {
+        title: 'Provas',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Provas' },
+        ],
+      }
+    case '/dashboard/courses/config':
+      return {
+        title: 'Configurações',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Configurações' },
+        ],
+      }
+    case '/dashboard/courses/testimonials':
+      return {
+        title: 'Depoimentos',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Depoimentos' },
+        ],
+      }
+    case '/dashboard/courses/courses/create':
+      return {
+        title: 'Criando um curso',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Cursos', href: '/dashboard/courses/courses' },
+          { label: 'Criando um curso' },
+        ],
+      }
     default:
       return {
         title: 'Dashboard',

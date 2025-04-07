@@ -7,6 +7,7 @@ import * as z from 'zod'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check, CreditCard, HelpCircle, ArrowLeft } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
+import Image from 'next/image'
 
 import { Button } from '@/components/ui/button/button'
 import {
@@ -594,7 +595,7 @@ export default function CheckoutPage() {
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
                     <div className="relative h-20 w-20 rounded-lg overflow-hidden bg-gray-100">
-                      <img
+                      <Image
                         src="/placeholder.svg"
                         alt="Plano thumbnail"
                         className="object-cover"
