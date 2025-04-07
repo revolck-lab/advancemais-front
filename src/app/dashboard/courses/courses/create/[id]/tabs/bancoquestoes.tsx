@@ -275,7 +275,7 @@ export default function BancoQuestoes() {
 
       {/* Add Question Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="sm:max-w-2xl bg-white">
           <DialogHeader>
             <DialogTitle className="text-lg font-medium">
               Nova questão
