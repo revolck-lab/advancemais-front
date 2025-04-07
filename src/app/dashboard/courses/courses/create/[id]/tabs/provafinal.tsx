@@ -130,7 +130,7 @@ export default function ProvaFinal() {
   }
 
   // Handler for form input change
-  const handleInputChange = (field: keyof ProvaFinal, value: any) => {
+  const handleInputChange = (field: keyof ProvaFinal, value: string | number | boolean) => {
     setFormData({
       ...formData,
       [field]: value
@@ -138,7 +138,7 @@ export default function ProvaFinal() {
   }
 
   // Handler for config input change
-  const handleConfigChange = (field: string, value: any) => {
+  const handleConfigChange = (field: keyof typeof configData, value: string | number | boolean) => {
     setConfigData({
       ...configData,
       [field]: value
