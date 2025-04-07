@@ -213,6 +213,16 @@ export function getBreadcrumbConfig(pathname: string): BreadcrumbConfig {
           { label: 'Criando um curso' },
         ],
       }
+      case 'dashboard/courses/courses/create/[id]':
+      return {
+        title: 'Criando um curso',
+        breadcrumbs: [
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Cursos', href: '/dashboard/courses/courses' },
+          { label: 'Criando um curso', href: '/dashboard/courses/courses/create' },
+          { label: 'Configurando um curso' },
+        ],
+      }
     default:
       return {
         title: 'Dashboard',
