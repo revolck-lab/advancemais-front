@@ -1,7 +1,9 @@
-'use client' // Adiciona a diretiva "use client" no topo do arquivo
+//src\components\website\pricing\PricingBox.tsx
+'use client'
 
-import React from 'react'
-import { useRouter } from 'next/navigation' // Importe o useRouter
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { LoginModal } from '@/components/website/login-modal/login-modal'
 
 interface PlanoProps {
   titulo: string
@@ -20,10 +22,28 @@ const Plano: React.FC<PlanoProps> = ({
   recursos,
   isPopular = false,
 }) => {
-  const router = useRouter() // Hook para navegação
+  const router = useRouter()
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    // Check login status when component mounts
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true'
+    setIsLoggedIn(loggedIn)
+  }, [])
 
   const handleAssinarPlano = () => {
-    router.push(`/checkout?plano=${encodeURIComponent(titulo)}`) // Passa o plano como query parameter
+    if (isLoggedIn) {
+      router.push(`/checkout?plano=${encodeURIComponent(titulo)}`)
+    } else {
+      setIsLoginModalOpen(true)
+    }
+  }
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true)
+    setIsLoginModalOpen(false)
+    router.push(`/checkout?plano=${encodeURIComponent(titulo)}`)
   }
 
   return (
@@ -51,7 +71,7 @@ const Plano: React.FC<PlanoProps> = ({
         Aumente a produtividade e a criatividade com o acesso expandido.
       </div>
       <button
-        onClick={handleAssinarPlano} // Adiciona o evento de clique
+        onClick={handleAssinarPlano}
         className={`w-full text-white rounded py-2 mb-4 hover:${
           isPopular ? 'bg-secondary' : 'bg-gray-800'
         } ${isPopular ? 'bg-secondary' : 'bg-gray-700'}`}
@@ -88,6 +108,12 @@ const Plano: React.FC<PlanoProps> = ({
           </li>
         ))}
       </ul>
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onSuccess={handleLoginSuccess}
+      />
     </div>
   )
 }

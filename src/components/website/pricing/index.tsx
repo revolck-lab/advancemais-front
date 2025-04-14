@@ -1,3 +1,4 @@
+//src\components\website\pricing\index.tsx
 import React from 'react'
 import { Briefcase, Crown, Rocket, Trophy } from 'lucide-react'
 import Plano from './PricingBox'

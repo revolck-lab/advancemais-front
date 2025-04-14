@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm, UseFormReturn } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, CreditCard, HelpCircle, ArrowLeft } from 'lucide-react'
+import { Check, HelpCircle, ArrowLeft } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 
@@ -26,6 +26,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip/tooltip'
 import { Progress } from '@/components/ui/progress/progress'
+import { LoginModal } from '@/components/website/login-modal/login-modal'
+import { PaymentMethodSelector } from '@/components/website/payment-method-selector/payment-method-selector'
 
 // Updated schema to match API validation
 const personalSchema = z
@@ -70,14 +72,7 @@ const personalSchema = z
     path: ['confirmarSenha'],
   })
 
-const paymentSchema = z.object({
-  cardNumber: z.string().min(16, { message: 'Número do cartão inválido' }),
-  expiryDate: z.string().min(5, { message: 'Data de validade inválida' }),
-  cvv: z.string().min(3, { message: 'CVV inválido' }),
-})
-
 type PersonalFormData = z.infer<typeof personalSchema>
-type PaymentFormData = z.infer<typeof paymentSchema>
 type PersonalFormFields = keyof PersonalFormData
 
 // Definir o tipo das chaves dos planos
@@ -121,6 +116,8 @@ const planos: Record<
 
 export default function CheckoutPage() {
   const [step, setStep] = useState(1)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const totalSteps = 3
   const searchParams = useSearchParams()
   const planoSelecionado = searchParams.get('plano')
@@ -139,6 +136,31 @@ export default function CheckoutPage() {
         desconto: '0,00',
         descricao: 'Nenhum plano selecionado',
       }
+
+  // Check login status when component mounts
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true'
+    setIsLoggedIn(loggedIn)
+
+    // If user is logged in, skip to payment methods
+    if (loggedIn) {
+      setStep(2)
+    } else {
+      setIsLoginModalOpen(true)
+    }
+
+    // Setup event listener for message from payment window
+    const handlePaymentMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'payment_completed') {
+        if (event.data.status === 'success') {
+          setStep(3)
+        }
+      }
+    }
+
+    window.addEventListener('message', handlePaymentMessage)
+    return () => window.removeEventListener('message', handlePaymentMessage)
+  }, [])
 
   // Updated form configuration
   const personalForm: UseFormReturn<PersonalFormData> =
@@ -166,52 +188,16 @@ export default function CheckoutPage() {
       },
     })
 
-  const paymentForm: UseFormReturn<PaymentFormData> = useForm<PaymentFormData>({
-    resolver: zodResolver(paymentSchema),
-    defaultValues: {
-      cardNumber: '',
-      expiryDate: '',
-      cvv: '',
-    },
-  })
+  // Removed unused payment form
 
   const onPersonalSubmit = async (data: PersonalFormData) => {
     try {
-      // // First, create address to get address_id
-      // const addressData = {
-      //   street: data.endereco,
-      //   neighborhood: data.bairro,
-      //   complement: data.complemento || null,
-      //   city: data.cidade,
-      //   state: data.estado,
-      //   zip_code: data.cep,
-      // }
-
-      // const addressResponse = await fetch(
-      //   'https://advancemais-api.onrender.com/api/address/',
-      //   {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify(addressData),
-      //   }
-      // )
-      // const addressResult = await addressResponse.json()
-      // console.log('Address response:', addressResult)
-
-      // if (!addressResult.id) {
-      //   console.error('Failed to create address')
-      //   return
-      // }
-
-      // Now create company with address_id
+      // Company data creation logic
       const companyData = {
         cnpj: data.cnpj,
         trade_name: data.trade_name,
         business_name: data.business_name,
         contact_name: data.contact_name,
-        // address_id: data.endereco.id,
         whatsapp: data.whatsapp,
         mobile_phone: data.mobile_phone,
         landline_phone: data.landline_phone || null,
@@ -239,6 +225,11 @@ export default function CheckoutPage() {
       )
       const companyResult = await companyResponse.json()
       console.log('Company response:', companyResult)
+
+      // Set login state after successful registration
+      localStorage.setItem('isLoggedIn', 'true')
+      localStorage.setItem('userEmail', data.email)
+      setIsLoggedIn(true)
     } catch (error) {
       console.error('Error submitting data:', error)
     } finally {
@@ -246,9 +237,19 @@ export default function CheckoutPage() {
     }
   }
 
-  const onPaymentSubmit = (data: PaymentFormData) => {
-    console.log('Payment data submitted:', data)
-    setStep(3)
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true)
+    setIsLoginModalOpen(false)
+    setStep(2)
+  }
+
+  const handlePaymentMethodSelect = (method: string) => {
+    // Open MercadoPago simulator in a new tab
+    const mercadoPagoUrl = `/mercadopago/checkout?method=${method}&plano=${encodeURIComponent(
+      planoSelecionado || 'Unknown'
+    )}&price=${encodeURIComponent(planoInfo.precoComDesconto)}`
+
+    window.open(mercadoPagoUrl, '_blank', 'width=500,height=600')
   }
 
   interface FormFieldProps {
@@ -445,103 +446,16 @@ export default function CheckoutPage() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Card className="shadow-sm border-0 bg-white/50 backdrop-blur-sm">
-                    <CardHeader>
-                      <CardTitle className="text-xl font-semibold">
-                        Método de Pagamento
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        Escolha como você quer pagar
-                      </p>
-                    </CardHeader>
-                    <CardContent>
-                      <form
-                        onSubmit={paymentForm.handleSubmit(onPaymentSubmit)}
-                        className="space-y-4"
-                      >
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="cardNumber"
-                            className="text-sm font-medium"
-                          >
-                            Número do Cartão
-                          </Label>
-                          <div className="relative">
-                            <Input
-                              id="cardNumber"
-                              {...paymentForm.register('cardNumber')}
-                              className="h-11 rounded-lg border-gray-200 focus:border-primary focus:ring-primary pr-10"
-                              placeholder="0000 0000 0000 0000"
-                            />
-                            <CreditCard className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
-                          </div>
-                          {paymentForm.formState.errors.cardNumber && (
-                            <p className="text-sm text-destructive">
-                              {paymentForm.formState.errors.cardNumber?.message}
-                            </p>
-                          )}
-                        </div>
+                  <PaymentMethodSelector onSelect={handlePaymentMethodSelect} />
 
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor="expiryDate"
-                              className="text-sm font-medium"
-                            >
-                              Data de Validade
-                            </Label>
-                            <Input
-                              id="expiryDate"
-                              placeholder="MM/AA"
-                              {...paymentForm.register('expiryDate')}
-                              className="h-11 rounded-lg border-gray-200 focus:border-primary focus:ring-primary"
-                            />
-                            {paymentForm.formState.errors.expiryDate && (
-                              <p className="text-sm text-destructive">
-                                {
-                                  paymentForm.formState.errors.expiryDate
-                                    ?.message
-                                }
-                              </p>
-                            )}
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor="cvv"
-                              className="text-sm font-medium"
-                            >
-                              CVV
-                            </Label>
-                            <Input
-                              id="cvv"
-                              {...paymentForm.register('cvv')}
-                              className="h-11 rounded-lg border-gray-200 focus:border-primary focus:ring-primary"
-                              placeholder="000"
-                            />
-                            {paymentForm.formState.errors.cvv && (
-                              <p className="text-sm text-destructive">
-                                {paymentForm.formState.errors.cvv?.message}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        <Button
-                          type="submit"
-                          className="w-full h-11 rounded-lg text-base"
-                        >
-                          Finalizar Pagamento
-                        </Button>
-                      </form>
-                    </CardContent>
-                  </Card>
-                  <div className="mt-4">
-                    <Button variant="outline" onClick={() => setStep(1)}>
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Voltar
-                    </Button>
-                  </div>
+                  {!isLoggedIn && (
+                    <div className="mt-4">
+                      <Button variant="outline" onClick={() => setStep(1)}>
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Voltar
+                      </Button>
+                    </div>
+                  )}
                 </motion.div>
               )}
 
@@ -679,6 +593,13 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onSuccess={handleLoginSuccess}
+      />
     </div>
   )
 }
