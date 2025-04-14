@@ -1,18 +1,43 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card/card'
 import { Progress } from '@/components/ui/progress/progress'
 import { CheckCircle, CreditCard, XCircle } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 
-export default function MercadoPagoCheckout() {
+// Loading component for Suspense fallback
+function LoadingState() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="border-b pb-4">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-500">
+              MP
+            </div>
+            <CardTitle className="text-lg">MercadoPago</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <div className="flex justify-between mb-1">
+                <span className="text-sm font-medium">Carregando</span>
+                <span className="text-sm text-muted-foreground">...</span>
+              </div>
+              <Progress value={30} className="h-2" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+// Main component wrapped with client directive
+function MercadoPagoCheckoutContent() {
   const [loading, setLoading] = useState(true)
   const [progress, setProgress] = useState(0)
   const [status, setStatus] = useState<'processing' | 'success' | 'fail'>(
@@ -201,5 +226,14 @@ export default function MercadoPagoCheckout() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+// Export the main component wrapped in Suspense
+export default function MercadoPagoCheckout() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <MercadoPagoCheckoutContent />
+    </Suspense>
   )
 }
