@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Checkbox, Input, Button, Pagination } from '@nextui-org/react'
+import { useRouter } from 'next/navigation'
 import {
   MapPin,
   Briefcase,
@@ -10,6 +11,21 @@ import {
   Heart,
   Eye,
 } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select/select'
+import { useToast } from '@/hooks/use-toast'
 
 interface Job {
   id: number
@@ -22,6 +38,19 @@ interface Job {
   workType: string
   pcd: boolean
 }
+
+interface MockCurriculum {
+  id: number
+  name: string
+  updatedAt: string
+}
+
+// Mock data para currículos
+const mockCurriculums: MockCurriculum[] = [
+  { id: 1, name: 'Currículo Principal', updatedAt: '2024-12-01' },
+  { id: 2, name: 'Currículo Tech', updatedAt: '2024-11-15' },
+  { id: 3, name: 'Currículo Design', updatedAt: '2024-10-20' },
+]
 
 const mockJobs: Job[] = [
   {
@@ -95,6 +124,8 @@ const mockJobs: Job[] = [
 const ITEMS_PER_PAGE = 5
 
 const JobsCareer: React.FC = () => {
+  const router = useRouter()
+  const { toast } = useToast()
   const [filteredJobs, setFilteredJobs] = useState<Job[]>(mockJobs)
   const [filters, setFilters] = useState({
     keyword: '',
@@ -104,6 +135,34 @@ const JobsCareer: React.FC = () => {
     salary: 0,
   })
   const [currentPage, setCurrentPage] = useState(1)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userCurriculums, setUserCurriculums] = useState<MockCurriculum[]>([])
+  const [selectedCurriculum, setSelectedCurriculum] = useState<string>('')
+  const [selectedJobId, setSelectedJobId] = useState<number | null>(null)
+  const [appliedJobs, setAppliedJobs] = useState<number[]>([])
+
+  // Verificar autenticação
+  useEffect(() => {
+    const checkAuth = () => {
+      const token =
+        localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
+      setIsAuthenticated(!!token)
+
+      // Mock: se autenticado, simula que o usuário tem currículos
+      if (token) {
+        setUserCurriculums(mockCurriculums)
+      }
+
+      // Verificar quais vagas o usuário já se candidatou
+      const savedAppliedJobs = localStorage.getItem('appliedJobs')
+      if (savedAppliedJobs) {
+        setAppliedJobs(JSON.parse(savedAppliedJobs))
+      }
+    }
+
+    checkAuth()
+  }, [])
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
   const paginatedJobs = filteredJobs.slice(
@@ -151,6 +210,165 @@ const JobsCareer: React.FC = () => {
     setFilters(updatedFilters)
     setFilteredJobs(updatedJobs)
     setCurrentPage(1)
+  }
+
+  const handleViewJob = (jobId: number) => {
+    router.push(`/website/vagas/${jobId}`)
+  }
+
+  const handleApplyClick = (jobId: number) => {
+    setSelectedJobId(jobId)
+    setIsModalOpen(true)
+  }
+
+  const handleModalClose = () => {
+    setIsModalOpen(false)
+    setSelectedCurriculum('')
+    setSelectedJobId(null)
+  }
+
+  const handleLogin = () => {
+    router.push('/auth/login')
+  }
+
+  const handleCreateCurriculum = () => {
+    router.push('/dashboard/curriculum/create')
+  }
+
+  const handleConfirmApplication = () => {
+    if (userCurriculums.length > 1 && !selectedCurriculum) {
+      toast({
+        title: 'Selecione um currículo',
+        description: 'Por favor, escolha qual currículo deseja enviar.',
+        variant: 'warning',
+      })
+      return
+    }
+
+    // Salvar que o usuário se candidatou a esta vaga
+    if (selectedJobId) {
+      const updatedAppliedJobs = [...appliedJobs, selectedJobId]
+      setAppliedJobs(updatedAppliedJobs)
+      localStorage.setItem('appliedJobs', JSON.stringify(updatedAppliedJobs))
+    }
+
+    toast({
+      title: 'Candidatura enviada!',
+      description: 'Seu currículo foi enviado com sucesso para esta vaga.',
+      variant: 'success',
+    })
+
+    handleModalClose()
+  }
+
+  const renderModalContent = () => {
+    if (!isAuthenticated) {
+      return (
+        <>
+          <DialogHeader>
+            <DialogTitle>Login necessário</DialogTitle>
+            <DialogDescription>
+              Você precisa estar logado para se candidatar a uma vaga.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-4 mt-4">
+            <Button onClick={handleLogin} color="primary">
+              Fazer login
+            </Button>
+            <Button onClick={handleModalClose} variant="bordered">
+              Fechar
+            </Button>
+          </div>
+        </>
+      )
+    }
+
+    if (userCurriculums.length === 0) {
+      return (
+        <>
+          <DialogHeader>
+            <DialogTitle>Currículo necessário</DialogTitle>
+            <DialogDescription>
+              É necessário criar um currículo para se candidatar a esta vaga.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-4 mt-4">
+            <Button onClick={handleCreateCurriculum} color="primary">
+              Cadastrar currículo
+            </Button>
+            <Button onClick={handleModalClose} variant="bordered">
+              Fechar
+            </Button>
+          </div>
+        </>
+      )
+    }
+
+    if (userCurriculums.length === 1) {
+      return (
+        <>
+          <DialogHeader>
+            <DialogTitle>Confirmar candidatura</DialogTitle>
+            <DialogDescription>
+              Deseja enviar seu currículo ({userCurriculums[0].name}) para esta
+              vaga?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-4 mt-4">
+            <Button onClick={handleConfirmApplication} color="primary">
+              Confirmar
+            </Button>
+            <Button onClick={handleModalClose} variant="bordered">
+              Cancelar
+            </Button>
+          </div>
+        </>
+      )
+    }
+
+    return (
+      <>
+        <DialogHeader>
+          <DialogTitle>Selecione um currículo</DialogTitle>
+          <DialogDescription>
+            Escolha qual currículo deseja enviar para esta vaga.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="mt-4">
+          <Select
+            value={selectedCurriculum}
+            onValueChange={setSelectedCurriculum}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione um currículo" />
+            </SelectTrigger>
+            <SelectContent>
+              {userCurriculums.map((curriculum) => (
+                <SelectItem
+                  key={curriculum.id}
+                  value={curriculum.id.toString()}
+                >
+                  {curriculum.name} - Atualizado em{' '}
+                  {new Date(curriculum.updatedAt).toLocaleDateString()}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex gap-4 mt-4">
+          <Button
+            onClick={handleConfirmApplication}
+            color="primary"
+            disabled={!selectedCurriculum}
+          >
+            Enviar currículo
+          </Button>
+          <Button onClick={handleModalClose} variant="bordered">
+            Cancelar
+          </Button>
+        </div>
+      </>
+    )
   }
 
   return (
@@ -333,13 +551,22 @@ const JobsCareer: React.FC = () => {
                     }).format(new Date(job.postedTime))}
                   </p>
                   <div className="flex gap-4">
-                    <Button color="primary" size="lg" className="text-white">
-                      Quero me candidatar
+                    <Button
+                      color="primary"
+                      size="lg"
+                      className="text-white"
+                      onPress={() => handleApplyClick(job.id)}
+                      disabled={appliedJobs.includes(job.id)}
+                    >
+                      {appliedJobs.includes(job.id)
+                        ? 'Candidatura enviada'
+                        : 'Quero me candidatar'}
                     </Button>
                     <Button
                       color="default"
                       size="lg"
                       startContent={<Eye className="w-5 h-5" />}
+                      onPress={() => handleViewJob(job.id)}
                     >
                       Visualizar vaga
                     </Button>
@@ -361,6 +588,13 @@ const JobsCareer: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de candidatura */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="bg-white">
+          {renderModalContent()}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
