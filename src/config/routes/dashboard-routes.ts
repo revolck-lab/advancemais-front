@@ -105,7 +105,7 @@ export const dashboardRoutes = [
     ],
   },
   {
-    category: 'DASHBOARD',
+    category: 'EMPRESAS',
     items: [
       {
         title: 'Página Inicial',
@@ -126,6 +126,56 @@ export const dashboardRoutes = [
         title: 'Configurações',
         icon: LayoutDashboard,
         href: '/dashboard/empresa/pagina-inicial',
+      },
+    ],
+  },
+  {
+    category: 'RECRUTADORES',
+    items: [
+      {
+        title: 'Página Inicial',
+        icon: LayoutDashboard,
+        href: '/dashboard/recrutadores',
+      },
+      {
+        title: 'Vagas',
+        icon: LayoutDashboard,
+        href: '/dashboard/recrutadores/vagas',
+      },
+      {
+        title: 'Lista de Candidatos',
+        icon: LayoutDashboard,
+        href: '/dashboard/recrutadores/candidatos',
+      },
+    ],
+  },
+  {
+    category: 'ESTUDANTE/CANDIDATO',
+    items: [
+      {
+        title: 'Página Inicial',
+        icon: LayoutDashboard,
+        href: '/dashboard/estudante',
+      },
+      {
+        title: 'Meus cursos',
+        icon: LayoutDashboard,
+        href: '/dashboard/estudante/cursos',
+      },
+      {
+        title: 'Agenda',
+        icon: LayoutDashboard,
+        href: '/dashboard/estudante/agenda',
+      },
+      {
+        title: 'Vagas de empregos',
+        icon: LayoutDashboard,
+        href: '/dashboard/estudante/vagas',
+      },
+      {
+        title: 'Meus de curriculo',
+        icon: LayoutDashboard,
+        href: '/dashboard/estudante/curriculos',
       },
     ],
   },

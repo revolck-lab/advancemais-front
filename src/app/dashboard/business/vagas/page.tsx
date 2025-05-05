@@ -1,22 +1,25 @@
-import Link from 'next/link'
-import { Eye, PenLine, Trash2 } from 'lucide-react'
+'use client'
+
+import { Trash2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button/button'
 import { Badge } from '@/components/ui/badge/badge'
+import { JobViewModal } from './modal'
+import { JobFormModal } from './job-form-modal'
 
 export default function JobListPage() {
   return (
     <div className="container mx-auto py-6">
       <div className="flex items-center justify-end mb-6">
         <div className="flex gap-2">
-          <Link href="/dashboard/business/vagas/register">
-            <Button
-              variant="default"
-              className="bg-secondary-500 hover:bg-secondary-600 text-white px-3 py-2"
-            >
-              <span className="mr-1">+</span> Adicionar Nova Vaga
-            </Button>
-          </Link>
+          <JobFormModal
+            buttonVariant="default"
+            isNew={true}
+            onSave={(newJob) => {
+              console.log('Nova vaga criada:', newJob)
+              // Aqui você implementaria a lógica para adicionar a vaga
+            }}
+          />
         </div>
       </div>
 
@@ -38,7 +41,7 @@ export default function JobListPage() {
                   Data de Publicação
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-gray-700">
-                  Prazo para Inscrição
+                  Fim da Publicação
                 </th>
                 <th className="px-4 py-3 text-left font-medium text-gray-700">
                   Status
@@ -71,20 +74,15 @@ export default function JobListPage() {
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-gray-500 hover:text-gray-700"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-gray-500 hover:text-gray-700"
-                      >
-                        <PenLine className="h-4 w-4" />
-                      </Button>
+                      <JobViewModal job={job} />
+                      <JobFormModal
+                        job={job}
+                        buttonVariant="icon"
+                        onSave={(updatedJob) => {
+                          console.log('Vaga atualizada:', updatedJob)
+                          // Aqui você implementaria a lógica para atualizar a vaga
+                        }}
+                      />
                       <Button
                         variant="ghost"
                         size="icon"
@@ -139,30 +137,42 @@ export default function JobListPage() {
   )
 }
 
-// Dados de exemplo
+// Dados de exemplo - Atualizados com todas as propriedades necessárias
 const jobs = [
   {
     id: 1,
-    position: 'Engenheiro de Redes',
+    position: 'Desenvolvedor Full Stack',
     type: 'Tempo Integral',
     postedDate: '12-01-2024',
     lastDateToApply: '24-01-2024',
     status: 'Ativo',
+    workMode: 'presencial',
+    description: 'Desenvolvedor Full Stack com experiência em React e Node.js',
+    pcdEligible: true,
+    highlighted: false,
   },
   {
     id: 2,
-    position: 'Desenvolvedor de Software Júnior',
+    position: 'Designer UX/UI',
     type: 'Meio Período',
     postedDate: '13-01-2024',
     lastDateToApply: '25-01-2024',
     status: 'Ativo',
+    workMode: 'remoto',
+    description: 'Designer com expertise em interfaces modernas e acessíveis',
+    pcdEligible: false,
+    highlighted: true,
   },
   {
     id: 3,
-    position: 'Desenvolvedor Java',
+    position: 'Gerente de Produto',
     type: 'Tempo Integral',
     postedDate: '13-01-2024',
     lastDateToApply: '26-01-2024',
-    status: 'Inativo',
+    status: 'Pendente',
+    workMode: 'hibrido',
+    description: 'Gerente de produto para liderar equipe de desenvolvimento',
+    pcdEligible: false,
+    highlighted: false,
   },
 ]

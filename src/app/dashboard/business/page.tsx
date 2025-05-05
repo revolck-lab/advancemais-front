@@ -27,7 +27,7 @@ export default function RecruitmentDashboard() {
             </div>
             <div>
               <p className="text-sm text-gray-600">
-                Renovação em: <span className="font-medium">15 dias</span>
+                Renovação em: <span className="font-medium">26 dias</span>
               </p>
               <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
                 Atualizar Plano
@@ -46,27 +46,27 @@ export default function RecruitmentDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           <MetricCard
             title="Total de Candidatos"
-            value={551}
-            change={76}
+            value={24}
+            change={15}
             icon={<Users className="h-6 w-6 text-blue-600" />}
           />
           <MetricCard
             title="Vagas Ativas"
-            value={8}
+            value={2}
             change={2}
             icon={<Briefcase className="h-6 w-6 text-green-600" />}
           />
           <MetricCard
             title="Entrevistas Realizadas"
-            value={54}
+            value={10}
             change={-5}
             icon={<CheckSquare className="h-6 w-6 text-purple-600" />}
           />
           <MetricCard
             title="Candidatos por Vaga"
             value={68.8}
-            suffix=""
-            change={9.5}
+            suffix="%"
+            change={0}
             icon={<Users className="h-6 w-6 text-orange-600" />}
           />
         </div>
@@ -149,19 +149,19 @@ export default function RecruitmentDashboard() {
                 <JobRow
                   title="Desenvolvedor Full Stack"
                   department="Tecnologia"
-                  candidates="45"
+                  candidates="10"
                   status="Ativa"
                 />
                 <JobRow
                   title="Designer UX/UI"
                   department="Design"
-                  candidates="32"
+                  candidates="14"
                   status="Ativa"
                 />
                 <JobRow
                   title="Gerente de Produto"
                   department="Produto"
-                  candidates="28"
+                  candidates="0"
                   status="Em Revisão"
                 />
               </tbody>
