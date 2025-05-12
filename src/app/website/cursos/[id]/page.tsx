@@ -19,13 +19,284 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion/accordion'
 import { StickyPriceCard } from './sticky-price-card'
+import { notFound } from 'next/navigation'
 
-export const metadata: Metadata = {
-  title: 'Análise e Desenvolvimento de Sistemas | AdvanceMais',
-  description: 'Curso de Análise e Desenvolvimento de Sistemas da AdvanceMais',
+// Definir tipos para nossos dados
+type CourseId =
+  | 'people-analytics'
+  | 'indicadores-recrutamento-selecao'
+  | 'oratoria-persuasao-lideres'
+  | 'gestao-tempo'
+
+interface CareerPath {
+  title: string
+  description: string
 }
 
-export default function CursoDetalhes({}: { params: { id: string } }) {
+interface JobMarket {
+  salaryRange: string
+  source: string
+  description: string
+}
+
+interface Coordinator {
+  name: string
+  image: string
+  curriculum: string
+  bio: string
+}
+
+interface FaqItem {
+  question: string
+  answer: string
+}
+
+interface CourseData {
+  id: string
+  title: string
+  type: string
+  description: string
+  whyStart: string
+  careerPaths: CareerPath[]
+  jobMarket: JobMarket
+  coordinator: Coordinator
+  faq: FaqItem[]
+}
+
+// Dados fictícios dos cursos
+const coursesData: Record<CourseId, CourseData> = {
+  'people-analytics': {
+    id: 'people-analytics',
+    title: 'People Analytics',
+    type: 'Tecnólogo',
+    description:
+      'O curso de People Analytics da AdvanceMais tem como objetivo geral formar profissionais competentes, tanto do ponto de vista ético quanto técnico, e aptos para atuar no mercado com ferramentas de análise de dados voltadas para gestão de pessoas.',
+    whyStart:
+      'O curso de People Analytics é uma excelente opção para quem deseja atuar na análise de dados aplicada à gestão de pessoas — um dos campos mais promissores na área de Recursos Humanos. A formação oferecida pela AdvanceMais proporciona um método avançado de ensino com tecnologias e práticas atuais do mercado.',
+    careerPaths: [
+      {
+        title: 'Analista de People Analytics',
+        description:
+          'O profissional terá as competências necessárias para analisar dados sobre colaboradores e fornecer insights relevantes para tomada de decisão em áreas como recrutamento, retenção e desenvolvimento de talentos.',
+      },
+      {
+        title: 'Consultor de RH Data-Driven',
+        description:
+          'Capacitação para atuar como consultor externo, auxiliando empresas a implementar processos de RH baseados em dados concretos.',
+      },
+    ],
+    jobMarket: {
+      salaryRange: 'R$ 6.500 a R$ 15.000',
+      source: 'salario.com.br',
+      description:
+        'O mercado de People Analytics está em expansão, com grande demanda por profissionais qualificados e com visão analítica. Em termos de remuneração, o salário inicial médio é de R$ 6.500 por mês, com altas oportunidades de crescimento na carreira e especialização, podendo chegar a salários acima de R$ 15.000.',
+    },
+    coordinator: {
+      name: 'Profa. Doutora Melissa Santos',
+      image: '/placeholder.svg?height=192&width=192',
+      curriculum: 'http://lattes.cnpq.br',
+      bio: 'Doutora em Administração com especialização em Gestão de Pessoas pela USP (2012) e Mestre em Ciência de Dados pela UNICAMP (2008). Possui mais de 15 anos de experiência acadêmica e como consultora em empresas de tecnologia. Coordena pesquisas sobre a aplicação de inteligência artificial em processos de RH e é autora de diversos artigos científicos na área.',
+    },
+    faq: [
+      {
+        question: 'O que se estuda no curso de People Analytics?',
+        answer:
+          'O curso aborda análise de dados aplicada à gestão de pessoas, incluindo disciplinas como: Estatística, Big Data, Machine Learning aplicado a RH, Visualização de Dados, Interpretação de Métricas, Recrutamento e Seleção baseados em dados, dentre outros temas.',
+      },
+      {
+        question: 'O que faz um profissional de People Analytics?',
+        answer:
+          'O profissional de People Analytics utiliza dados para otimizar processos de recursos humanos, como recrutamento, gestão de talentos, engajamento e desempenho. Ele coleta, analisa e interpreta dados para embasar decisões estratégicas na área de gestão de pessoas.',
+      },
+      {
+        question: 'Quais são as ferramentas utilizadas em People Analytics?',
+        answer:
+          'O curso aborda ferramentas como Excel avançado, PowerBI, Tableau, R, Python e outros softwares específicos para análise de dados em RH.',
+      },
+    ],
+  },
+  'indicadores-recrutamento-selecao': {
+    id: 'indicadores-recrutamento-selecao',
+    title: 'Indicadores de Recrutamento e Seleção',
+    type: 'Curso Livre',
+    description:
+      'O curso de Indicadores de Recrutamento e Seleção da AdvanceMais prepara profissionais para mensurar, analisar e otimizar processos seletivos utilizando métricas e KPIs específicos para a área de atração de talentos.',
+    whyStart:
+      'Este curso é ideal para profissionais de RH que desejam implementar uma abordagem mais analítica e orientada por dados no recrutamento e seleção. Com a crescente competitividade do mercado, saber mensurar a eficiência dos processos seletivos se tornou uma habilidade essencial.',
+    careerPaths: [
+      {
+        title: 'Analista de Recrutamento e Seleção',
+        description:
+          'O profissional será capaz de estruturar processos seletivos eficientes e mensurar seus resultados através de indicadores específicos.',
+      },
+      {
+        title: 'Consultor de Métricas de RH',
+        description:
+          'Desenvolverá habilidades para atuar como consultor especializado em métricas de recrutamento para diferentes organizações.',
+      },
+    ],
+    jobMarket: {
+      salaryRange: 'R$ 4.200 a R$ 9.500',
+      source: 'salario.com.br',
+      description:
+        'Profissionais que dominam indicadores de recrutamento e seleção têm alta empregabilidade em empresas de médio e grande porte. A remuneração inicial média é de R$ 4.200, podendo chegar a R$ 9.500 em posições mais estratégicas.',
+    },
+    coordinator: {
+      name: 'Profa. Mestre Natália Nascimento',
+      image: '/placeholder.svg?height=192&width=192',
+      curriculum: 'http://lattes.cnpq.br',
+      bio: 'Mestre em Gestão de Pessoas (2015) com especialização em Recrutamento e Seleção pela FGV. Possui certificação em HR Analytics e mais de 10 anos de experiência como Gerente de Recrutamento em grandes empresas. Autora do livro "Métricas que Transformam o RH" e palestrante internacional em eventos sobre aquisição de talentos.',
+    },
+    faq: [
+      {
+        question: 'Quais indicadores são abordados no curso?',
+        answer:
+          'O curso aborda indicadores como time-to-hire, cost-per-hire, taxa de turnover, qualidade da contratação, diversidade, sourcing efficiency, taxa de rejeição de ofertas, entre outros KPIs essenciais para medir a eficiência do recrutamento.',
+      },
+      {
+        question: 'É necessário conhecimento prévio em RH para fazer o curso?',
+        answer:
+          'É recomendável que o aluno tenha conhecimentos básicos em recrutamento e seleção, mas não é obrigatório. O curso foi estruturado para ser compreensível mesmo para iniciantes na área.',
+      },
+      {
+        question: 'Como os indicadores ajudam a melhorar o processo seletivo?',
+        answer:
+          'Os indicadores permitem identificar gargalos, reduzir custos, melhorar a qualidade das contratações, aumentar a retenção e tomar decisões baseadas em dados, não apenas em intuição.',
+      },
+    ],
+  },
+  'oratoria-persuasao-lideres': {
+    id: 'oratoria-persuasao-lideres',
+    title: 'Curso de oratória e persuasão para líderes',
+    type: 'Curso Livre',
+    description:
+      'O curso de Oratória e Persuasão para Líderes da AdvanceMais desenvolve habilidades de comunicação eficaz e técnicas de influência para líderes que desejam aprimorar sua capacidade de transmitir ideias e inspirar equipes.',
+    whyStart:
+      'A comunicação é uma das competências mais valorizadas em líderes de todos os níveis. Este curso foi desenvolvido especialmente para profissionais que desejam impactar positivamente suas equipes, apresentar ideias com clareza e confiança e desenvolver uma presença executiva marcante.',
+    careerPaths: [
+      {
+        title: 'Líder Comunicador',
+        description:
+          'Desenvolvimento de habilidades para comunicação clara e persuasiva com equipes, clientes e stakeholders.',
+      },
+      {
+        title: 'Apresentador Executivo',
+        description:
+          'Aprimoramento da capacidade de realizar apresentações de alto impacto em reuniões estratégicas e eventos corporativos.',
+      },
+    ],
+    jobMarket: {
+      salaryRange: 'Adicional de 15% a 30% em cargos de liderança',
+      source: 'pesquisa interna',
+      description:
+        'Profissionais com habilidades avançadas de comunicação e persuasão são mais bem avaliados em processos de promoção e tendem a receber entre 15% e 30% a mais em comparação com pares que não dominam essas competências.',
+    },
+    coordinator: {
+      name: 'Prof. Mestre Octávio Alves Jr',
+      image: '/placeholder.svg?height=192&width=192',
+      curriculum: 'http://lattes.cnpq.br',
+      bio: 'Mestre em Comunicação Corporativa pela UFRJ e especialista em Programação Neurolinguística. Com mais de 20 anos de experiência como consultor de comunicação executiva para grandes empresas. É palestrante internacional e autor de três livros sobre oratória e persuasão no ambiente corporativo.',
+    },
+    faq: [
+      {
+        question: 'Quais técnicas são ensinadas no curso?',
+        answer:
+          'O curso aborda storytelling, linguagem corporal, estruturação de discursos persuasivos, técnicas de argumentação, domínio de nervosismo, apresentações visuais impactantes, entre outras habilidades essenciais.',
+      },
+      {
+        question: 'O curso inclui exercícios práticos?',
+        answer:
+          'Sim, cerca de 70% do curso é composto por exercícios práticos e simulações de situações reais, com feedback individualizado do instrutor para cada participante.',
+      },
+      {
+        question: 'Quem pode se beneficiar deste curso?',
+        answer:
+          'Líderes de todos os níveis hierárquicos, empreendedores, profissionais que realizam apresentações frequentes, e qualquer pessoa que deseje melhorar sua capacidade de influência e comunicação.',
+      },
+    ],
+  },
+  'gestao-tempo': {
+    id: 'gestao-tempo',
+    title: 'Curso de Gestão de Tempo',
+    type: 'Curso Livre',
+    description:
+      'O curso de Gestão de Tempo da AdvanceMais oferece técnicas e ferramentas práticas para otimização da produtividade pessoal e profissional, ajudando os participantes a priorizar tarefas, eliminar procrastinação e criar rotinas eficientes.',
+    whyStart:
+      'Em um mundo cada vez mais acelerado e com inúmeras demandas simultâneas, a gestão eficiente do tempo se tornou uma habilidade essencial para o sucesso profissional. Este curso foi desenvolvido para ajudar profissionais a recuperarem o controle sobre sua agenda e aumentarem significativamente sua produtividade.',
+    careerPaths: [
+      {
+        title: 'Profissional de Alta Performance',
+        description:
+          'Desenvolvimento de habilidades para maximizar resultados em menos tempo, equilibrando vida pessoal e profissional.',
+      },
+      {
+        title: 'Líder de Equipes Ágeis',
+        description:
+          'Capacitação para implementar metodologias de produtividade em equipes, aumentando a eficiência coletiva.',
+      },
+    ],
+    jobMarket: {
+      salaryRange: 'Aumento de produtividade em até 40%',
+      source: 'estudo interno',
+      description:
+        'Profissionais que dominam técnicas avançadas de gestão de tempo relatam um aumento de produtividade de até 40%, o que se traduz em melhor desempenho, avaliações superiores e maior potencial de crescimento na carreira.',
+    },
+    coordinator: {
+      name: 'Profa. Mestre Andréia Pereira',
+      image: '/placeholder.svg?height=192&width=192',
+      curriculum: 'http://lattes.cnpq.br',
+      bio: 'Mestre em Psicologia Organizacional com especialização em Produtividade e Bem-estar no Trabalho. Certificada em metodologias de produtividade como GTD, Pomodoro e Time Blocking. Atua há 12 anos como consultora de produtividade para executivos C-level e é criadora do método "Tempo Inteligente", adotado por diversas empresas do setor de tecnologia.',
+    },
+    faq: [
+      {
+        question: 'Quais metodologias são abordadas no curso?',
+        answer:
+          'O curso aborda as principais metodologias de gestão de tempo, como GTD (Getting Things Done), Matriz de Eisenhower, Pomodoro, Time Blocking, entre outras, adaptando-as para diferentes perfis profissionais.',
+      },
+      {
+        question: 'O curso ensina a usar ferramentas digitais?',
+        answer:
+          'Sim, o programa inclui módulos sobre as principais ferramentas e aplicativos para gestão de tempo e produtividade, como Todoist, Notion, Trello, Google Calendar e Microsoft To Do.',
+      },
+      {
+        question: 'Como o curso ajuda a combater a procrastinação?',
+        answer:
+          'O curso apresenta técnicas psicológicas específicas para identificar e superar padrões de procrastinação, além de métodos práticos para criar novos hábitos de produtividade e foco.',
+      },
+    ],
+  },
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string }
+}): Promise<Metadata> {
+  const { id } = params
+  const courseData = coursesData[id as CourseId]
+
+  if (!courseData) {
+    return {
+      title: 'Curso não encontrado | AdvanceMais',
+      description: 'O curso que você está procurando não foi encontrado.',
+    }
+  }
+
+  return {
+    title: `${courseData.title} | AdvanceMais`,
+    description: courseData.description,
+  }
+}
+
+export default function CursoDetalhes({ params }: { params: { id: string } }) {
+  const { id } = params
+  const courseData = coursesData[id as CourseId]
+
+  // Se o curso não existir, redirecionar para 404
+  if (!courseData) {
+    notFound()
+  }
+
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
@@ -40,9 +311,7 @@ export default function CursoDetalhes({}: { params: { id: string } }) {
               Nossos Cursos
             </Link>
             <ChevronRight className="h-3 w-3 mx-2" />
-            <span className="text-white">
-              Curso de Análise e Desenvolvimento de Sistemas
-            </span>
+            <span className="text-white">{courseData.title}</span>
           </div>
         </div>
       </div>
@@ -55,7 +324,7 @@ export default function CursoDetalhes({}: { params: { id: string } }) {
               variant="outline"
               className="bg-white/10 text-white border-none px-3 py-1 uppercase"
             >
-              Tecnólogo
+              {courseData.type || 'Curso'}
             </Badge>
             <Button
               variant="outline"
@@ -69,15 +338,11 @@ export default function CursoDetalhes({}: { params: { id: string } }) {
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-2/3">
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Análise e Desenvolvimento de Sistemas
+                {courseData.title}
               </h1>
 
               <p className="text-white/80 text-base max-w-3xl">
-                O curso de Análise e Desenvolvimento de Sistemas da AdvanceMais
-                tem como objetivo geral formar profissionais competentes, tanto
-                do ponto de vista ético quanto técnico, e aptos para atuar no
-                mercado, no planejamento e desenvolvimento de programas
-                computacionais.
+                {courseData.description}
               </p>
             </div>
 
@@ -95,70 +360,36 @@ export default function CursoDetalhes({}: { params: { id: string } }) {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 pt-64 lg:pt-16 pb-10">
+      <div className="container mx-auto px-4 pt-64 lg:pt-16 pb-10 relative">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left Column - Main Content */}
           <div className="lg:w-2/3">
             {/* Why Start Section */}
             <div className="mb-10">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Por que começar sua jornada em Análise e Desenvolvimento de
-                Sistemas?
+                Por que começar sua jornada em {courseData.title}?
               </h2>
-              <p className="text-gray-700 mb-4">
-                O curso de Análise e Desenvolvimento de Sistemas é uma excelente
-                opção para quem deseja atuar no mercado tech — um dos mais
-                promissores e atrativos dos últimos tempos.
-              </p>
-              <p className="text-gray-700 mb-4">
-                A formação oferecida pela AdvanceMais proporciona não apenas um
-                avançado método de ensino, como também tecnologias úteis para o
-                aprendizado e conteúdos em dia com as práticas do mercado.
-              </p>
-              <p className="text-gray-700">
-                Assim, formamos analistas e desenvolvedores com perfil
-                multifacetado, capazes de explorar sistemas, de desenvolver
-                softwares e de programar códigos e colocá-los em prática, além
-                de aprimorar outras habilidades técnicas e comportamentais
-                essenciais para o mercado de trabalho.
-              </p>
+              <p className="text-gray-700 mb-4">{courseData.whyStart}</p>
             </div>
 
             {/* Career Path Section */}
             <div className="mb-10">
               <p className="text-gray-700 mb-4">
-                Durante a graduação, nós te guiamos por uma trilha geral, com
-                todos os conhecimentos necessários para a carreira. Ao longo
+                Durante a formação, nós te guiamos por uma trilha específica,
+                com todos os conhecimentos necessários para a carreira. Ao longo
                 dessa trilha, você poderá escolher uma área de ênfase por meio
-                de matérias e atividades complementares, se quiser. Confira as
-                ênfases para o curso de Análise e Desenvolvimento de Sistemas a
-                seguir:
+                de matérias e atividades complementares. Confira as ênfases para
+                o curso de {courseData.title} a seguir:
               </p>
 
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Full-Stack Developer
-                </h3>
-                <p className="text-gray-700">
-                  A ênfase em Full-Stack Developer promoverá no aluno a formação
-                  completa para que atue nas mais diversas atividades
-                  relacionadas ao desenvolvimento tanto do Front-End como do
-                  Back-End. É um profissional muito valorizado no mercado com
-                  conhecimento em diferentes linguagens e tecnologias.
-                </p>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Mobile Developer
-                </h3>
-                <p className="text-gray-700">
-                  A ênfase em Mobile Developer promoverá no aluno o conhecimento
-                  e domínio necessário para se tornar um desenvolvedor de
-                  aplicações e sistemas para dispositivos móveis. É um mercado
-                  em grande expansão.
-                </p>
-              </div>
+              {courseData.careerPaths.map((path: CareerPath, index: number) => (
+                <div className="mb-6" key={index}>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    {path.title}
+                  </h3>
+                  <p className="text-gray-700">{path.description}</p>
+                </div>
+              ))}
             </div>
 
             {/* Video Section */}
@@ -177,8 +408,7 @@ export default function CursoDetalhes({}: { params: { id: string } }) {
             {/* Job Market Section */}
             <div className="mb-10">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Como é o mercado de trabalho de Análise e Desenvolvimento de
-                Sistemas?
+                Como é o mercado de trabalho para {courseData.title}?
               </h2>
 
               <div className="bg-gray-50 rounded-lg p-6 flex flex-col md:flex-row items-center gap-4 mb-6">
@@ -187,22 +417,16 @@ export default function CursoDetalhes({}: { params: { id: string } }) {
                 </div>
                 <div>
                   <h3 className="text-gray-900 font-semibold text-lg">
-                    Salários de R$ 6.000 a R$ 15.110
+                    Salários de {courseData.jobMarket.salaryRange}
                   </h3>
-                  <p className="text-gray-600 text-sm">Fonte: salario.com.br</p>
+                  <p className="text-gray-600 text-sm">
+                    Fonte: {courseData.jobMarket.source}
+                  </p>
                 </div>
               </div>
 
               <p className="text-gray-700 mb-4">
-                Na prática, o mercado tem grande demanda, mas exige
-                profissionais qualificados e com repertório diverso.
-              </p>
-              <p className="text-gray-700">
-                Em termos de remuneração, o salário de analista de sistemas
-                chega a, em média, de R$ 6.000 por mês, segundo a GlassDoor. O
-                ponto positivo é que essa remuneração representa profissionais
-                juniores, com altas oportunidades de crescimento na carreira e
-                especialização no futuro, com salários acima de R$ 15.110.
+                {courseData.jobMarket.description}
               </p>
             </div>
 
@@ -215,8 +439,8 @@ export default function CursoDetalhes({}: { params: { id: string } }) {
               <div className="flex flex-col md:flex-row gap-6 items-start">
                 <div className="w-48 h-48 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                   <Image
-                    src="/placeholder.svg?height=192&width=192"
-                    alt="Prof. Mestre Miguel Carvalho"
+                    src={courseData.coordinator.image}
+                    alt={courseData.coordinator.name}
                     width={192}
                     height={192}
                     className="w-full h-full object-cover"
@@ -225,24 +449,16 @@ export default function CursoDetalhes({}: { params: { id: string } }) {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900">
-                      Prof. Mestre Miguel Carvalho
+                      {courseData.coordinator.name}
                     </h3>
-                    <Link href="#" className="text-blue-600 hover:underline">
+                    <Link
+                      href={courseData.coordinator.curriculum}
+                      className="text-blue-600 hover:underline"
+                    >
                       Currículo Lattes
                     </Link>
                   </div>
-                  <p className="text-gray-700">
-                    Cientista da Computação (2008) e Mestre em Informática
-                    (2011) pela Universidade Federal do Rio de Janeiro. Também
-                    possui graduações em Direito e Matemática e diversas
-                    especializações aplicando TI em diferentes áreas do
-                    conhecimento. Há 12 anos atua como Professor Universitário,
-                    consultor de TI e palestrante de diversos eventos. Tem
-                    experiência na área de Tecnologia da Informação, com ênfase
-                    em Engenharia de Software, Gestão da TI, Desenvolvimento de
-                    Sistemas, Tecnologia de Web Services, Engenharia de Sistemas
-                    IoT, Cultura Maker e Educação STEAM.
-                  </p>
+                  <p className="text-gray-700">{courseData.coordinator.bio}</p>
                 </div>
               </div>
             </div>
@@ -312,109 +528,24 @@ export default function CursoDetalhes({}: { params: { id: string } }) {
                 <span className="text-red-500">AdvanceMais?</span>
               </h2>
               <p className="text-gray-600 text-center mb-8">
-                Quer saber mais sobre o que te espera na AdvanceMais?
+                Perguntas frequentes sobre o curso de {courseData.title}
               </p>
 
               <Accordion type="single" collapsible className="text-gray-900">
-                <AccordionItem value="item-1" className="border-gray-200">
-                  <AccordionTrigger className="text-gray-900 hover:no-underline hover:text-gray-700">
-                    O que se estuda no curso de Análise e Desenvolvimento de
-                    Sistemas?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-700">
-                    <p className="mb-4">
-                      A grade curricular do curso de Análise de Sistemas se
-                      baseia em dois critérios: desenvolver pensamento lógico e
-                      aprimorar as habilidades na área. Ou seja, o aluno deve
-                      concluir o curso não apenas com as competências técnicas,
-                      mas sim com o modo de pensar de um analista de sistemas.
-                    </p>
-                    <p className="mb-2">
-                      Entre as disciplinas vistas nos cursos, estão:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-1">
-                      <li>Banco de Dados;</li>
-                      <li>Criação de Algoritmos;</li>
-                      <li>Desenvolvimento Mobile;</li>
-                      <li>Linguagens de Programação;</li>
-                      <li>Aplicativos Web;</li>
-                      <li>Pensamento Computacional;</li>
-                      <li>Matemática e Estatística;</li>
-                      <li>Manipulação de Datasets;</li>
-                      <li>Engenharia de Software;</li>
-                      <li>Segurança Digital.</li>
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="item-2" className="border-gray-200">
-                  <AccordionTrigger className="text-gray-900 hover:no-underline hover:text-gray-700">
-                    O que faz um profissional de análise de sistemas?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-700">
-                    O analista de sistemas é responsável por projetar,
-                    desenvolver e implementar sistemas de informação. Ele
-                    analisa as necessidades dos usuários, cria soluções
-                    tecnológicas e garante que os sistemas funcionem
-                    corretamente. Também pode trabalhar com manutenção e
-                    atualização de sistemas existentes.
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="item-3" className="border-gray-200">
-                  <AccordionTrigger className="text-gray-900 hover:no-underline hover:text-gray-700">
-                    Quais são as áreas de atuação na análise e desenvolvimento
-                    de sistemas?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-700">
-                    Os profissionais podem atuar em diversas áreas como
-                    desenvolvimento de software, análise de requisitos, gestão
-                    de projetos de TI, banco de dados, segurança da informação,
-                    desenvolvimento web e mobile, inteligência artificial, entre
-                    outras especialidades do mercado tecnológico.
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="item-4" className="border-gray-200">
-                  <AccordionTrigger className="text-gray-900 hover:no-underline hover:text-gray-700">
-                    Quais são as competências que um bom analista de sistemas
-                    deve ter?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-700">
-                    Um bom analista deve ter pensamento lógico, conhecimento
-                    técnico em programação, capacidade de resolução de
-                    problemas, boa comunicação, trabalho em equipe,
-                    adaptabilidade às novas tecnologias, e habilidade para
-                    entender as necessidades dos clientes e transformá-las em
-                    soluções tecnológicas.
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="item-5" className="border-gray-200">
-                  <AccordionTrigger className="text-gray-900 hover:no-underline hover:text-gray-700">
-                    Qual é o salário de um analista e desenvolvedor de sistemas?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-700">
-                    O salário inicial médio é de R$ 6.000, podendo chegar a mais
-                    de R$ 15.110 para profissionais experientes e
-                    especializados. A remuneração varia conforme a região, o
-                    porte da empresa, a especialização do profissional e o nível
-                    de experiência.
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="item-6" className="border-gray-200">
-                  <AccordionTrigger className="text-gray-900 hover:no-underline hover:text-gray-700">
-                    Têm muitas vagas de trabalho para analista de sistemas?
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-700">
-                    Sim, o mercado de TI está em constante crescimento e há uma
-                    grande demanda por profissionais qualificados. Segundo
-                    estudos recentes, existe um déficit de profissionais na
-                    área, o que torna o momento ideal para ingressar nessa
-                    carreira.
-                  </AccordionContent>
-                </AccordionItem>
+                {courseData.faq.map((faqItem: FaqItem, index: number) => (
+                  <AccordionItem
+                    key={index}
+                    value={`item-${index + 1}`}
+                    className="border-gray-200"
+                  >
+                    <AccordionTrigger className="text-gray-900 hover:no-underline hover:text-gray-700">
+                      {faqItem.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-gray-700">
+                      {faqItem.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
               </Accordion>
             </div>
           </div>

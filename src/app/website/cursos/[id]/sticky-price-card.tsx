@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useRef } from 'react'
 import { Card, CardContent } from '@/components/ui/card/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,130 +13,173 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { CountdownTimer } from './countdown-timer'
+import { useParams } from 'next/navigation'
+
+// Definir tipos para preços dos cursos
+type CourseId =
+  | 'people-analytics'
+  | 'indicadores-recrutamento-selecao'
+  | 'oratoria-persuasao-lideres'
+  | 'gestao-tempo'
+
+interface CoursePrice {
+  regularPrice: number
+  discountPrice: number
+  discountName: string
+  fixedPriceNote: string
+  duration: string
+  modality: string
+}
+
+// Dados de preços dos cursos
+const coursePrices: Record<CourseId, CoursePrice> = {
+  'people-analytics': {
+    regularPrice: 249.9,
+    discountPrice: 99.89,
+    discountName: 'Combo Futuro 2 em 1',
+    fixedPriceNote:
+      'Preço fixo durante todo o período letivo, desde que o discente não se torne inadimplente e/ou tranque o curso.',
+    duration: '5 semestres',
+    modality: 'EaD',
+  },
+  'indicadores-recrutamento-selecao': {
+    regularPrice: 499.9,
+    discountPrice: 199.89,
+    discountName: 'Combo Carreiras RH',
+    fixedPriceNote:
+      'Preço promocional válido até o término das vagas disponíveis para esta turma.',
+    duration: '6 meses',
+    modality: 'EaD',
+  },
+  'oratoria-persuasao-lideres': {
+    regularPrice: 399.9,
+    discountPrice: 249.9,
+    discountName: 'Combo Comunicação Eficaz',
+    fixedPriceNote: 'Preço promocional por tempo limitado. Aproveite!',
+    duration: '3 meses',
+    modality: 'Presencial/Online',
+  },
+  'gestao-tempo': {
+    regularPrice: 299.9,
+    discountPrice: 149.9,
+    discountName: 'Combo Produtividade',
+    fixedPriceNote:
+      'Preço promocional por tempo limitado. Início imediato após a confirmação da matrícula.',
+    duration: '2 meses',
+    modality: 'Online',
+  },
+}
 
 export function StickyPriceCard() {
-  const [isSticky, setIsSticky] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
-  const [cardHeight, setCardHeight] = useState(0)
+  const params = useParams()
+  const courseId = params.id as string
 
-  useEffect(() => {
-    // Medir a altura do card quando ele for renderizado
-    if (cardRef.current) {
-      setCardHeight(cardRef.current.offsetHeight)
-    }
-
-    const handleScroll = () => {
-      const heroSection = document.getElementById('hero-section')
-
-      if (heroSection) {
-        // Calcular quando o card deve se tornar sticky
-        // Queremos que ele se torne sticky quando a parte inferior do hero section
-        // estiver acima da parte superior da viewport + um pequeno offset
-        const heroBottom = heroSection.getBoundingClientRect().bottom
-        const offset = 100 // ajuste conforme necessário
-        setIsSticky(heroBottom < offset)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    window.addEventListener('resize', handleScroll)
-
-    // Chamar uma vez para definir o estado inicial
-    handleScroll()
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', handleScroll)
-    }
-  }, [])
+  // Obtém os dados de preço específicos do curso ou usa dados padrão
+  const priceData = (coursePrices as Record<string, CoursePrice>)[courseId] || {
+    regularPrice: 249.9,
+    discountPrice: 99.89,
+    discountName: 'Combo Futuro 2 em 1',
+    fixedPriceNote: 'Preço fixo durante todo o período letivo.',
+    duration: '5 semestres',
+    modality: 'EaD',
+  }
 
   return (
-    <>
-      {/* Espaço reservado para o card quando ele se torna sticky */}
-      {isSticky && (
-        <div style={{ height: cardHeight }} className="hidden lg:block" />
-      )}
+    <div ref={cardRef} className="sticky-card-container">
+      <Card className="bg-white border-none shadow-lg">
+        <CardContent className="p-6 space-y-5">
+          <div className="space-y-1">
+            <p className="text-gray-600 font-medium">DESCONTO SELECIONADO:</p>
+            <h3 className="text-2xl font-bold">{priceData.discountName}</h3>
+            <p className="text-red-600">Últimas vagas com este preço</p>
+          </div>
 
-      {/* O card real */}
-      <div
-        ref={cardRef}
-        className={`${
-          isSticky
-            ? 'fixed top-6 right-4 lg:right-[calc((100vw-1280px)/2+1rem)] z-50 w-full max-w-sm'
-            : 'relative'
-        } transition-all duration-300`}
-      >
-        <Card className="bg-white border-none shadow-md">
-          <CardContent className="p-6 space-y-5">
-            <div className="space-y-1">
-              <p className="text-gray-600 font-medium">DESCONTO SELECIONADO:</p>
-              <h3 className="text-2xl font-bold">Combo Futuro 2 em 1</h3>
-              <p className="text-red-600">Últimas vagas com este preço</p>
+          <div className="bg-red-50 rounded-lg p-4 space-y-2">
+            <p className="text-red-700 flex items-center gap-2">
+              <Clock className="h-4 w-4" /> ESSAS OFERTAS ACABAM EM:
+            </p>
+            <CountdownTimer hours={11} minutes={8} seconds={6} />
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-gray-500 line-through">
+              De R$ {priceData.regularPrice.toFixed(2).replace('.', ',')}/mês
+              por a partir de
+            </p>
+            <div className="flex items-end gap-1">
+              <span className="text-4xl font-bold text-gray-800">
+                R$ {priceData.discountPrice.toFixed(2).replace('.', ',')}
+              </span>
+              <span className="text-gray-600 mb-1">/mês</span>
             </div>
+            <p className="text-xs text-gray-500">{priceData.fixedPriceNote}</p>
+          </div>
 
-            <div className="bg-red-50 rounded-lg p-4 space-y-2">
-              <p className="text-red-700 flex items-center gap-2">
-                <Clock className="h-4 w-4" /> ESSAS OFERTAS ACABAM EM:
-              </p>
-              <CountdownTimer hours={11} minutes={8} seconds={6} />
+          <Button className="w-full bg-red-500 hover:bg-red-600 text-white py-6 text-lg">
+            Fazer Inscrição <ChevronRight className="h-5 w-5 ml-1" />
+          </Button>
+
+          <div className="space-y-3 pt-1">
+            <div className="flex items-center gap-3">
+              <Calendar className="h-5 w-5 text-blue-600" />
+              <span className="text-gray-700">Início imediato</span>
             </div>
-
-            <div className="space-y-1">
-              <p className="text-gray-500 line-through">
-                De R$ 249,90/mês por a partir de
-              </p>
-              <div className="flex items-end gap-1">
-                <span className="text-4xl font-bold text-gray-800">
-                  R$ 99,89
-                </span>
-                <span className="text-gray-600 mb-1">/mês</span>
-              </div>
-              <p className="text-xs text-gray-500">
-                Preço fixo durante todo o período letivo, desde que o discente
-                não se torne inadimplente e/ou tranque o curso.
-              </p>
+            <div className="flex items-center gap-3">
+              <Users className="h-5 w-5 text-blue-600" />
+              <span className="text-gray-700">
+                Professores mestres e doutores
+              </span>
             </div>
-
-            <Button className="w-full bg-red-500 hover:bg-red-600 text-white py-6 text-lg">
-              Fazer Inscrição <ChevronRight className="h-5 w-5 ml-1" />
-            </Button>
-
-            <div className="space-y-3 pt-1">
-              <div className="flex items-center gap-3">
-                <Calendar className="h-5 w-5 text-blue-600" />
-                <span className="text-gray-700">Início imediato</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Users className="h-5 w-5 text-blue-600" />
-                <span className="text-gray-700">
-                  Professores mestres e doutores
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Clock3 className="h-5 w-5 text-blue-600" />
-                <span className="text-gray-700">Duração de 5 semestres</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-5 w-5 text-blue-600" />
-                <span className="text-gray-700">Autorizado pelo MEC</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Wifi className="h-5 w-5 text-blue-600" />
-                <span className="text-gray-700">EaD</span>
-              </div>
+            <div className="flex items-center gap-3">
+              <Clock3 className="h-5 w-5 text-blue-600" />
+              <span className="text-gray-700">
+                Duração de {priceData.duration}
+              </span>
             </div>
-
-            <div className="text-xs text-gray-500 pt-1">
-              <p className="font-semibold">Atenção:</p>
-              <p>
-                Caso seja menor de idade, é necessário que seu responsável legal
-                realize o processo de matrícula junto a você, sob pena de
-                nulidade da inscrição.
-              </p>
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="h-5 w-5 text-blue-600" />
+              <span className="text-gray-700">Autorizado pelo MEC</span>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </>
+            <div className="flex items-center gap-3">
+              <Wifi className="h-5 w-5 text-blue-600" />
+              <span className="text-gray-700">{priceData.modality}</span>
+            </div>
+          </div>
+
+          <div className="text-xs text-gray-500 pt-1">
+            <p className="font-semibold">Atenção:</p>
+            <p>
+              Caso seja menor de idade, é necessário que seu responsável legal
+              realize o processo de matrícula junto a você, sob pena de nulidade
+              da inscrição.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* CSS inline para sticky */}
+      <style jsx>{`
+        .sticky-card-container {
+          position: sticky;
+          top: 20px;
+          align-self: flex-start;
+          width: 100%;
+          max-width: 380px;
+          z-index: 50;
+          transition: top 0.3s ease;
+          transform: translateZ(0); /* Hardware acceleration */
+          will-change: position, top; /* Hint to browser */
+        }
+
+        @media (max-width: 1024px) {
+          .sticky-card-container {
+            position: relative;
+            top: 0;
+            max-width: 100%;
+          }
+        }
+      `}</style>
+    </div>
   )
 }

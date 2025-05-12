@@ -4,8 +4,21 @@ import React, { useState } from 'react'
 import { Grid, List, MapPin, Clock, Calendar, Eye } from 'lucide-react'
 import { Button, Pagination, Checkbox } from '@nextui-org/react'
 import Image from 'next/image'
+import Link from 'next/link'
 import Styles from './coursesCarousel.module.css'
 import { useIsMobile } from '@/hooks/use-mobile'
+
+// Definir tipos para os cursos
+interface Course {
+  id: string
+  image: string
+  category: string
+  title: string
+  description: string
+  instructor: string
+  location: string
+  registrationDeadline: Date
+}
 
 const formatDate = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {
@@ -26,9 +39,9 @@ const calculateRemainingDays = (date: Date): number => {
   return diffInDays > 0 ? diffInDays : 0
 }
 
-const courses = [
+const courses: Course[] = [
   {
-    id: 1,
+    id: 'people-analytics',
     image: '/images/courses/course-1.png',
     category: 'Negócios',
     title: 'People Analytics',
@@ -39,7 +52,7 @@ const courses = [
     registrationDeadline: new Date('2025-12-31'),
   },
   {
-    id: 2,
+    id: 'indicadores-recrutamento-selecao',
     image: '/images/courses/course-2.png',
     category: 'Atração de talentos',
     title: 'Indicadores de Recrutamento e Seleção',
@@ -50,7 +63,7 @@ const courses = [
     registrationDeadline: new Date('2025-11-15'),
   },
   {
-    id: 3,
+    id: 'oratoria-persuasao-lideres',
     image: '/images/courses/course-3.png',
     category: 'Liderança',
     title: 'Curso de oratória e persuasão para líderes',
@@ -61,7 +74,7 @@ const courses = [
     registrationDeadline: new Date('2025-10-05'),
   },
   {
-    id: 4,
+    id: 'gestao-tempo',
     image: '/images/courses/course-4.png',
     category: 'Desenvolvimento e Performance',
     title: 'Curso de Gestão de Tempo',
@@ -288,7 +301,7 @@ const CourseListGrid: React.FC = (): JSX.Element => {
                       <p className="text-sm font-medium text-neutral-800">
                         por {course.instructor}
                       </p>
-                      <div className="mt-4 space-y-2">
+                      <div className="mt-4 space-y-2 ">
                         <Button
                           className="w-full flex items-center justify-center gap-2 text-sm py-2"
                           variant="solid"
@@ -300,16 +313,17 @@ const CourseListGrid: React.FC = (): JSX.Element => {
                           Inscreva-se até{' '}
                           {formatDate(course.registrationDeadline)}
                         </Button>
-                        <Button
-                          className="w-full flex items-center justify-center gap-2 text-sm py-2"
-                          variant="solid"
-                          size="md"
-                          color="primary"
-                          href="#"
-                        >
-                          <Eye className="w-4 h-4" />
-                          Visualizar informações
-                        </Button>
+                        <Link href={`/website/cursos/${course.id}`} passHref>
+                          <Button
+                            className="w-full flex items-center justify-center gap-2 text-sm py-2"
+                            variant="solid"
+                            size="md"
+                            color="primary"
+                          >
+                            <Eye className="w-4 h-4" />
+                            Visualizar informações
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -524,16 +538,17 @@ const CourseListGrid: React.FC = (): JSX.Element => {
                           Inscreva-se até{' '}
                           {formatDate(course.registrationDeadline)}
                         </Button>
-                        <Button
-                          className="w-full flex items-center justify-center gap-2 text-sm py-2"
-                          variant="solid"
-                          size="md"
-                          color="primary"
-                          href="#"
-                        >
-                          <Eye className="w-4 h-4" />
-                          Visualizar informações
-                        </Button>
+                        <Link href={`/website/cursos/${course.id}`} passHref>
+                          <Button
+                            className="w-full flex items-center justify-center gap-2 text-sm py-2"
+                            variant="solid"
+                            size="md"
+                            color="primary"
+                          >
+                            <Eye className="w-4 h-4" />
+                            Visualizar informações
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -557,11 +572,6 @@ const CourseListGrid: React.FC = (): JSX.Element => {
                         height={192}
                         className={`w-full h-full object-cover ${Styles.ImagemGrid}`}
                       />
-                      {/* <img
-                        src={course.image}
-                        alt={course.title}
-                        className={`w-full h-full object-cover ${Styles.ImagemGrid}`}
-                      /> */}
                     </div>
                     <div className="p-6 flex flex-col justify-between w-3/4">
                       <div>
@@ -604,16 +614,17 @@ const CourseListGrid: React.FC = (): JSX.Element => {
                           Inscreva-se até{' '}
                           {formatDate(course.registrationDeadline)}
                         </Button>
-                        <Button
-                          className="flex-1 flex items-center justify-center gap-2 text-sm py-2"
-                          variant="solid"
-                          size="md"
-                          color="primary"
-                          href="#"
-                        >
-                          <Eye className="w-4 h-4" />
-                          Visualizar informações
-                        </Button>
+                        <Link href={`/cursos/${course.id}`} passHref>
+                          <Button
+                            className="flex-1 flex items-center justify-center gap-2 text-sm py-2"
+                            variant="solid"
+                            size="md"
+                            color="primary"
+                          >
+                            <Eye className="w-4 h-4" />
+                            Visualizar informações
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </div>
