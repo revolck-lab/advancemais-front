@@ -3,8 +3,8 @@ import { CardPayment } from '@mercadopago/sdk-react'
 
 interface MercadoPagoCheckoutProps {
   amount: number
-  onSubmit: (formData: any, additionalData?: any) => Promise<void>
-  onError: (error: any) => void
+  onSubmit: Parameters<typeof CardPayment>[0]['onSubmit']
+  onError: Parameters<typeof CardPayment>[0]['onError']
 }
 
 export default function MercadoPagoCheckout({

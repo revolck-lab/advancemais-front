@@ -345,7 +345,7 @@ export default function AdminInternshipManagement() {
 
   const formatSchedule = (schedule: Internship['schedule']) => {
     const activeDays = Object.entries(schedule)
-      .filter(([_, config]) => config !== null)
+      .filter(([config]) => config !== null)
       .map(([day, config]) => {
         const dayName = weekDays.find((d) => d.key === day)?.label || day
         return `${dayName}: ${config!.start} - ${config!.end}`

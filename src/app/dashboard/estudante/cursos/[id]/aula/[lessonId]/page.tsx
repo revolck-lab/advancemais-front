@@ -403,7 +403,7 @@ export default function AulaPage() {
               <CardContent className="space-y-3">
                 {lessonsData &&
                   Object.entries(lessonsData)
-                    .filter(([key, value]) => Number(key) > lessonId)
+                    .filter(([key]) => Number(key) > lessonId)
                     .sort(([, a], [, b]) => Number(a) - Number(b))
                     .slice(0, 4)
                     .map(([key, nextLesson]) => (

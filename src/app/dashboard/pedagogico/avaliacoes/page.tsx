@@ -180,7 +180,27 @@ const students = [
 export default function TeacherDashboard() {
   const [selectedCourse, setSelectedCourse] = useState('2')
   const [editModalOpen, setEditModalOpen] = useState(false)
-  const [editingStudent, setEditingStudent] = useState<unknown>(null)
+  interface Student {
+    id: string
+    name: string
+    matricula: string
+    avatar: string
+    grade: number
+    examDate: string
+    courseId: string
+    status: string
+    exam: {
+      title: string
+      questions: Array<{
+        id: number
+        question: string
+        answer: string
+        correct: boolean
+      }>
+    }
+  }
+
+  const [editingStudent, setEditingStudent] = useState<Student | null>(null)
   const [newGrade, setNewGrade] = useState('')
   const [bonusPoints, setBonusPoints] = useState('')
   const [bonusReason, setBonusReason] = useState('')
@@ -192,7 +212,7 @@ export default function TeacherDashboard() {
     (course) => course.id === selectedCourse
   )
 
-  const handleEditGrade = (student: any) => {
+  const handleEditGrade = (student: Student) => {
     setEditingStudent(student)
     setNewGrade(student.grade.toString())
     setEditModalOpen(true)

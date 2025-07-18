@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from '@/components/ui/select/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Progress } from '@/components/ui/progress/progress'
 import {
   BarChart,
   XAxis,
@@ -52,6 +51,7 @@ import {
   Edit,
   HelpCircle,
 } from 'lucide-react'
+import Image from 'next/image'
 
 const monthlyEnrollmentData = [
   { month: 'Jan', enrollments: 120, completions: 95 },
@@ -664,7 +664,7 @@ export default function PedagogicalOverview() {
                         <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-semibold">
                           {index + 1}
                         </div>
-                        <img
+                        <Image
                           src={instructor.photo || '/placeholder.svg'}
                           alt={instructor.name}
                           className="w-12 h-12 rounded-full object-cover"

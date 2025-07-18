@@ -5,6 +5,7 @@ import AccordionSection from '@/components/website/accordion/accordion'
 import About from '@/components/website/about/about'
 import LogoEnterprises from '@/components/website/logoEnterprises/logoEnterprises'
 import { Users, Lightbulb, Shield, Heart } from 'lucide-react'
+import Image from 'next/image'
 
 export const generateMetadata = (): { title: string; description: string } => {
   return {
@@ -58,7 +59,7 @@ function EquipeAdvance() {
               key={idx}
               className="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <img
+              <Image
                 src={membro.foto}
                 alt={membro.nome}
                 className="w-full h-72 object-cover filter grayscale group-hover:grayscale-0 transition duration-300"

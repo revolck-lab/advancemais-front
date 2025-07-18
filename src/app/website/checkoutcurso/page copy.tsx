@@ -196,9 +196,19 @@ export default function CheckoutCursoPage() {
   }
 
   // -------------------------------------------------- CARTÃO de CRÉDITO/DÉBITO com BRICK (MercadoPago)
+  interface CardPaymentFormData {
+    token: string
+    issuer_id: string
+    payment_method_id: string
+    transaction_amount: number
+    installments: number
+    identificationNumber?: string
+    identificationType?: string
+  }
+
   const handleCardPaymentSubmit = async (
-    formData: any,
-    additionalData?: any
+    formData: CardPaymentFormData,
+    additionalData?: Record<string, unknown>
   ) => {
     setError(null)
     setPaymentStatus(null)
@@ -216,14 +226,14 @@ export default function CheckoutCursoPage() {
       } else {
         setPaymentStatus('Pagamento recusado ou pendente.')
       }
-    } catch (err) {
+    } catch {
       setError('Erro ao processar pagamento.')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleCardPaymentError = (err: any) => {
+  const handleCardPaymentError = () => {
     setError('Erro ao processar pagamento.')
   }
 

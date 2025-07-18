@@ -198,8 +198,8 @@ export default function CheckoutCursoPage() {
 
   // -------------------------------------------------- CARTÃO de CRÉDITO/DÉBITO com BRICK (MercadoPago)
   const handleCardPaymentSubmit = async (
-    formData: any,
-    additionalData?: any
+    formData: Record<string, unknown>,
+    additionalData?: Record<string, unknown>
   ) => {
     setError(null)
     setPaymentStatus(null)
@@ -217,14 +217,14 @@ export default function CheckoutCursoPage() {
       } else {
         setPaymentStatus('Pagamento recusado ou pendente.')
       }
-    } catch (err) {
+    } catch {
       setError('Erro ao processar pagamento.')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleCardPaymentError = (err: any) => {
+  const handleCardPaymentError = () => {
     setError('Erro ao processar pagamento.')
   }
 
@@ -260,7 +260,7 @@ export default function CheckoutCursoPage() {
       setTimeout(() => {
         if (step === 'payment') setStep('success')
       }, 25000) // 25 segundos
-    } catch (e) {
+    } catch {
       setError('Erro ao gerar PIX.')
     } finally {
       setLoading(false)
@@ -295,7 +295,7 @@ export default function CheckoutCursoPage() {
       setTimeout(() => {
         if (step === 'payment') setStep('success')
       }, 6000)
-    } catch (e) {
+    } catch {
       setError('Erro ao gerar boleto.')
     } finally {
       setLoading(false)
@@ -956,7 +956,7 @@ export default function CheckoutCursoPage() {
                             <div className="text-center space-y-4">
                               <div className="w-64 h-64 bg-white border-2 border-gray-200 rounded-lg mx-auto flex items-center justify-center">
                                 {pixQrCodeImage ? (
-                                  <img
+                                  <Image
                                     src={pixQrCodeImage}
                                     alt="QR Code PIX"
                                     className="w-full h-full object-contain"
