@@ -1,5 +1,5 @@
 'use client'
-
+import Link from 'next/link'
 import { useRef } from 'react'
 import { Card, CardContent } from '@/components/ui/card/card'
 import { Button } from '@/components/ui/button'
@@ -17,8 +17,8 @@ import { useParams } from 'next/navigation'
 
 // Definir tipos para preços dos cursos
 type CourseId =
-  | 'people-analytics'
-  | 'indicadores-recrutamento-selecao'
+  | 'auxiliar-farmacia'
+  | 'operador-empilhadeira'
   | 'oratoria-persuasao-lideres'
   | 'gestao-tempo'
 
@@ -33,16 +33,15 @@ interface CoursePrice {
 
 // Dados de preços dos cursos
 const coursePrices: Record<CourseId, CoursePrice> = {
-  'people-analytics': {
+  'auxiliar-farmacia': {
     regularPrice: 249.9,
-    discountPrice: 99.89,
-    discountName: 'Combo Futuro 2 em 1',
-    fixedPriceNote:
-      'Preço fixo durante todo o período letivo, desde que o discente não se torne inadimplente e/ou tranque o curso.',
-    duration: '5 semestres',
-    modality: 'EaD',
+    discountPrice: 1,
+    discountName: 'Arraiá de Ofertas',
+    fixedPriceNote: 'Preço único para o curso.',
+    duration: '2 semanas',
+    modality: 'Presencial',
   },
-  'indicadores-recrutamento-selecao': {
+  'operador-empilhadeira': {
     regularPrice: 499.9,
     discountPrice: 199.89,
     discountName: 'Combo Carreiras RH',
@@ -116,8 +115,13 @@ export function StickyPriceCard() {
             <p className="text-xs text-gray-500">{priceData.fixedPriceNote}</p>
           </div>
 
-          <Button className="w-full bg-red-500 hover:bg-red-600 text-white py-6 text-lg">
-            Fazer Inscrição <ChevronRight className="h-5 w-5 ml-1" />
+          <Button
+            asChild
+            className="w-full bg-red-500 hover:bg-red-600 text-white py-6 text-lg"
+          >
+            <Link href={`/website/checkoutcurso?course=${courseId}`}>
+              Fazer Inscrição <ChevronRight className="h-5 w-5 ml-1" />
+            </Link>
           </Button>
 
           <div className="space-y-3 pt-1">
@@ -128,7 +132,7 @@ export function StickyPriceCard() {
             <div className="flex items-center gap-3">
               <Users className="h-5 w-5 text-blue-600" />
               <span className="text-gray-700">
-                Professores mestres e doutores
+                Professores qualificados e experientes
               </span>
             </div>
             <div className="flex items-center gap-3">

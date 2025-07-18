@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { ToasterClient } from '@/components/ui/toast/toaster-client'
 import { ToastProvider } from '@/components/ui/toast/toast'
+import MercadoPagoProvider from '@/components/mercadopago/MercadoPagoProvider'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <ToastProvider>
           <ToasterClient />
-          {children}
+          <MercadoPagoProvider>{children}</MercadoPagoProvider>
         </ToastProvider>
         {typeof window !== 'undefined' && <SpeedInsights />}
       </body>

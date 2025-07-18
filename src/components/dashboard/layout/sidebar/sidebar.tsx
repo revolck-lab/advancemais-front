@@ -145,7 +145,9 @@ export function Sidebar() {
                           variant="ghost"
                           className={cn(
                             'w-full justify-start gap-2 hover:bg-white/10',
-                            'href' in item && pathname === item.href && 'bg-white/10'
+                            'href' in item &&
+                              pathname === item.href &&
+                              'bg-white/10'
                           )}
                         >
                           <item.icon className="h-4 w-4" />

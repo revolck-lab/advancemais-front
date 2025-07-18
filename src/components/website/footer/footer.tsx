@@ -19,6 +19,12 @@ const Footer: React.FC = (): JSX.Element => {
     websiteRoutes.find((route) => route.label === 'Sobre')?.path || '/sobre'
   const contactRoute =
     websiteRoutes.find((route) => route.label === 'Contato')?.path || '/contato'
+  const privacidade =
+    websiteRoutes.find((route) => route.label === 'Politica de Privacidade')
+      ?.path || '/politica-privacidade'
+  const termos =
+    websiteRoutes.find((route) => route.label === 'Termos de Uso')?.path ||
+    '/termos-uso'
   const coursesRoute =
     websiteRoutes.find((route) => route.label === 'Cursos')?.path || '/cursos'
   const solutionsSubRoutes =
@@ -86,6 +92,12 @@ const Footer: React.FC = (): JSX.Element => {
                   </li>
                   <li>
                     <Link href={contactRoute}>Contato</Link>
+                  </li>
+                  <li>
+                    <Link href={privacidade}>Politica de Privacidade</Link>
+                  </li>
+                  <li>
+                    <Link href={termos}>Termos de Uso</Link>
                   </li>
                 </ul>
               </div>
@@ -185,6 +197,12 @@ const Footer: React.FC = (): JSX.Element => {
                   </li>
                   <li>
                     <Link href={contactRoute}>Contato</Link>
+                  </li>
+                  <li>
+                    <Link href={privacidade}>Politica de Privacidade</Link>
+                  </li>
+                  <li>
+                    <Link href={termos}>Termos de Uso</Link>
                   </li>
                 </ul>
               </div>

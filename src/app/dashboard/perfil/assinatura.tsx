@@ -126,7 +126,9 @@ export default function SubscriptionPage() {
                       )}
                       <EditarCartaoModal
                         cartao={cartao}
-                        onEditCard={(formData) => handleEditCard({ ...cartao, ...formData })}
+                        onEditCard={(formData) =>
+                          handleEditCard({ ...cartao, ...formData })
+                        }
                       />
                       <RemoverCartaoModal
                         cartao={cartao}

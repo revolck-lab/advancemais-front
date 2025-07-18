@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server'
 
 // Expressão regular para identificar os prefixos das rotas do website
 const websiteRegex =
-  /^\/(sobre|cursos|solucoes|vagas|blog|contato|para-empresas|para-estudantes|para-empregos|checkout)(\/|$)/
+  /^\/(sobre|cursos|solucoes|vagas|blog|contato|para-empresas|para-estudantes|para-empregos|politica-privacidade|termos-uso|checkout)(\/|$)/
 
 export const config = {
   // Aplica o middleware apenas para as rotas necessárias,
@@ -19,6 +19,8 @@ export const config = {
     '/vagas/:path*',
     '/blog/:path*',
     '/contato/:path*',
+    '/politica-privacidade/:path*',
+    '/termos-uso/:path*',
     '/para-empresas/:path*',
     '/para-estudantes/:path*',
     '/para-empregos/:path*',

@@ -1,0 +1,48 @@
+import {
+  LayoutDashboard,
+  BookOpen,
+  GraduationCap,
+  CalendarClock,
+  Briefcase,
+  FileText,
+} from 'lucide-react'
+
+export const dashboardRoutes = [
+  {
+    category: 'DASHBOARD',
+    items: [
+      {
+        title: 'Página Inicial',
+        icon: LayoutDashboard,
+        href: '/dashboard/estudante',
+      },
+      {
+        title: 'Meus cursos',
+        icon: BookOpen,
+        href: '/dashboard/estudante/cursos',
+      },
+      {
+        title: 'Minhas notas',
+        icon: GraduationCap,
+        href: '/dashboard/estudante/notas',
+      },
+      {
+        title: 'Agenda',
+        icon: CalendarClock,
+        href: '/dashboard/estudante/agenda',
+      },
+      {
+        title: 'Vagas de empregos',
+        icon: Briefcase,
+        href: '/dashboard/estudante/vagas',
+      },
+      {
+        title: 'Meus de curriculo',
+        icon: FileText,
+        href: '/dashboard/estudante/curriculos',
+      },
+    ],
+  },
+]
+
+export default dashboardRoutes

@@ -76,10 +76,6 @@ export default function AgendaPage() {
             Gerencie suas aulas, compromissos e prazos
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline">Exportar agenda</Button>
-          <Button>Adicionar evento</Button>
-        </div>
       </div>
 
       {/* Controles de navegação e filtros */}

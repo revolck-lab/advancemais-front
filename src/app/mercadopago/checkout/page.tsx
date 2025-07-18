@@ -2,7 +2,12 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card/card'
 import { Progress } from '@/components/ui/progress/progress'
 import { CheckCircle, CreditCard, XCircle } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'

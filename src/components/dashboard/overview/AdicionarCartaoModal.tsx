@@ -12,7 +12,17 @@ import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
 import { CreditCard } from 'lucide-react'
 
-export function AdicionarCartaoModal({ onAddCard }: { onAddCard: (cardData: { id: number, type: string, lastFour: string, expiry: string, isPrimary: boolean }) => void }) {
+export function AdicionarCartaoModal({
+  onAddCard,
+}: {
+  onAddCard: (cardData: {
+    id: number
+    type: string
+    lastFour: string
+    expiry: string
+    isPrimary: boolean
+  }) => void
+}) {
   const [isOpen, setIsOpen] = useState(false)
   const [formData, setFormData] = useState({
     cardNumber: '',

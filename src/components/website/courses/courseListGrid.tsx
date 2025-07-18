@@ -41,23 +41,23 @@ const calculateRemainingDays = (date: Date): number => {
 
 const courses: Course[] = [
   {
-    id: 'people-analytics',
+    id: 'auxiliar-farmacia',
     image: '/images/courses/course-1.png',
     category: 'Negócios',
-    title: 'People Analytics',
+    title: 'Auxiliar de farmácia',
     description:
-      'Saiba como utilizar dados na gestão de pessoas neste curso de People Analytics, com estratégias práticas para tomada de decisões assertivas.',
+      'O curso tem como objetivo capacitar profissionais para atuar em farmácias e drogarias, sob a supervisão de um farmacêutico. ',
     instructor: 'Kerly Calixto',
-    location: 'Online',
+    location: 'Presencial',
     registrationDeadline: new Date('2025-12-31'),
   },
   {
-    id: 'indicadores-recrutamento-selecao',
+    id: 'operador-empilhadeira',
     image: '/images/courses/course-2.png',
     category: 'Atração de talentos',
-    title: 'Indicadores de Recrutamento e Seleção',
+    title: 'Operador de empilhadeira',
     description:
-      'Aprenda a usar indicadores estratégicos no recrutamento e seleção e contrate os melhores talentos para sua empresa!',
+      'O curso aborda os princípios de operação segura e eficiente de empilhadeiras, incluindo noções de legislação trabalhista (CLT e NRs), inspeção diária do equipamento, movimentação de cargas, estabilidade e centro de gravidade.',
     instructor: 'Natália Nascimento',
     location: 'Presencial',
     registrationDeadline: new Date('2025-11-15'),
@@ -319,6 +319,7 @@ const CourseListGrid: React.FC = (): JSX.Element => {
                             variant="solid"
                             size="md"
                             color="primary"
+                            href={`/website/cursos/${course.id}`}
                           >
                             <Eye className="w-4 h-4" />
                             Visualizar informações
@@ -527,26 +528,29 @@ const CourseListGrid: React.FC = (): JSX.Element => {
                         por {course.instructor}
                       </p>
                       <div className="mt-4 space-y-2">
-                        <Button
-                          className="w-full flex items-center justify-center gap-2 text-sm py-2"
-                          variant="solid"
-                          size="md"
-                          color="secondary"
-                          href="#"
-                        >
-                          <Calendar className="w-4 h-4" />
-                          Inscreva-se até{' '}
-                          {formatDate(course.registrationDeadline)}
-                        </Button>
+                        {/* <Link href={`/website/cursos/${course.id}`} passHref>
+                          <Button
+                            className="w-full flex items-center justify-center gap-2 text-sm py-2"
+                            variant="solid"
+                            size="md"
+                            color="secondary"
+                            href="#"
+                          >
+                            <Calendar className="w-4 h-4" />
+                            Inscreva-se até{' '}
+                            {formatDate(course.registrationDeadline)}
+                          </Button>
+                        </Link> */}
                         <Link href={`/website/cursos/${course.id}`} passHref>
                           <Button
                             className="w-full flex items-center justify-center gap-2 text-sm py-2"
                             variant="solid"
                             size="md"
-                            color="primary"
+                            color="secondary"
                           >
-                            <Eye className="w-4 h-4" />
-                            Visualizar informações
+                            <Calendar className="w-4 h-4" />
+                            Inscreva-se até{' '}
+                            {formatDate(course.registrationDeadline)}
                           </Button>
                         </Link>
                       </div>

@@ -1,0 +1,704 @@
+// components/mercadopago/payment-processor.tsx
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input/input'
+import { Label } from '@/components/ui/label/label'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card/card'
+import { Loader2, CreditCard, QrCode, FileText, Smartphone } from 'lucide-react'
+import { cn } from '@/lib/utils'
+
+interface PaymentProcessorProps {
+  amount: number
+  description: string
+  onPaymentSuccess: () => void
+  onPaymentError: (error: string) => void
+  userEmail?: string
+}
+
+// Tipos para os dados de pagamento
+type PaymentData = {
+  token: string
+  installments: number
+  payment_method_id: string
+  issuer_id: string
+  payer: {
+    email: string
+    identification: {
+      type: string
+      number: string
+    }
+  }
+  transaction_amount: number
+  description: string
+  capture: boolean
+}
+
+type PixPaymentData = {
+  transaction_amount: number
+  payment_method_id: string
+  payer: {
+    email: string
+  }
+  description: string
+}
+
+type BoletoPaymentData = {
+  transaction_amount: number
+  payment_method_id: string
+  payer: {
+    email: string
+    first_name: string
+    last_name: string
+    identification: {
+      type: string
+      number: string
+    }
+    address: {
+      zip_code: string
+      street_name: string
+      street_number: number
+      neighborhood: string
+      city: string
+      federal_unit: string
+    }
+  }
+  description: string
+}
+
+type PaymentResponse = {
+  status: string
+  id: string
+}
+
+type PixResponse = {
+  qr_code: string
+  qr_code_base64: string
+  payment_id: string
+}
+
+type BoletoResponse = {
+  pdf: string
+  barcode: string
+  payment_id: string
+}
+
+// Tipos para Mercado Pago SDK
+type MercadoPagoInstance = {
+  cardForm: (config: CardFormConfig) => CardFormInstance
+}
+
+type CardFormConfig = {
+  amount: string
+  iframe: boolean
+  form: {
+    id: string
+    cardNumber: { id: string; placeholder: string }
+    expirationDate: { id: string; placeholder: string }
+    securityCode: { id: string; placeholder: string }
+    cardholderName: { id: string; placeholder: string }
+    issuer: { id: string; placeholder: string }
+    installments: { id: string; placeholder: string } 
+    identificationType: { id: string }
+    identificationNumber: { id: string; placeholder: string }
+    cardholderEmail: { id: string; placeholder: string }
+  }
+  callbacks: {
+    onFormMounted: () => void
+    onSubmit: (event: Event) => void
+    onFetching?: (resource: string) => void
+  }
+}
+
+type CardFormInstance = {
+  getCardFormData: () => {
+    token: string
+    installments: number
+    issuerId: string
+    paymentMethodId: string
+  }
+}
+
+// Tipos para Window com Mercado Pago
+type WindowWithMercadoPago = Window & {
+  MercadoPago: new (
+    publicKey: string,
+    options: { locale: string }
+  ) => MercadoPagoInstance
+  cardPaymentBrickController?: CardFormInstance
+}
+
+export function PaymentProcessor({
+  amount,
+  description,
+  onPaymentSuccess,
+  onPaymentError,
+  userEmail = 'test@test.com',
+}: PaymentProcessorProps) {
+  const [mp, setMp] = useState<MercadoPagoInstance | null>(null)
+  const [paymentMethod, setPaymentMethod] = useState<
+    'credit' | 'debit' | 'pix' | 'boleto'
+  >('credit')
+  const [loading, setLoading] = useState(false)
+  const [pixData, setPixData] = useState<{
+    qr_code: string
+    qr_code_base64: string
+  } | null>(null)
+  const [boletoData, setBoletoData] = useState<{
+    pdf: string
+    barcode: string
+  } | null>(null)
+  const [cardFormLoaded, setCardFormLoaded] = useState(false)
+
+  // Inicializar Mercado Pago
+  useEffect(() => {
+    const initializeMercadoPago = async () => {
+      try {
+        const windowWithMP = window as WindowWithMercadoPago
+
+        // Carregar SDK se não estiver carregado
+        if (!windowWithMP.MercadoPago) {
+          const script = document.createElement('script')
+          script.src = 'https://sdk.mercadopago.com/js/v2'
+          script.async = true
+
+          script.onload = () => {
+            const updatedWindow = window as WindowWithMercadoPago
+            const mercadopago = new updatedWindow.MercadoPago(
+              'TEST-801f2ef8-6914-45f3-b582-a219ea9c1d42',
+              {
+                locale: 'pt-BR',
+              }
+            )
+            setMp(mercadopago)
+          }
+
+          script.onerror = () => {
+            onPaymentError('Erro ao carregar sistema de pagamento')
+          }
+
+          document.head.appendChild(script)
+        } else {
+          const mercadopago = new windowWithMP.MercadoPago(
+            'TEST-801f2ef8-6914-45f3-b582-a219ea9c1d42',
+            {
+              locale: 'pt-BR',
+            }
+          )
+          setMp(mercadopago)
+        }
+      } catch (initError) {
+        console.error('Erro ao inicializar Mercado Pago:', initError)
+        onPaymentError('Erro ao carregar sistema de pagamento')
+      }
+    }
+
+    initializeMercadoPago()
+  }, [onPaymentError])
+
+  // Criar formulário de cartão
+  const createCardForm = useCallback(async () => {
+    if (!mp) return
+
+    try {
+      const cardForm = mp.cardForm({
+        amount: amount.toString(),
+        iframe: true,
+        form: {
+          id: 'form-checkout',
+          cardNumber: {
+            id: 'form-checkout__cardNumber',
+            placeholder: '1111 1111 1111 1111',
+          },
+          expirationDate: {
+            id: 'form-checkout__expirationDate',
+            placeholder: 'MM/YY',
+          },
+          securityCode: {
+            id: 'form-checkout__securityCode',
+            placeholder: '123',
+          },
+          cardholderName: {
+            id: 'form-checkout__cardholderName',
+            placeholder: 'Titular do cartão',
+          },
+          issuer: {
+            id: 'form-checkout__issuer',
+            placeholder: 'Banco emissor',
+          },
+          installments: {
+            id: 'form-checkout__installments',
+            placeholder: 'Parcelas',
+          },
+          identificationType: {
+            id: 'form-checkout__identificationType',
+          },
+          identificationNumber: {
+            id: 'form-checkout__identificationNumber',
+            placeholder: 'Número do documento',
+          },
+          cardholderEmail: {
+            id: 'form-checkout__cardholderEmail',
+            placeholder: 'E-mail',
+          },
+        },
+        callbacks: {
+          onFormMounted: () => {
+            setCardFormLoaded(true)
+          },
+          onSubmit: (event: Event) => {
+            event.preventDefault()
+            handleCardPayment(cardForm)
+          },
+          onFetching: (resource: string) => {
+            console.log('Fetching resource: ', resource)
+          },
+        },
+      })
+
+      const windowWithMP = window as WindowWithMercadoPago
+      windowWithMP.cardPaymentBrickController = cardForm
+    } catch (cardFormError) {
+      console.error('Erro ao criar formulário de cartão:', cardFormError)
+      onPaymentError('Erro ao carregar formulário de pagamento')
+    }
+  }, [mp, amount, onPaymentError])
+
+  // Inicializar formulário de cartão quando necessário
+  useEffect(() => {
+    if (
+      mp &&
+      (paymentMethod === 'credit' || paymentMethod === 'debit') &&
+      !cardFormLoaded
+    ) {
+      createCardForm()
+    }
+  }, [mp, paymentMethod, cardFormLoaded, createCardForm])
+
+  const handleCardPayment = async (cardForm: CardFormInstance) => {
+    setLoading(true)
+    try {
+      const { token, installments, issuerId, paymentMethodId } =
+        cardForm.getCardFormData()
+
+      const paymentData: PaymentData = {
+        token,
+        installments: Number(installments),
+        payment_method_id: paymentMethodId,
+        issuer_id: issuerId,
+        payer: {
+          email: userEmail,
+          identification: {
+            type: 'CPF',
+            number: '12345678901',
+          },
+        },
+        transaction_amount: amount,
+        description: description,
+        capture: true,
+      }
+
+      // Simular pagamento (em produção, fazer chamada real para API)
+      const response = await simulatePayment(paymentData)
+
+      if (response.status === 'approved') {
+        onPaymentSuccess()
+      } else {
+        onPaymentError('Pagamento não aprovado. Verifique os dados do cartão.')
+      }
+    } catch (cardPaymentError) {
+      console.error('Erro no pagamento:', cardPaymentError)
+      onPaymentError('Erro ao processar pagamento. Tente novamente.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handlePixPayment = async () => {
+    setLoading(true)
+    try {
+      const pixPaymentData: PixPaymentData = {
+        transaction_amount: amount,
+        payment_method_id: 'pix',
+        payer: {
+          email: userEmail,
+        },
+        description: description,
+      }
+
+      // Simular criação de PIX
+      const response = await simulatePixPayment(pixPaymentData)
+
+      if (response.qr_code) {
+        setPixData(response)
+        // Simular confirmação de pagamento após 10 segundos
+        setTimeout(() => {
+          onPaymentSuccess()
+        }, 10000)
+      }
+    } catch (pixError) {
+      console.error('Erro ao gerar PIX:', pixError)
+      onPaymentError('Erro ao gerar PIX. Tente novamente.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleBoletoPayment = async () => {
+    setLoading(true)
+    try {
+      const boletoPaymentData: BoletoPaymentData = {
+        transaction_amount: amount,
+        payment_method_id: 'bolbradesco',
+        payer: {
+          email: userEmail,
+          first_name: 'Test',
+          last_name: 'User',
+          identification: {
+            type: 'CPF',
+            number: '12345678901',
+          },
+          address: {
+            zip_code: '01310-100',
+            street_name: 'Av. Paulista',
+            street_number: 1000,
+            neighborhood: 'Bela Vista',
+            city: 'São Paulo',
+            federal_unit: 'SP',
+          },
+        },
+        description: description,
+      }
+
+      // Simular criação de boleto
+      const response = await simulateBoletoPayment(boletoPaymentData)
+
+      if (response.pdf) {
+        setBoletoData(response)
+        // Simular confirmação de pagamento após visualizar boleto
+        setTimeout(() => {
+          onPaymentSuccess()
+        }, 8000)
+      }
+    } catch (boletoError) {
+      console.error('Erro ao gerar boleto:', boletoError)
+      onPaymentError('Erro ao gerar boleto. Tente novamente.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Funções de simulação com tipos específicos
+  const simulatePayment = async (
+    paymentData: PaymentData
+  ): Promise<PaymentResponse> => {
+    console.log('Processando pagamento com dados:', {
+      method: paymentData.payment_method_id,
+      amount: paymentData.transaction_amount,
+      email: paymentData.payer.email,
+    })
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    return {
+      status: 'approved',
+      id: Math.random().toString(36).substr(2, 9),
+    }
+  }
+
+  const simulatePixPayment = async (
+    pixPaymentData: PixPaymentData
+  ): Promise<PixResponse> => {
+    console.log('Gerando PIX com dados:', {
+      amount: pixPaymentData.transaction_amount,
+      email: pixPaymentData.payer.email,
+      description: pixPaymentData.description,
+    })
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    return {
+      qr_code:
+        '00020101021243650016COM.MERCADOLIBRE02013063638f1264-5401-4901-ae8b-dcf4c80f0a4a5204000053039865802BR5909Test User6009SAO PAULO61080540-090062070503***63040B6D',
+      qr_code_base64:
+        'iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADhSURBVDhPrZQ9CgIxEIWfgIiNjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2N',
+      payment_id: Math.random().toString(36).substr(2, 9),
+    }
+  }
+
+  const simulateBoletoPayment = async (
+    boletoPaymentData: BoletoPaymentData
+  ): Promise<BoletoResponse> => {
+    console.log('Gerando boleto com dados:', {
+      amount: boletoPaymentData.transaction_amount,
+      email: boletoPaymentData.payer.email,
+      name: `${boletoPaymentData.payer.first_name} ${boletoPaymentData.payer.last_name}`,
+      city: boletoPaymentData.payer.address.city,
+    })
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    return {
+      pdf: 'https://www.mercadopago.com.br/checkout/test-boleto.pdf',
+      barcode: '23793381286008301234567890123456789012',
+      payment_id: Math.random().toString(36).substr(2, 9),
+    }
+  }
+
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="text-lg">Finalizar Pagamento</CardTitle>
+        <p className="text-sm text-gray-600">
+          Valor total:{' '}
+          <span className="font-semibold">
+            R$ {amount.toFixed(2).replace('.', ',')}
+          </span>
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Seleção do método de pagamento */}
+        <div className="grid grid-cols-2 gap-3">
+          <Button
+            type="button"
+            variant="default"
+            onClick={() => setPaymentMethod('credit')}
+            className={cn(
+              'h-16 flex-col relative',
+              paymentMethod === 'credit' && 'ring-2 ring-blue-500 bg-blue-50'
+            )}
+          >
+            <CreditCard className="w-5 h-5 mb-1" />
+            <span className="text-xs">Cartão de Crédito</span>
+          </Button>
+
+          <Button
+            type="button"
+            variant="default"
+            onClick={() => setPaymentMethod('debit')}
+            className={cn(
+              'h-16 flex-col relative',
+              paymentMethod === 'debit' && 'ring-2 ring-blue-500 bg-blue-50'
+            )}
+          >
+            <CreditCard className="w-5 h-5 mb-1" />
+            <span className="text-xs">Cartão de Débito</span>
+          </Button>
+
+          <Button
+            type="button"
+            variant="default"
+            onClick={() => setPaymentMethod('pix')}
+            className={cn(
+              'h-16 flex-col relative',
+              paymentMethod === 'pix' && 'ring-2 ring-blue-500 bg-blue-50'
+            )}
+          >
+            <Smartphone className="w-5 h-5 mb-1" />
+            <span className="text-xs">PIX</span>
+          </Button>
+
+          <Button
+            type="button"
+            variant="default"
+            onClick={() => setPaymentMethod('boleto')}
+            className={cn(
+              'h-16 flex-col relative',
+              paymentMethod === 'boleto' && 'ring-2 ring-blue-500 bg-blue-50'
+            )}
+          >
+            <FileText className="w-5 h-5 mb-1" />
+            <span className="text-xs">Boleto</span>
+          </Button>
+        </div>
+
+        {/* Formulário de Cartão */}
+        {(paymentMethod === 'credit' || paymentMethod === 'debit') && (
+          <div className="space-y-4">
+            <form id="form-checkout" className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="form-checkout__cardNumber">
+                    Número do cartão
+                  </Label>
+                  <div
+                    id="form-checkout__cardNumber"
+                    className="mt-2 p-3 border rounded-lg min-h-[44px]"
+                  ></div>
+                </div>
+                <div>
+                  <Label htmlFor="form-checkout__expirationDate">
+                    Validade
+                  </Label>
+                  <div
+                    id="form-checkout__expirationDate"
+                    className="mt-2 p-3 border rounded-lg min-h-[44px]"
+                  ></div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="form-checkout__securityCode">CVV</Label>
+                  <div
+                    id="form-checkout__securityCode"
+                    className="mt-2 p-3 border rounded-lg min-h-[44px]"
+                  ></div>
+                </div>
+                <div>
+                  <Label htmlFor="form-checkout__installments">Parcelas</Label>
+                  <select
+                    id="form-checkout__installments"
+                    className="mt-2 w-full p-3 border rounded-lg"
+                  >
+                    <option value="">Escolha...</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="form-checkout__cardholderName">
+                  Nome no cartão
+                </Label>
+                <Input
+                  id="form-checkout__cardholderName"
+                  className="mt-2 w-full"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="form-checkout__identificationType">
+                    Tipo documento
+                  </Label>
+                  <select
+                    id="form-checkout__identificationType"
+                    className="mt-2 w-full p-3 border rounded-lg"
+                  >
+                    <option value="CPF">CPF</option>
+                  </select>
+                </div>
+                <div>
+                  <Label htmlFor="form-checkout__identificationNumber">
+                    Número documento
+                  </Label>
+                  <Input
+                    id="form-checkout__identificationNumber"
+                    className="mt-2 w-full"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="form-checkout__cardholderEmail">E-mail</Label>
+                <Input
+                  id="form-checkout__cardholderEmail"
+                  type="email"
+                  defaultValue={userEmail}
+                  className="mt-2 w-full"
+                />
+              </div>
+
+              <div style={{ display: 'none' }}>
+                <select id="form-checkout__issuer"></select>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full h-12"
+                disabled={loading || !cardFormLoaded}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processando...
+                  </>
+                ) : (
+                  `Pagar R$ ${amount.toFixed(2).replace('.', ',')}`
+                )}
+              </Button>
+            </form>
+          </div>
+        )}
+
+        {/* PIX */}
+        {paymentMethod === 'pix' && (
+          <div className="space-y-4">
+            {!pixData ? (
+              <Button
+                onClick={handlePixPayment}
+                className="w-full h-12"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Gerando PIX...
+                  </>
+                ) : (
+                  `Gerar PIX - R$ ${amount.toFixed(2).replace('.', ',')}`
+                )}
+              </Button>
+            ) : (
+              <div className="text-center space-y-4">
+                <div className="w-48 h-48 bg-white border-2 border-gray-200 rounded-lg mx-auto flex items-center justify-center">
+                  <QrCode className="w-24 h-24 text-gray-400" />
+                </div>
+                <p className="text-sm text-gray-600">
+                  Escaneie o código QR com seu banco ou app de pagamento
+                </p>
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <p className="text-xs text-blue-700">
+                    ⏰ Aguardando pagamento... O pagamento será confirmado
+                    automaticamente.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Boleto */}
+        {paymentMethod === 'boleto' && (
+          <div className="space-y-4">
+            {!boletoData ? (
+              <Button
+                onClick={handleBoletoPayment}
+                className="w-full h-12"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Gerando boleto...
+                  </>
+                ) : (
+                  `Gerar Boleto - R$ ${amount.toFixed(2).replace('.', ',')}`
+                )}
+              </Button>
+            ) : (
+              <div className="text-center space-y-4">
+                <FileText className="w-16 h-16 mx-auto text-gray-400" />
+                <p className="text-sm text-gray-600">
+                  Seu boleto foi gerado com sucesso
+                </p>
+                <Button
+                  onClick={() => window.open(boletoData.pdf, '_blank')}
+                  className="w-full"
+                >
+                  Visualizar Boleto
+                </Button>
+                <div className="bg-orange-50 p-3 rounded-lg">
+                  <p className="text-xs text-orange-700">
+                    📋 Vencimento: 3 dias úteis. O pagamento será confirmado em
+                    até 2 dias úteis após o pagamento.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}

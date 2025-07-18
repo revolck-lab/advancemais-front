@@ -1,30 +1,17 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  ChevronRight,
-  Share2,
-  FileText,
-  Users,
-  GraduationCap,
-} from 'lucide-react'
+import { ChevronRight, Share2, FileText } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card/card'
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion/accordion'
 import { StickyPriceCard } from './sticky-price-card'
 import { notFound } from 'next/navigation'
 
 // Definir tipos para nossos dados
 type CourseId =
-  | 'people-analytics'
-  | 'indicadores-recrutamento-selecao'
+  | 'auxiliar-farmacia'
+  | 'operador-empilhadeira'
   | 'oratoria-persuasao-lideres'
   | 'gestao-tempo'
 
@@ -56,7 +43,7 @@ interface CourseData {
   title: string
   type: string
   description: string
-  whyStart: string
+  // whyStart: string
   careerPaths: CareerPath[]
   jobMarket: JobMarket
   coordinator: Coordinator
@@ -65,24 +52,17 @@ interface CourseData {
 
 // Dados fictícios dos cursos
 const coursesData: Record<CourseId, CourseData> = {
-  'people-analytics': {
-    id: 'people-analytics',
-    title: 'People Analytics',
-    type: 'Tecnólogo',
+  'auxiliar-farmacia': {
+    id: 'auxiliar-farmacia',
+    title: 'Auxiliar de farmácia',
+    type: 'Presencial',
     description:
-      'O curso de People Analytics da AdvanceMais tem como objetivo geral formar profissionais competentes, tanto do ponto de vista ético quanto técnico, e aptos para atuar no mercado com ferramentas de análise de dados voltadas para gestão de pessoas.',
-    whyStart:
-      'O curso de People Analytics é uma excelente opção para quem deseja atuar na análise de dados aplicada à gestão de pessoas — um dos campos mais promissores na área de Recursos Humanos. A formação oferecida pela AdvanceMais proporciona um método avançado de ensino com tecnologias e práticas atuais do mercado.',
+      'O curso tem como objetivo capacitar profissionais para atuar em farmácias e drogarias, sob a supervisão de um farmacêutico. O conteúdo aborda conceitos básicos do setor farmacêutico, como a diferença entre farmácia e drogaria, tipos de medicamentos (referência, genérico e similar), formas farmacêuticas, armazenamento e descarte de medicamentos, além de normas e procedimentos para medicamentos controlados. O curso também enfatiza a importância da ética, postura profissional, técnicas de atendimento ao cliente e o combate à automedicação, preparando o auxiliar para atuar com responsabilidade e segurança no ambiente farmacêutico.',
     careerPaths: [
       {
-        title: 'Analista de People Analytics',
+        title: 'Auxiliar de farmácia',
         description:
           'O profissional terá as competências necessárias para analisar dados sobre colaboradores e fornecer insights relevantes para tomada de decisão em áreas como recrutamento, retenção e desenvolvimento de talentos.',
-      },
-      {
-        title: 'Consultor de RH Data-Driven',
-        description:
-          'Capacitação para atuar como consultor externo, auxiliando empresas a implementar processos de RH baseados em dados concretos.',
       },
     ],
     jobMarket: {
@@ -115,14 +95,12 @@ const coursesData: Record<CourseId, CourseData> = {
       },
     ],
   },
-  'indicadores-recrutamento-selecao': {
-    id: 'indicadores-recrutamento-selecao',
+  'operador-empilhadeira': {
+    id: 'operador-empilhadeira',
     title: 'Indicadores de Recrutamento e Seleção',
     type: 'Curso Livre',
     description:
       'O curso de Indicadores de Recrutamento e Seleção da AdvanceMais prepara profissionais para mensurar, analisar e otimizar processos seletivos utilizando métricas e KPIs específicos para a área de atração de talentos.',
-    whyStart:
-      'Este curso é ideal para profissionais de RH que desejam implementar uma abordagem mais analítica e orientada por dados no recrutamento e seleção. Com a crescente competitividade do mercado, saber mensurar a eficiência dos processos seletivos se tornou uma habilidade essencial.',
     careerPaths: [
       {
         title: 'Analista de Recrutamento e Seleção',
@@ -171,8 +149,6 @@ const coursesData: Record<CourseId, CourseData> = {
     type: 'Curso Livre',
     description:
       'O curso de Oratória e Persuasão para Líderes da AdvanceMais desenvolve habilidades de comunicação eficaz e técnicas de influência para líderes que desejam aprimorar sua capacidade de transmitir ideias e inspirar equipes.',
-    whyStart:
-      'A comunicação é uma das competências mais valorizadas em líderes de todos os níveis. Este curso foi desenvolvido especialmente para profissionais que desejam impactar positivamente suas equipes, apresentar ideias com clareza e confiança e desenvolver uma presença executiva marcante.',
     careerPaths: [
       {
         title: 'Líder Comunicador',
@@ -221,8 +197,6 @@ const coursesData: Record<CourseId, CourseData> = {
     type: 'Curso Livre',
     description:
       'O curso de Gestão de Tempo da AdvanceMais oferece técnicas e ferramentas práticas para otimização da produtividade pessoal e profissional, ajudando os participantes a priorizar tarefas, eliminar procrastinação e criar rotinas eficientes.',
-    whyStart:
-      'Em um mundo cada vez mais acelerado e com inúmeras demandas simultâneas, a gestão eficiente do tempo se tornou uma habilidade essencial para o sucesso profissional. Este curso foi desenvolvido para ajudar profissionais a recuperarem o controle sobre sua agenda e aumentarem significativamente sua produtividade.',
     careerPaths: [
       {
         title: 'Profissional de Alta Performance',
@@ -369,7 +343,6 @@ export default function CursoDetalhes({ params }: { params: { id: string } }) {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Por que começar sua jornada em {courseData.title}?
               </h2>
-              <p className="text-gray-700 mb-4">{courseData.whyStart}</p>
             </div>
 
             {/* Career Path Section */}
@@ -395,12 +368,14 @@ export default function CursoDetalhes({ params }: { params: { id: string } }) {
             {/* Video Section */}
             <div className="mb-10">
               <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=480&width=854"
-                  alt="Vídeo do curso"
-                  width={854}
-                  height={480}
-                  className="w-full h-full object-cover"
+                <iframe
+                  src="https://www.youtube.com/embed/3_9arm0tE_Y"
+                  title="YouTube video"
+                  width="854"
+                  height="480"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full"
                 />
               </div>
             </div>
@@ -428,125 +403,6 @@ export default function CursoDetalhes({ params }: { params: { id: string } }) {
               <p className="text-gray-700 mb-4">
                 {courseData.jobMarket.description}
               </p>
-            </div>
-
-            {/* Coordinator Section */}
-            <div className="mb-10">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Coordenador
-              </h2>
-
-              <div className="flex flex-col md:flex-row gap-6 items-start">
-                <div className="w-48 h-48 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                  <Image
-                    src={courseData.coordinator.image}
-                    alt={courseData.coordinator.name}
-                    width={192}
-                    height={192}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900">
-                      {courseData.coordinator.name}
-                    </h3>
-                    <Link
-                      href={courseData.coordinator.curriculum}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Currículo Lattes
-                    </Link>
-                  </div>
-                  <p className="text-gray-700">{courseData.coordinator.bio}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Resources Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="flex justify-center">
-                    <FileText className="h-12 w-12 text-gray-700" />
-                  </div>
-                  <h3 className="text-xl font-bold text-center text-gray-900">
-                    Ebook do curso
-                  </h3>
-                  <p className="text-gray-600 text-center">
-                    Quer mais informações sobre este curso? Reunimos neste ebook
-                    tudo que você precisa saber! Clique para baixar.
-                  </p>
-                  <Button variant="link" className="w-full text-blue-600">
-                    Baixar Ebook do curso{' '}
-                    <ChevronRight className="h-4 w-4 ml-1" />
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="flex justify-center">
-                    <GraduationCap className="h-12 w-12 text-gray-700" />
-                  </div>
-                  <h3 className="text-xl font-bold text-center text-gray-900">
-                    Formas de ingresso
-                  </h3>
-                  <p className="text-gray-600 text-center">
-                    Conheça todas as maneiras de entrar para o seu curso dos
-                    sonhos na AdvanceMais! Estamos te esperando!
-                  </p>
-                  <Button variant="link" className="w-full text-blue-600">
-                    Saiba mais <ChevronRight className="h-4 w-4 ml-1" />
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6 space-y-4">
-                  <div className="flex justify-center">
-                    <Users className="h-12 w-12 text-gray-700" />
-                  </div>
-                  <h3 className="text-xl font-bold text-center text-gray-900">
-                    Como funciona
-                  </h3>
-                  <p className="text-gray-600 text-center">
-                    Ainda tem dúvidas? Separamos algumas perguntas frequentes
-                    que podem te ajudar! Clique para ver nosso FAQ.
-                  </p>
-                  <Button variant="link" className="w-full text-blue-600">
-                    Ir para o FAQ <ChevronRight className="h-4 w-4 ml-1" />
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* FAQ Section */}
-            <div className="mb-10">
-              <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">
-                Quer saber mais sobre o que te espera na{' '}
-                <span className="text-red-500">AdvanceMais?</span>
-              </h2>
-              <p className="text-gray-600 text-center mb-8">
-                Perguntas frequentes sobre o curso de {courseData.title}
-              </p>
-
-              <Accordion type="single" collapsible className="text-gray-900">
-                {courseData.faq.map((faqItem: FaqItem, index: number) => (
-                  <AccordionItem
-                    key={index}
-                    value={`item-${index + 1}`}
-                    className="border-gray-200"
-                  >
-                    <AccordionTrigger className="text-gray-900 hover:no-underline hover:text-gray-700">
-                      {faqItem.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-gray-700">
-                      {faqItem.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
             </div>
           </div>
 

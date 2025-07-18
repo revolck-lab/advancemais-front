@@ -21,118 +21,117 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 
-export default function VisaoGeralPage() {
+export default function CursosVisaoGeralPage() {
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+    <div className="container mx-auto p-4 space-y-8">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Olá, João Silva</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Olá, Filipe!</h1>
           <p className="text-muted-foreground">
-            Semestre atual: 2024.1 • Semana 8 de 16
+            Bem-vindo de volta! Veja seu progresso e novidades nos cursos.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline">Calendário acadêmico</Button>
-          <Button>Meu desempenho</Button>
+          <Button variant="outline">Meus certificados</Button>
+          <Button>Explorar novos cursos</Button>
         </div>
       </div>
 
-      {/* Card de progresso do semestre */}
-      <Card className="bg-gradient-to-r from-blue-500 to-blue-700 text-white">
+      {/* Progresso do curso atual */}
+      <Card className="bg-gradient-to-r from-indigo-500 to-sky-600 text-white">
         <CardHeader>
-          <CardTitle className="text-2xl">Progresso do semestre</CardTitle>
+          <CardTitle className="text-2xl">Curso em andamento</CardTitle>
           <CardDescription className="text-blue-100">
-            Você está na metade do caminho!
+            <span className="font-medium">Auxiliar de farmácia</span>
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            <div className="flex justify-between">
+            <div className="flex justify-between text-sm">
               <span>Progresso geral</span>
-              <span>50%</span>
+              <span>0%</span>
             </div>
             <Progress
-              value={50}
+              value={0}
               className="h-2 bg-blue-400"
               indicatorClassName="bg-white"
             />
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
+        <CardFooter className="flex flex-col sm:flex-row gap-2 justify-between">
           <div className="text-sm">
-            <span className="font-medium">Início:</span> 01/02/2024
+            <span className="font-medium">Início:</span> 04/06/2025
           </div>
           <div className="text-sm">
-            <span className="font-medium">Término:</span> 30/06/2024
+            <span className="font-medium">Prazo:</span> 25/06/2025
           </div>
         </CardFooter>
       </Card>
 
-      {/* Stats Grid */}
+      {/* Stats de cursos */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Média Geral</CardTitle>
+            <CardTitle className="text-sm font-medium">Média geral</CardTitle>
             <Star className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8.7</div>
+            <div className="text-2xl font-bold">Sem avaliação</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-500">+0.3</span> vs semestre anterior
+              Sua avaliação média dos cursos
             </p>
           </CardContent>
         </Card>
 
         <Card className="bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Disciplinas Atuais
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Cursos ativos</CardTitle>
             <BookOpen className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">6</div>
-            <p className="text-xs text-muted-foreground">24 créditos totais</p>
+            <div className="text-2xl font-bold">1</div>
+            <p className="text-xs text-muted-foreground">Em andamento</p>
           </CardContent>
         </Card>
 
         <Card className="bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
-              Tarefas Pendentes
+              Aulas pendentes
             </CardTitle>
             <FileText className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">3 com prazo próximo</p>
+            <div className="text-2xl font-bold">7</div>
+            <p className="text-xs text-muted-foreground">Aulas para assistir</p>
           </CardContent>
         </Card>
 
         <Card className="bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
-              Horas de Estudo
+              Horas investidas
             </CardTitle>
             <Clock className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">32h</div>
+            <div className="text-2xl font-bold">Sem avaliação</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-500">+4h</span> vs semana anterior
+              nas últimas 2 semanas
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Activity Chart */}
+      {/* Gráfico de Atividade */}
       <Card className="bg-white">
         <CardHeader>
-          <CardTitle>Atividade de Estudo</CardTitle>
-          <CardDescription>Horas de estudo nas últimas semanas</CardDescription>
+          <CardTitle>Seu ritmo de estudo</CardTitle>
+          <CardDescription>Progresso semanal</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px]">
+          <div className="h-[260px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={activityData}
@@ -152,7 +151,7 @@ export default function VisaoGeralPage() {
                     backgroundColor: 'white',
                     border: '1px solid #e5e7eb',
                     borderRadius: '6px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
                   }}
                 />
                 <Area
@@ -168,13 +167,14 @@ export default function VisaoGeralPage() {
         </CardContent>
       </Card>
 
-      {/* Upcoming Tasks and Recent Courses */}
+      {/* Próximos conteúdos e progresso dos cursos */}
       <div className="grid gap-4 md:grid-cols-2">
+        {/* Próximas aulas/atividades */}
         <Card className="bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Próximas Tarefas</CardTitle>
-              <CardDescription>Tarefas com prazo próximo</CardDescription>
+              <CardTitle>Próximas aulas/atividades</CardTitle>
+              <CardDescription>Acompanhe o que vem a seguir</CardDescription>
             </div>
             <Button variant="outline" size="sm">
               Ver todas
@@ -182,43 +182,43 @@ export default function VisaoGeralPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {upcomingTasks.map((task) => (
+              {upcomingLessons.map((lesson) => (
                 <div
-                  key={task.id}
-                  className="flex items-center justify-between rounded-lg border p-3 shadow-sm transition-all hover:bg-gray-50"
+                  key={lesson.id}
+                  className="flex items-center justify-between rounded-lg border p-3 shadow-sm hover:bg-gray-50 transition-all"
                 >
                   <div className="space-y-1">
-                    <p className="font-medium">{task.title}</p>
+                    <p className="font-medium">{lesson.title}</p>
                     <div className="flex items-center text-sm text-muted-foreground">
                       <BookOpen className="mr-1 h-3 w-3" />
-                      <span>{task.course}</span>
+                      <span>{lesson.course}</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end">
                     <Badge
                       variant={
-                        task.daysLeft <= 1
+                        lesson.daysLeft <= 1
                           ? 'destructive'
-                          : task.daysLeft <= 3
+                          : lesson.daysLeft <= 3
                             ? 'warning'
                             : 'outline'
                       }
                       className={
-                        task.daysLeft <= 1
+                        lesson.daysLeft <= 1
                           ? ''
-                          : task.daysLeft <= 3
+                          : lesson.daysLeft <= 3
                             ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
                             : ''
                       }
                     >
-                      {task.daysLeft === 0
+                      {lesson.daysLeft === 0
                         ? 'Hoje'
-                        : task.daysLeft === 1
+                        : lesson.daysLeft === 1
                           ? 'Amanhã'
-                          : `${task.daysLeft} dias`}
+                          : `${lesson.daysLeft} dias`}
                     </Badge>
                     <span className="mt-1 text-xs text-muted-foreground">
-                      {task.date}
+                      {lesson.date}
                     </span>
                   </div>
                 </div>
@@ -227,200 +227,64 @@ export default function VisaoGeralPage() {
           </CardContent>
         </Card>
 
+        {/* Progresso por curso */}
         <Card className="bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Desempenho por Disciplina</CardTitle>
-              <CardDescription>Notas e progresso atual</CardDescription>
+              <CardTitle>Progresso por curso</CardTitle>
+              <CardDescription>Veja como está em cada curso</CardDescription>
             </div>
             <Button variant="outline" size="sm">
-              Ver detalhes
+              Detalhes
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {currentCourses.map((course) => (
-                <div key={course.id} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="h-3 w-3 rounded-full"
-                        style={{ backgroundColor: course.color }}
-                      ></div>
-                      <span className="font-medium">{course.title}</span>
-                    </div>
-                    <span className="font-medium">{course.grade}</span>
-                  </div>
-                  <Progress value={course.progress} className="h-2" />
-                </div>
-              ))}
+            <div className="flex flex-col items-center justify-center space-y-2 py-6 text-center text-muted-foreground">
+              <Star className="w-8 h-8 text-gray-400" />
+              <p className="text-sm font-medium">
+                Este curso ainda não possui progressos registrados.
+              </p>
+              <p className="text-xs max-w-sm">
+                Comece suas aulas para poder visualizar seu progresso.
+              </p>
             </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Oportunidades de Emprego */}
-      <Card className="bg-white">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Oportunidades de Emprego</CardTitle>
-            <CardDescription>
-              Vagas recomendadas para seu perfil
-            </CardDescription>
-          </div>
-          <Button>Ver todas as vagas</Button>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {recommendedJobs.map((job) => (
-              <Card key={job.id} className="bg-white">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
-                      {job.type}
-                    </Badge>
-                    <Badge variant="outline">{job.location}</Badge>
-                  </div>
-                  <CardTitle className="text-lg mt-2">{job.title}</CardTitle>
-                  <CardDescription>{job.company}</CardDescription>
-                </CardHeader>
-                <CardContent className="pb-2">
-                  <p className="text-sm line-clamp-2">{job.description}</p>
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {job.skills.slice(0, 3).map((skill, index) => (
-                      <Badge
-                        key={index}
-                        variant="outline"
-                        className="bg-gray-50"
-                      >
-                        {skill}
-                      </Badge>
-                    ))}
-                    {job.skills.length > 3 && (
-                      <Badge variant="outline" className="bg-gray-50">
-                        +{job.skills.length - 3}
-                      </Badge>
-                    )}
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full">Ver detalhes</Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }
 
-// Dados de exemplo
-const activityData = [
-  { name: 'Semana 1', horas: 22 },
-  { name: 'Semana 2', horas: 25 },
-  { name: 'Semana 3', horas: 18 },
-  { name: 'Semana 4', horas: 30 },
-  { name: 'Semana 5', horas: 28 },
-  { name: 'Semana 6', horas: 32 },
-  { name: 'Semana 7', horas: 26 },
-  { name: 'Semana 8', horas: 32 },
-]
+// Dados de exemplo para cursos
+const activityData = [{ name: 'Semana 1', horas: 0 }]
 
-const upcomingTasks = [
+const upcomingLessons = [
   {
     id: 1,
-    title: 'Relatório de Laboratório',
-    course: 'Física Experimental',
+    title: 'Introdução à Farmácia e Ética Profissional',
+    course: 'Curso de Auxiliar de Farmácia',
     daysLeft: 0,
-    date: '25/05/2024',
+    date: '04/06/2025',
   },
   {
     id: 2,
-    title: 'Projeto Final',
-    course: 'Programação Web',
+    title: 'Noções de Anatomia e Fisiologia',
+    course: 'Curso de Auxiliar de Farmácia',
     daysLeft: 2,
-    date: '27/05/2024',
+    date: '06/06/2025',
   },
   {
     id: 3,
-    title: 'Lista de Exercícios',
-    course: 'Cálculo III',
+    title: 'Classificação de Medicamentos',
+    course: 'Curso de Auxiliar de Farmácia',
     daysLeft: 3,
-    date: '28/05/2024',
+    date: '07/06/2025',
   },
   {
     id: 4,
-    title: 'Apresentação',
-    course: 'Engenharia de Software',
+    title: 'Boas Práticas de Armazenamento e Controle de Estoque',
+    course: 'Curso de Auxiliar de Farmácia',
     daysLeft: 5,
-    date: '30/05/2024',
-  },
-]
-
-const currentCourses = [
-  {
-    id: 1,
-    title: 'Programação Web',
-    grade: '9.2',
-    progress: 65,
-    color: '#3b82f6',
-  },
-  {
-    id: 2,
-    title: 'Cálculo III',
-    grade: '8.5',
-    progress: 60,
-    color: '#10b981',
-  },
-  {
-    id: 3,
-    title: 'Engenharia de Software',
-    grade: '9.0',
-    progress: 70,
-    color: '#8b5cf6',
-  },
-  {
-    id: 4,
-    title: 'Física Experimental',
-    grade: '7.8',
-    progress: 55,
-    color: '#f59e0b',
-  },
-]
-
-const recommendedJobs = [
-  {
-    id: 1,
-    title: 'Desenvolvedor Front-end Jr',
-    company: 'TechSolutions',
-    type: 'Estágio',
-    location: 'Remoto',
-    description:
-      'Oportunidade para estudantes de Ciência da Computação com conhecimentos em React e JavaScript.',
-    skills: ['React', 'JavaScript', 'HTML', 'CSS'],
-    match: 95,
-  },
-  {
-    id: 2,
-    title: 'Analista de Dados',
-    company: 'DataInsights',
-    type: 'Meio Período',
-    location: 'Híbrido',
-    description:
-      'Vaga para estudantes com conhecimentos em análise de dados e estatística.',
-    skills: ['Python', 'SQL', 'Excel', 'Power BI'],
-    match: 85,
-  },
-  {
-    id: 3,
-    title: 'Assistente de Pesquisa',
-    company: 'Universidade Federal',
-    type: 'Bolsa',
-    location: 'Presencial',
-    description:
-      'Bolsa de iniciação científica para estudantes interessados em pesquisa acadêmica.',
-    skills: ['Pesquisa', 'Redação', 'Análise de Dados'],
-    match: 90,
+    date: '09/06/2025',
   },
 ]

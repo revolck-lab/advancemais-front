@@ -3,8 +3,8 @@ import HeaderPages from '@/components/website/headerPages/headerPages'
 import Testimonials from '@/components/website/testimonials/testimonials'
 import AccordionSection from '@/components/website/accordion/accordion'
 import About from '@/components/website/about/about'
-import { Users, Lightbulb, Shield, Heart } from 'lucide-react'
 import LogoEnterprises from '@/components/website/logoEnterprises/logoEnterprises'
+import { Users, Lightbulb, Shield, Heart } from 'lucide-react'
 
 export const generateMetadata = (): { title: string; description: string } => {
   return {
@@ -12,6 +12,72 @@ export const generateMetadata = (): { title: string; description: string } => {
     description: 'Saiba mais sobre a história e os valores da Advance+',
   }
 }
+
+// --- NOVA SEÇÃO EQUIPE ---
+function EquipeAdvance() {
+  const equipe = [
+    { nome: 'Jorge', cargo: 'Direção', foto: '/images/equipe/jorge.jpg' },
+    { nome: 'Victor', cargo: 'Direção', foto: '/images/equipe/victor.jpg' },
+    { nome: 'Danillo', cargo: 'Gerencial', foto: '/images/equipe/danillo.jpg' },
+    { nome: 'Pessoa 2', cargo: 'Pedagógico', foto: '/images/equipe/luiz.jpg' },
+    {
+      nome: 'Pessoa 3',
+      cargo: 'Setor de Vagas',
+      foto: '/images/equipe/arychele.jpg',
+    },
+    {
+      nome: 'Pessoa 4',
+      cargo: 'Setor de Vagas',
+      foto: '/images/equipe/arychele.jpg',
+    },
+    {
+      nome: 'Pessoa 5',
+      cargo: 'Setor de Vagas',
+      foto: '/images/equipe/arychele.jpg',
+    },
+    {
+      nome: 'Pessoa 6',
+      cargo: 'Setor de Vagas',
+      foto: '/images/equipe/arychele.jpg',
+    },
+  ]
+
+  return (
+    <section className="py-12">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-0 text-blue-900">
+          Nossa Equipe
+        </h2>
+        <p className="text-center text-gray-700 mb-10 mx-auto">
+          Conheça os responsáveis por transformar talentos, empresas e
+          carreiras.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {equipe.map((membro, idx) => (
+            <div
+              key={idx}
+              className="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
+              <img
+                src={membro.foto}
+                alt={membro.nome}
+                className="w-full h-72 object-cover filter grayscale group-hover:grayscale-0 transition duration-300"
+              />
+              <div className="absolute bottom-0 left-0 bg-white bg-opacity-90 px-4 py-3 w-full">
+                <h3 className="text-md font-semibold text-gray-900">
+                  {membro.nome}
+                </h3>
+                <p className="text-sm text-gray-600">{membro.cargo}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// --- FIM DA NOVA SEÇÃO ---
 
 export default function SobrePage(): JSX.Element {
   return (
@@ -56,6 +122,9 @@ export default function SobrePage(): JSX.Element {
           },
         ]}
       />
+
+      {/* --- Seção da Equipe --- */}
+      <EquipeAdvance />
 
       {/* Porque escolher advancedMais */}
       <About
