@@ -36,11 +36,6 @@ export function useAuth() {
   })
   const router = useRouter()
 
-  // Verificar se há sessão ativa
-  useEffect(() => {
-    checkAuthStatus()
-  }, [])
-
   const checkAuthStatus = useCallback(() => {
     try {
       const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
@@ -69,6 +64,11 @@ export function useAuth() {
       })
     }
   }, [])
+
+  // Verificar se há sessão ativa - FIXED: incluir checkAuthStatus nas dependências
+  useEffect(() => {
+    checkAuthStatus()
+  }, [checkAuthStatus])
 
   const login = useCallback(
     async (
