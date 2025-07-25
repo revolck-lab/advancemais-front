@@ -243,9 +243,9 @@ const coursesData: Record<CourseId, CourseData> = {
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>  // ✅ MUDANÇA: Promise<{ id: string }>
 }): Promise<Metadata> {
-  const { id } = params
+  const { id } = await params  // ✅ MUDANÇA: await params
   const courseData = coursesData[id as CourseId]
 
   if (!courseData) {
@@ -261,8 +261,8 @@ export async function generateMetadata({
   }
 }
 
-export default function CursoDetalhes({ params }: { params: { id: string } }) {
-  const { id } = params
+export default async function CursoDetalhes({ params }: { params: Promise<{ id: string }> }) {  // ✅ MUDANÇA: async + Promise<{ id: string }>
+  const { id } = await params  // ✅ MUDANÇA: await params
   const courseData = coursesData[id as CourseId]
 
   // Se o curso não existir, redirecionar para 404
