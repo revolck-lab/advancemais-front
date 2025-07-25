@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "vercel-build": "next build",
+    "vercel-build": "pnpm install --no-frozen-lockfile && next build",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
