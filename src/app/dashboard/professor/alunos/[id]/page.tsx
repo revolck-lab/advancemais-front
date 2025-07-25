@@ -1,551 +1,462 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { useRouter } from 'next/navigation'
 import { useState, use } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import {
-  ArrowLeft,
-  BookOpen,
-  CheckCircle,
-  XCircle,
-  Edit,
-  Plus,
-  FileText,
-  Upload,
+  Search,
+  Users,
+  GraduationCap,
+  ChevronRight,
+  SortAsc,
+  SortDesc,
+  Filter,
+  ChevronDown,
 } from 'lucide-react'
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog/dialog'
 import { Input } from '@/components/ui/input/input'
-import { Label } from '@/components/ui/label/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select/select'
+import { Button } from '@/components/ui/button'
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from '@/components/ui/avatar/avatar'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress/progress'
-import { useToast } from '@/hooks/use-toast'
+import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table/table'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+} from '@/components/ui/dropdown-menu/dropdown-menu'
 
-// Interface para dados de nota existente
-interface GradeData {
-  id: number
-  assessment: string
-  date: string
-  grade: number
-  maxGrade: number
-  module: string
-  status: 'aprovado' | 'reprovado'
+// Interface para dados do aluno
+interface StudentData {
+  id: string
+  name: string
+  enrollment: string
+  status: 'Regular' | 'Irregular'
+  attendance: number
+  midtermGrade: number
+  finalGrade: number
+  avatar: string
 }
 
-export default function StudentProfile({
+// Tipos para filtros
+type StatusFilter = 'todos' | 'regular' | 'irregular'
+type GradeFilter = 'todos' | 'aprovados' | 'reprovados'
+
+export default function CourseStudentsList({
   params,
 }: {
-  params: Promise<{ courseId: string; studentId: string }>
+  params: Promise<{ courseId: string }>
 }) {
   const router = useRouter()
-  const { toast } = useToast()
   
-  // Resolver params assíncronos
+  // Resolver params assíncronos - CORREÇÃO PARA NEXT.JS 15
   const resolvedParams = use(params)
-  const { studentId } = resolvedParams
+  const { courseId } = resolvedParams
 
-  // Dados simulados do aluno
-  const studentInfo = {
-    id: studentId,
-    name: 'Ana Silva',
-    enrollment: '2023001',
-    course: 'Gestão de RH e DP',
-    status: 'Regular',
-    avatar: '/placeholder.svg?height=100&width=100',
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('todos')
+  const [gradeFilter, setGradeFilter] = useState<GradeFilter>('todos')
+
+  // Dados simulados do curso
+  const courseInfo = {
+    id: courseId,
+    name: 'Gestão de RH e DP',
+    code: 'GP404',
+    students: 32,
   }
 
-  // Dados simulados de frequência por aula
-  const [attendanceData, setAttendanceData] = useState([
+  // Dados simulados dos alunos - com tipagem adequada
+  const studentsData: StudentData[] = [
     {
-      module: 'Módulo 1 - Fundamentos de RH',
-      classes: [
-        { id: 1, date: '01/03/2024', topic: 'Introdução ao RH', present: true },
-        {
-          id: 2,
-          date: '05/03/2024',
-          topic: 'História do RH',
-          present: false,
-        },
-        {
-          id: 3,
-          date: '08/03/2024',
-          topic: 'Estrutura Organizacional',
-          present: true,
-        },
-        {
-          id: 4,
-          date: '12/03/2024',
-          topic: 'Recrutamento e Seleção',
-          present: true,
-        },
-      ],
+      id: '2023001',
+      name: 'Ana Silva',
+      enrollment: '2023001',
+      status: 'Regular',
+      attendance: 92,
+      midtermGrade: 8.5,
+      finalGrade: 9.0,
+      avatar: '/placeholder.svg?height=40&width=40',
     },
     {
-      module: 'Módulo 2 - Departamento Pessoal',
-      classes: [
-        { id: 5, date: '15/03/2024', topic: 'Folha de Pagamento', present: true },
-        { id: 6, date: '19/03/2024', topic: 'Benefícios', present: false },
-        { id: 7, date: '22/03/2024', topic: 'Férias e 13º', present: true },
-      ],
+      id: '2023002',
+      name: 'Bruno Santos',
+      enrollment: '2023002',
+      status: 'Regular',
+      attendance: 88,
+      midtermGrade: 7.0,
+      finalGrade: 7.5,
+      avatar: '/placeholder.svg?height=40&width=40',
     },
-  ])
+    {
+      id: '2023003',
+      name: 'Carla Oliveira',
+      enrollment: '2023003',
+      status: 'Regular',
+      attendance: 95,
+      midtermGrade: 9.5,
+      finalGrade: 9.2,
+      avatar: '/placeholder.svg?height=40&width=40',
+    },
+    {
+      id: '2023004',
+      name: 'Daniel Costa',
+      enrollment: '2023004',
+      status: 'Irregular',
+      attendance: 65,
+      midtermGrade: 6.0,
+      finalGrade: 5.8,
+      avatar: '/placeholder.svg?height=40&width=40',
+    },
+    {
+      id: '2023005',
+      name: 'Eduardo Lima',
+      enrollment: '2023005',
+      status: 'Regular',
+      attendance: 89,
+      midtermGrade: 7.8,
+      finalGrade: 8.1,
+      avatar: '/placeholder.svg?height=40&width=40',
+    },
+  ]
 
-  // Dados simulados de notas
-  const [gradesData, setGradesData] = useState<GradeData[]>([
-    {
-      id: 1,
-      assessment: 'Prova 1 - Fundamentos',
-      date: '20/03/2024',
-      grade: 8.5,
-      maxGrade: 10,
-      module: 'Módulo 1',
-      status: 'aprovado',
-    },
-    {
-      id: 2,
-      assessment: 'Trabalho - Recrutamento',
-      date: '25/03/2024',
-      grade: 9.0,
-      maxGrade: 10,
-      module: 'Módulo 1',
-      status: 'aprovado',
-    },
-    {
-      id: 3,
-      assessment: 'Prova 2 - DP',
-      date: '10/04/2024',
-      grade: 7.5,
-      maxGrade: 10,
-      module: 'Módulo 2',
-      status: 'aprovado',
-    },
-  ])
+  // Filtrar alunos
+  const filteredStudents = studentsData.filter((student) => {
+    // Filtro de busca
+    const matchesSearch =
+      !searchTerm ||
+      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.enrollment.toLowerCase().includes(searchTerm.toLowerCase())
 
-  // Estados para diálogos
-  const [isAddGradeOpen, setIsAddGradeOpen] = useState(false)
-  const [newGradeForm, setNewGradeForm] = useState({
-    assessment: '',
-    module: '',
-    grade: 0,
-    maxGrade: 10,
-    date: '',
+    // Filtro de status
+    const matchesStatus =
+      statusFilter === 'todos' ||
+      (statusFilter === 'regular' && student.status === 'Regular') ||
+      (statusFilter === 'irregular' && student.status === 'Irregular')
+
+    // Filtro de notas
+    const matchesGrade =
+      gradeFilter === 'todos' ||
+      (gradeFilter === 'aprovados' && student.finalGrade >= 7) ||
+      (gradeFilter === 'reprovados' && student.finalGrade < 7)
+
+    return matchesSearch && matchesStatus && matchesGrade
   })
 
-  // Calcular estatísticas
-  const totalClasses = attendanceData.reduce(
-    (acc, module) => acc + module.classes.length,
-    0
-  )
-  const presentClasses = attendanceData.reduce(
-    (acc, module) =>
-      acc + module.classes.filter((cls) => cls.present).length,
-    0
-  )
-  const attendancePercentage = (presentClasses / totalClasses) * 100
+  // Ordenar alunos
+  const sortedStudents = [...filteredStudents].sort((a, b) => {
+    if (sortOrder === 'asc') {
+      return a.name.localeCompare(b.name)
+    } else {
+      return b.name.localeCompare(a.name)
+    }
+  })
 
-  const averageGrade =
-    gradesData.reduce((acc, grade) => acc + grade.grade, 0) / gradesData.length
-
-  // Funções para manipular dados
-  const toggleAttendance = (moduleIndex: number, classIndex: number) => {
-    const newData = [...attendanceData]
-    newData[moduleIndex].classes[classIndex].present =
-      !newData[moduleIndex].classes[classIndex].present
-    setAttendanceData(newData)
-    
-    toast({
-      title: 'Presença atualizada',
-      description: 'A frequência do aluno foi atualizada com sucesso.',
-    })
+  // Navegar para o perfil do aluno
+  const navigateToStudentProfile = (studentId: string) => {
+    router.push(`alunos/${studentId}`)
   }
 
-  const addNewGrade = () => {
-    // Validar campos obrigatórios
-    if (!newGradeForm.assessment || !newGradeForm.module || !newGradeForm.date) {
-      toast({
-        title: 'Campos obrigatórios',
-        description: 'Por favor, preencha todos os campos obrigatórios.',
-        variant: 'destructive',
-      })
-      return
-    }
+  // Contagem de alunos por categoria
+  const totalStudents = studentsData.length
+  const approvedStudents = studentsData.filter(
+    (student) => student.finalGrade >= 7
+  ).length
+  const failedStudents = studentsData.filter(
+    (student) => student.finalGrade < 7
+  ).length
 
-    const newGrade: GradeData = {
-      id: gradesData.length + 1,
-      assessment: newGradeForm.assessment,
-      date: newGradeForm.date,
-      grade: newGradeForm.grade,
-      maxGrade: newGradeForm.maxGrade,
-      module: newGradeForm.module,
-      status: newGradeForm.grade >= 7 ? 'aprovado' : 'reprovado',
-    }
-    
-    setGradesData([...gradesData, newGrade])
-    setIsAddGradeOpen(false)
-    
-    // Resetar formulário
-    setNewGradeForm({
-      assessment: '',
-      module: '',
-      grade: 0,
-      maxGrade: 10,
-      date: '',
-    })
-    
-    toast({
-      title: 'Nota adicionada',
-      description: 'A nova avaliação foi registrada com sucesso.',
-    })
+  // Função para obter variant do badge
+  const getStatusBadgeVariant = (status: string): 'default' | 'destructive' => {
+    return status === 'Regular' ? 'default' : 'destructive'
   }
 
   return (
     <div className="container mx-auto py-8 px-4">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="mb-8"
       >
-        <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="outline"
-            onClick={() => router.back()}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar
-          </Button>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold">{courseInfo.name}</h1>
+            <p className="text-muted-foreground">
+              {courseInfo.code} • {courseInfo.students} alunos
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm">
+              <GraduationCap className="h-4 w-4 mr-2" />
+              Lançar Notas
+            </Button>
+          </div>
         </div>
 
-        {/* Student Profile Header */}
         <Card className="bg-white">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-6">
-              <Avatar className="h-24 w-24">
-                <AvatarImage src={studentInfo.avatar} alt={studentInfo.name} />
-                <AvatarFallback className="text-lg">
-                  {studentInfo.name
-                    .split(' ')
-                    .map((n) => n[0])
-                    .join('')}
-                </AvatarFallback>
-              </Avatar>
-
-              <div className="flex-1">
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                  <div>
-                    <h1 className="text-3xl font-bold text-gray-900">
-                      {studentInfo.name}
-                    </h1>
-                    <p className="text-gray-600">
-                      Matrícula: {studentInfo.enrollment}
-                    </p>
-                    <p className="text-gray-600">{studentInfo.course}</p>
-                  </div>
-                  <Badge
-                    variant={
-                      studentInfo.status === 'Regular' ? 'success' : 'destructive'
-                    }
-                    className="self-start md:self-center"
-                  >
-                    {studentInfo.status}
-                  </Badge>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Users className="h-5 w-5 mr-2" />
+              Lista de Alunos
+            </CardTitle>
+            <CardDescription>
+              Visualize e gerencie os alunos do curso
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {/* Estatísticas Rápidas */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <div className="text-2xl font-bold text-blue-600">
+                  {totalStudents}
                 </div>
-
-                {/* Quick Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">
-                      {attendancePercentage.toFixed(1)}%
-                    </div>
-                    <div className="text-sm text-gray-600">Frequência</div>
-                  </div>
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">
-                      {averageGrade.toFixed(1)}
-                    </div>
-                    <div className="text-sm text-gray-600">Média Geral</div>
-                  </div>
-                  <div className="text-center p-4 bg-purple-50 rounded-lg">
-                    <div className="text-2xl font-bold text-purple-600">
-                      {gradesData.length}
-                    </div>
-                    <div className="text-sm text-gray-600">Avaliações</div>
-                  </div>
+                <div className="text-sm text-gray-600">Total de Alunos</div>
+              </div>
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <div className="text-2xl font-bold text-green-600">
+                  {approvedStudents}
                 </div>
+                <div className="text-sm text-gray-600">Aprovados</div>
+              </div>
+              <div className="text-center p-4 bg-red-50 rounded-lg">
+                <div className="text-2xl font-bold text-red-600">
+                  {failedStudents}
+                </div>
+                <div className="text-sm text-gray-600">Reprovados</div>
               </div>
             </div>
+
+            {/* Filtros e Busca */}
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                    placeholder="Buscar por nome ou matrícula..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                {/* Filtro de Status */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <Filter className="h-4 w-4 mr-2" />
+                      Status
+                      <ChevronDown className="h-4 w-4 ml-2" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuRadioGroup
+                      value={statusFilter}
+                      onValueChange={(value) =>
+                        setStatusFilter(value as StatusFilter)
+                      }
+                    >
+                      <DropdownMenuRadioItem value="todos">
+                        Todos
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="regular">
+                        Regular
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="irregular">
+                        Irregular
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {/* Filtro de Notas */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <Filter className="h-4 w-4 mr-2" />
+                      Notas
+                      <ChevronDown className="h-4 w-4 ml-2" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuRadioGroup
+                      value={gradeFilter}
+                      onValueChange={(value) =>
+                        setGradeFilter(value as GradeFilter)
+                      }
+                    >
+                      <DropdownMenuRadioItem value="todos">
+                        Todos
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="aprovados">
+                        Aprovados (≥7.0)
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="reprovados">
+                        Reprovados (&lt;7.0)
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {/* Ordenação */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+                  }
+                >
+                  {sortOrder === 'asc' ? (
+                    <SortAsc className="h-4 w-4" />
+                  ) : (
+                    <SortDesc className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {/* Tabela de Alunos */}
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Aluno</TableHead>
+                    <TableHead>Matrícula</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Frequência</TableHead>
+                    <TableHead>Nota Parcial</TableHead>
+                    <TableHead>Nota Final</TableHead>
+                    <TableHead>Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <AnimatePresence>
+                    {sortedStudents.map((student) => (
+                      <motion.tr
+                        key={student.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.2 }}
+                        className="hover:bg-gray-50 cursor-pointer"
+                        onClick={() => navigateToStudentProfile(student.id)}
+                      >
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage
+                                src={student.avatar}
+                                alt={student.name}
+                              />
+                              <AvatarFallback>
+                                {student.name
+                                  .split(' ')
+                                  .map((n) => n[0])
+                                  .join('')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="font-medium">{student.name}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{student.enrollment}</TableCell>
+                        <TableCell>
+                          <Badge variant={getStatusBadgeVariant(student.status)}>
+                            {student.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm">{student.attendance}%</span>
+                            <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div
+                                className={`h-full ${
+                                  student.attendance >= 75
+                                    ? 'bg-green-500'
+                                    : 'bg-red-500'
+                                }`}
+                                style={{ width: `${student.attendance}%` }}
+                              />
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            className={`font-medium ${
+                              student.midtermGrade >= 7
+                                ? 'text-green-600'
+                                : 'text-red-600'
+                            }`}
+                          >
+                            {student.midtermGrade.toFixed(1)}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            className={`font-medium ${
+                              student.finalGrade >= 7
+                                ? 'text-green-600'
+                                : 'text-red-600'
+                            }`}
+                          >
+                            {student.finalGrade.toFixed(1)}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              navigateToStudentProfile(student.id)
+                            }}
+                          >
+                            Ver Perfil
+                            <ChevronRight className="h-4 w-4 ml-1" />
+                          </Button>
+                        </TableCell>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mensagem quando não há resultados */}
+            {sortedStudents.length === 0 && (
+              <div className="text-center py-8">
+                <Users className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Nenhum aluno encontrado
+                </h3>
+                <p className="text-gray-500">
+                  Tente ajustar os filtros de busca.
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>
-
-      {/* Content Tabs */}
-      <Tabs defaultValue="attendance" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="attendance">Frequência</TabsTrigger>
-          <TabsTrigger value="grades">Notas</TabsTrigger>
-          <TabsTrigger value="materials">Materiais</TabsTrigger>
-        </TabsList>
-
-        {/* Attendance Tab */}
-        <TabsContent value="attendance" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Controle de Frequência</h2>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary">
-                {presentClasses}/{totalClasses} presenças
-              </Badge>
-              <Progress value={attendancePercentage} className="w-24" />
-            </div>
-          </div>
-
-          {attendanceData.map((module, moduleIndex) => (
-            <Card key={moduleIndex} className="bg-white">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="h-5 w-5" />
-                  {module.module}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {module.classes.map((classItem, classIndex) => (
-                    <div
-                      key={classItem.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="text-sm">
-                          <div className="font-medium">{classItem.topic}</div>
-                          <div className="text-gray-500">{classItem.date}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge
-                          variant={classItem.present ? 'success' : 'destructive'}
-                        >
-                          {classItem.present ? 'Presente' : 'Ausente'}
-                        </Badge>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => toggleAttendance(moduleIndex, classIndex)}
-                        >
-                          {classItem.present ? (
-                            <XCircle className="h-4 w-4" />
-                          ) : (
-                            <CheckCircle className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </TabsContent>
-
-        {/* Grades Tab */}
-        <TabsContent value="grades" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Notas e Avaliações</h2>
-            <Dialog open={isAddGradeOpen} onOpenChange={setIsAddGradeOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Adicionar Nota
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Adicionar Nova Avaliação</DialogTitle>
-                  <DialogDescription>
-                    Registre uma nova nota para este aluno.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="assessment">Avaliação</Label>
-                    <Input
-                      id="assessment"
-                      placeholder="Ex: Prova 3 - Direito Trabalhista"
-                      value={newGradeForm.assessment}
-                      onChange={(e) =>
-                        setNewGradeForm({ ...newGradeForm, assessment: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="module">Módulo</Label>
-                    <Select
-                      value={newGradeForm.module}
-                      onValueChange={(value) =>
-                        setNewGradeForm({ ...newGradeForm, module: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o módulo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Módulo 1">Módulo 1</SelectItem>
-                        <SelectItem value="Módulo 2">Módulo 2</SelectItem>
-                        <SelectItem value="Módulo 3">Módulo 3</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="grade">Nota</Label>
-                      <Input
-                        id="grade"
-                        type="number"
-                        min="0"
-                        max="10"
-                        step="0.1"
-                        placeholder="0.0"
-                        value={newGradeForm.grade.toString()}
-                        onChange={(e) =>
-                          setNewGradeForm({
-                            ...newGradeForm,
-                            grade: parseFloat(e.target.value) || 0,
-                          })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="maxGrade">Nota Máxima</Label>
-                      <Input
-                        id="maxGrade"
-                        type="number"
-                        min="1"
-                        max="10"
-                        value={newGradeForm.maxGrade.toString()}
-                        onChange={(e) =>
-                          setNewGradeForm({
-                            ...newGradeForm,
-                            maxGrade: parseInt(e.target.value) || 10,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="date">Data</Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={newGradeForm.date}
-                      onChange={(e) =>
-                        setNewGradeForm({ ...newGradeForm, date: e.target.value })
-                      }
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsAddGradeOpen(false)}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button onClick={addNewGrade}>Salvar</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          <Card className="bg-white">
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                {gradesData.map((grade) => (
-                  <div
-                    key={grade.id}
-                    className="flex items-center justify-between p-4 border rounded-lg"
-                  >
-                    <div className="flex-1">
-                      <div className="font-medium">{grade.assessment}</div>
-                      <div className="text-sm text-gray-500">
-                        {grade.module} • {grade.date}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <div className="text-lg font-bold">
-                          {grade.grade}/{grade.maxGrade}
-                        </div>
-                        <Badge
-                          variant={
-                            grade.status === 'aprovado' ? 'success' : 'destructive'
-                          }
-                        >
-                          {grade.status === 'aprovado' ? 'Aprovado' : 'Reprovado'}
-                        </Badge>
-                      </div>
-                      <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Materials Tab */}
-        <TabsContent value="materials" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Materiais e Atividades</h2>
-            <Button>
-              <Upload className="h-4 w-4 mr-2" />
-              Upload Material
-            </Button>
-          </div>
-
-          <Card className="bg-white">
-            <CardContent className="p-6">
-              <div className="text-center py-12">
-                <FileText className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Nenhum material disponível
-                </h3>
-                <p className="text-gray-500">
-                  Faça upload de materiais para disponibilizar ao aluno.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
     </div>
   )
 }
