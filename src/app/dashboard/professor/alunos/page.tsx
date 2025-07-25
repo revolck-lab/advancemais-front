@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, use } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import {
@@ -51,21 +51,22 @@ import {
 export default function CourseStudentsList({
   params,
 }: {
-  params: { courseId: string }
+  params: Promise<{ courseId: string }>
 }) {
   const router = useRouter()
+  
+  // Resolver params assíncronos - CORREÇÃO PARA NEXT.JS 15
+  const resolvedParams = use(params)
+  const { courseId } = resolvedParams
+
   const [searchTerm, setSearchTerm] = useState('')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-  const [statusFilter, setStatusFilter] = useState<
-    'todos' | 'regular' | 'irregular'
-  >('todos')
-  const [gradeFilter, setGradeFilter] = useState<
-    'todos' | 'aprovados' | 'reprovados'
-  >('todos')
+  const [statusFilter, setStatusFilter] = useState <'todos' | 'regular' | 'irregular'>('todos')
+  const [gradeFilter, setGradeFilter] = useState <'todos' | 'aprovados' | 'reprovados'>('todos')
 
   // Dados simulados do curso
   const courseInfo = {
-    id: params.courseId,
+    id: courseId,
     name: 'Gestão de RH e DP',
     code: 'GP404',
     students: 32,
