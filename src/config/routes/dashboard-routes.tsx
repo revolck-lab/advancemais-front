@@ -269,6 +269,31 @@ export const dashboardRoutes = [
       },
     ],
   },
+  {
+    category: 'Pedagogico',
+    items: [
+      {
+        title: 'Overview',
+        icon: LayoutDashboard,
+        href: '/dashboard/pedagogico/overview',
+      },
+      {
+        title: 'Cursos',
+        icon: LayoutDashboard,
+        href: '/dashboard/courses/courses',
+      },
+      {
+        title: 'Provas & Notas',
+        icon: LayoutDashboard,
+        href: '/dashboard/pedagogico/avaliacoes',
+      },
+      {
+        title: 'Alunos ',
+        icon: LayoutDashboard,
+        href: '/dashboard/professor/alunos',
+      },
+    ],
+  },
 ]
 
 export default dashboardRoutes

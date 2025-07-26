@@ -2,6 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { CardPayment } from '@mercadopago/sdk-react'
 import MercadoPagoCheckout from '@/components/mercadopago/MercadoPagoCheckout'
 
 import { useForm } from 'react-hook-form'
@@ -197,19 +198,26 @@ export default function CheckoutCursoPage() {
   }
 
   // -------------------------------------------------- CARTÃO de CRÉDITO/DÉBITO com BRICK (MercadoPago)
-  const handleCardPaymentSubmit = async (
-    formData: Record<string, unknown>,
-    additionalData?: Record<string, unknown>
+  const handleCardPaymentSubmit: Parameters<typeof CardPayment>[0]['onSubmit'] = async (
+    formData,
+    additionalData
   ) => {
     setError(null)
     setPaymentStatus(null)
     setLoading(true)
     try {
+      // Criar payload com description para a API
+      const paymentPayload = {
+        ...formData,
+        description: course?.title || 'Curso',
+        ...additionalData,
+      }
+      
       // Envie os dados do cartão para sua API
       const response = await fetch('/api/create-card-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, ...additionalData }),
+        body: JSON.stringify(paymentPayload),
       })
       const paymentResult = await response.json()
       if (paymentResult.status === 'approved') {
@@ -224,7 +232,7 @@ export default function CheckoutCursoPage() {
     }
   }
 
-  const handleCardPaymentError = () => {
+  const handleCardPaymentError: Parameters<typeof CardPayment>[0]['onError'] = () => {
     setError('Erro ao processar pagamento.')
   }
 
@@ -959,6 +967,8 @@ export default function CheckoutCursoPage() {
                                   <Image
                                     src={pixQrCodeImage}
                                     alt="QR Code PIX"
+                                    width={256}
+                                    height={256}
                                     className="w-full h-full object-contain"
                                   />
                                 ) : (
