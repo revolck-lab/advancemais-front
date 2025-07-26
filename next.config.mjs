@@ -20,10 +20,8 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
   },
-  i18n: {
-    locales: ['pt-BR', 'en'],
-    defaultLocale: 'pt-BR', 
-  },
+  // REMOVIDO: i18n não é suportado no App Router do Next.js 15
+  // Se precisar de internacionalização, use next-intl ou implemente manualmente no App Router
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,

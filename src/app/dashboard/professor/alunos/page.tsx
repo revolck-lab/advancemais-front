@@ -61,8 +61,8 @@ export default function CourseStudentsList({
 
   const [searchTerm, setSearchTerm] = useState('')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-  const [statusFilter, setStatusFilter] = useState <'todos' | 'regular' | 'irregular'>('todos')
-  const [gradeFilter, setGradeFilter] = useState <'todos' | 'aprovados' | 'reprovados'>('todos')
+  const [statusFilter, setStatusFilter] = useState<'todos' | 'regular' | 'irregular'>('todos')
+  const [gradeFilter, setGradeFilter] = useState<'todos' | 'aprovados' | 'reprovados'>('todos')
 
   // Dados simulados do curso
   const courseInfo = {
