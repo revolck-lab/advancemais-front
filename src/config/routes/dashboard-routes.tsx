@@ -234,41 +234,41 @@ export const dashboardRoutes = [
   //     },
   //   ],
   // },
-  {
-    category: 'Auditoria',
-    items: [
-      {
-        title: 'Logs ',
-        icon: LayoutDashboard,
-        href: '/dashboard/auditoria/logs',
-      },
-      {
-        title: 'Usuarios',
-        icon: LayoutDashboard,
-        href: '/dashboard/auditoria/usuarios',
-      },
-      {
-        title: 'Scripts',
-        icon: LayoutDashboard,
-        href: '/dashboard/auditoria/scripts',
-      },
-      {
-        title: 'Assinaturas',
-        icon: LayoutDashboard,
-        href: '/dashboard/auditoria/plano-assinatura',
-      },
-      {
-        title: 'Financeiro',
-        icon: LayoutDashboard,
-        href: '/dashboard/auditoria/financeiro',
-      },
-      {
-        title: 'Gerenciador Conteúdo',
-        icon: LayoutDashboard,
-        href: '/dashboard/auditoria/conteudos',
-      },
-    ],
-  },
+  // {
+  //   category: 'Auditoria',
+  //   items: [
+  //     {
+  //       title: 'Logs ',
+  //       icon: LayoutDashboard,
+  //       href: '/dashboard/auditoria/logs',
+  //     },
+  //     {
+  //       title: 'Usuarios',
+  //       icon: LayoutDashboard,
+  //       href: '/dashboard/auditoria/usuarios',
+  //     },
+  //     {
+  //       title: 'Scripts',
+  //       icon: LayoutDashboard,
+  //       href: '/dashboard/auditoria/scripts',
+  //     },
+  //     {
+  //       title: 'Assinaturas',
+  //       icon: LayoutDashboard,
+  //       href: '/dashboard/auditoria/plano-assinatura',
+  //     },
+  //     {
+  //       title: 'Financeiro',
+  //       icon: LayoutDashboard,
+  //       href: '/dashboard/auditoria/financeiro',
+  //     },
+  //     {
+  //       title: 'Gerenciador Conteúdo',
+  //       icon: LayoutDashboard,
+  //       href: '/dashboard/auditoria/conteudos',
+  //     },
+  //   ],
+  // },
   {
     category: 'Pedagogico',
     items: [
